@@ -22,6 +22,7 @@
         public Dictionary<int, Player> Players { get; private set; } = new Dictionary<int, Player>();
         public bool CanJoin { get { return CurrentState == GameState.Joinable; } }
         public GameState CurrentState { get; private set; }
+        public float GlobalDamageMultiplier { get; private set; } = 0.0f;
 
         public Game(int id) 
         {
@@ -60,7 +61,7 @@
             if (CurrentState != GameState.Joinable)
                 return null;
             int id = _nextPlayerId++;
-            Player p = new Player(id);
+            Player p = new Player(id, Id);
             Players.Add(id, p);
             return p;
         }
@@ -77,6 +78,12 @@
         {
             _gameStarted = DateTime.Now;
             CurrentState = GameState.Started;
+            // reset all players
+            for (int i = 0; i < Players.Count; i++) 
+            {
+                Players[i].Reset();
+            }
+            GlobalDamageMultiplier = 1;
         }
 
         public void EndGame()

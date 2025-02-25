@@ -22,6 +22,18 @@ namespace WizardIslandRestApi.Controllers
             int id = _gameManager.CreateNewGame();
             return Created("/" + id, "Game created");
         }
+        [HttpPost("/StartGame/{gameId}")]
+        public ActionResult<string> StartGame(int gameId, [FromBody] string password)
+        {
+            var game = _gameManager.GetGame(gameId);
+            if (game == null || game.Players[0].Password != password || !game.CanJoin)
+                return NotFound();
+            lock(game)
+            {
+                game.StartGame();
+            }
+            return Ok();
+        }
         [HttpPost("/Join/{gameId}")]
         public ActionResult<string> JoinGame(int gameId)
         {
@@ -73,6 +85,12 @@ namespace WizardIslandRestApi.Controllers
             return NotFound("Game does not exist");
         }
 
+        enum ActionPacketType
+        {
+            Move = 0,
+            Spell = 1,
+        }
+
         [HttpPost("/{gameId}")]
         public ActionResult<string> DoAction(int gameId, PlayerSendDataPacket data)
         {
@@ -99,7 +117,16 @@ namespace WizardIslandRestApi.Controllers
 
                 lock (game)
                 {
-                    game.Players[data.PlayerId].TargetPos = JsonSerializer.Deserialize<Vector2>(extraData);
+                    switch (packetType)
+                    {
+                        case (int)ActionPacketType.Move:
+                            game.Players[data.PlayerId].TargetPos = JsonSerializer.Deserialize<Vector2>(extraData);
+                            break;
+                        case (int)ActionPacketType.Spell:
+                            break;
+                        //default:
+                        //    return BadRequest("Action not available");
+                    }
                     return Ok();
                 }
             }

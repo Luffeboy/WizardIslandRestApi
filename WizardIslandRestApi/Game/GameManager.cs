@@ -46,7 +46,10 @@
         }
         public void DeleteGame(int gameId)
         {
-            
+            lock (_games)
+            {
+                _games.Remove(gameId);
+            }
         }
     }
 }
