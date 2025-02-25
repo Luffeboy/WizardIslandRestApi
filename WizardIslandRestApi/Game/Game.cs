@@ -38,8 +38,11 @@
                 {
                     LobbyUpdate();
                     GameTick++;
+                    if (GameTick >= 4000)
+                        CurrentState = GameState.Ended; // temp
                 }
                 SleepBetweenUpdates();
+
             }
             while (CurrentState == GameState.Started)
             {
