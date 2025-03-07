@@ -4,7 +4,7 @@
     {
         public Vector2 Size { get; } = new Vector2(1000, 1000);
         public Vector2 GroundMiddle { get; private set; }
-        public float CircleRadius { get; } = 100; // radius of ground
+        public float CircleRadius { get; } = 50; // radius of ground
         public float CircleInnerRadius { get; } = 10; // hole in the middle
         public Map()
         {

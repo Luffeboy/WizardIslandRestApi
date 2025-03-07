@@ -15,6 +15,7 @@
 
         public IEnumerable<int> GetAvailableGames()
         {
+            //Console.WriteLine("All games: " + _games.Values.Count + "Available games: " + _games.Values.Where(g => g.CanJoin).Select(g => g.Id).Count());
             return _games.Values.Where(g => g.CanJoin).Select(g => g.Id);
         }
         public Game? GetGame(int gameId)
@@ -35,15 +36,15 @@
                 return id;
             }
         }
-        public Player JoinGame(int gameId)
-        {
-            if (!_games.ContainsKey(gameId))
-                return null;
-            lock (_games[gameId]) 
-            {
-                return _games[gameId].AddPlayer();
-            }
-        }
+        //public Player JoinGame(int gameId)
+        //{
+        //    if (!_games.ContainsKey(gameId))
+        //        return null;
+        //    lock (_games[gameId]) 
+        //    {
+        //        return _games[gameId].AddPlayer();
+        //    }
+        //}
         public void DeleteGame(int gameId)
         {
             lock (_games)

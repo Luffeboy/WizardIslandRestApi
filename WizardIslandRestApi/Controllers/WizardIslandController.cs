@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using WizardIslandRestApi.Game;
+using WizardIslandRestApi.Game.Spells;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 namespace WizardIslandRestApi.Controllers
@@ -35,26 +36,58 @@ namespace WizardIslandRestApi.Controllers
             return Ok();
         }
         [HttpPost("/Join/{gameId}")]
-        public ActionResult<string> JoinGame(int gameId)
+        public ActionResult<string> JoinGame(int gameId, [FromBody] List<int> spells)
         {
+            // remove douplicate spells
+            for (int i = 0; i < spells.Count; i++)
+                for (int j = i+1; j < spells.Count; j++)
+                {
+                    if (spells[i] == spells[j])
+                    {
+                        spells.RemoveAt(j);
+                        j--;
+                    }
+                }
+            // check none of the spells are above the amount of spells we have
+            int maxSpells = Spell.GetSpells().Length;
+            for (int i = 0; i < spells.Count; i++)
+                if (spells[i] < 0 || spells[i] >= maxSpells)
+                    return BadRequest("Those spells don't exist");
+            // cast spells indicies to ints
+            //int[] spells = new int[spellsAsStrings.Count];
             var game = _gameManager.GetGame(gameId);
             if (game == null)
                 return NotFound("Game does not exist");
-            lock(game)
+            // not enough spells
+            int allowedSpellCount = game.AllowedSpellCount;
+            if (spells.Count < allowedSpellCount)
+                return BadRequest("Select  more spells (" + game.AllowedSpellCount + " spells)");
+            // too many spells, we just cut a few off
+            if (spells.Count > allowedSpellCount)
             {
-                Player p = game.AddPlayer();
+                int[] temp = new int[allowedSpellCount];
+                for (int i = 0; i < allowedSpellCount; i++)
+                    temp[i] = spells[i];
+                spells = temp.ToList();
+            }
+            lock (game)
+            {
+                Player? p = game.AddPlayer(spells.ToArray());
+                if (p == null)
+                    return BadRequest("Game has allready started!");
                 return Ok(new { 
                     Id = p.Id, 
                     Password = p.Password,
                     Map = game.GameMap,
+                    YourSpells = spells,
                 });
             }
         }
 
         [HttpGet("/AvailableGames")]
-        public ActionResult<IEnumerable<int>> Get()
+        public ActionResult<string> Get()
         {
-            return Ok(_gameManager.GetAvailableGames());
+            return Ok(new { Games = _gameManager.GetAvailableGames(), AvailableSpells = Spell.GetSpells().Select(spell => spell.Name) });
         }
         [HttpGet("/{gameId}")]
         public ActionResult<string> GetGameInfo(int gameId, [FromHeader] int playerId, [FromHeader] string password, [FromHeader] int gameTick)
@@ -73,7 +106,8 @@ namespace WizardIslandRestApi.Controllers
                             return Ok(new 
                             {
                                 GameTick = game.GameTick,
-                                players = PlayerMinimum.Copy(game.Players.Values)
+                                Players = PlayerMinimum.Copy(game.Players.Values.Where(p => !p.IsDead)),
+                                Entities = game.Entities.Select(e => new { e.Pos, e.Size, e.Color }),
                             });
                         }
                     }
@@ -113,7 +147,7 @@ namespace WizardIslandRestApi.Controllers
                 int packetType = int.Parse(packetTypeAsString);
                 string extraData = data.ExtraData.Substring(index);
                 // for packet inspection
-                // Console.WriteLine("Action: " + packetTypeAsString + "\ndata: " + extraData);
+                //Console.WriteLine("Action: " + packetTypeAsString + "\ndata: " + extraData);
 
                 lock (game)
                 {
@@ -123,6 +157,8 @@ namespace WizardIslandRestApi.Controllers
                             game.Players[data.PlayerId].TargetPos = JsonSerializer.Deserialize<Vector2>(extraData);
                             break;
                         case (int)ActionPacketType.Spell:
+                            SpellData spellData = JsonSerializer.Deserialize<SpellData>(extraData);
+                            game.Players[data.PlayerId].CastSpell(spellData.spellIndex, spellData.mousePos);
                             break;
                         //default:
                         //    return BadRequest("Action not available");
@@ -134,11 +170,17 @@ namespace WizardIslandRestApi.Controllers
             return NotFound();
         }
 
-        public class PlayerSendDataPacket()
+        public class PlayerSendDataPacket
         {
             public int PlayerId { get; set; }
             public string Password { get; set; }
             public string ExtraData { get; set; }
+        }
+
+        private class SpellData
+        {
+            public int spellIndex { get; set; }
+            public Vector2 mousePos { get; set; }
         }
     }
 }
