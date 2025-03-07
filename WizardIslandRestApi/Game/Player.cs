@@ -7,7 +7,7 @@ namespace WizardIslandRestApi.Game
     {
         public float Speed { get; set; } = 1f / Game._updatesPerSecond;
         public float MaxSpeed { get { return Speed * Game._updatesPerSecond; } }
-        public float SlowDownSpeed { get { return Speed / 5; } }
+        public float SlowDownSpeed { get { return Speed / 3; } }
         public int Health { get; set; }
         public int MaxHealth { get; set; } = 100;
 
@@ -56,7 +56,7 @@ namespace WizardIslandRestApi.Game
         }
         public void CastSpell(int spellIndex, Vector2 mousePos)
         {
-            if (spellIndex < 0 || spellIndex >= MySpells.Length || !MySpells[spellIndex].CanCast)
+            if (IsDead || spellIndex < 0 || spellIndex >= MySpells.Length || !MySpells[spellIndex].CanCast)
                 return;
             MySpells[spellIndex].OnCast(mousePos);
         }
@@ -66,11 +66,14 @@ namespace WizardIslandRestApi.Game
             TicksTillAlive = -1;
             Stats.Health = Stats.MaxHealth;
             Vel = new Vector2();
+            // ready spells
+            for (int i = 0; i < MySpells.Length; i++)
+                MySpells[i].CurrentCooldown = 0;
             //get random spawn on the map
             Random r = new Random();
             float angle = (float)(r.NextDouble() * Math.PI * 2);
             var map = GetMap();
-            float distance = (float)(r.NextDouble() * (map.CircleRadius - map.CircleInnerRadius));
+            float distance = (float)(r.NextDouble() * (map.CircleRadius - map.CircleInnerRadius)) + map.CircleInnerRadius;
             Pos = map.GroundMiddle + new Vector2(MathF.Cos(angle) * distance, MathF.Sin(angle) * distance);
             TargetPos = Pos;
         }
@@ -140,6 +143,8 @@ namespace WizardIslandRestApi.Game
         }
         public void TakeDamage(float dmg, Player player = null)
         {
+            if (IsDead)
+                return;
             if (player != null)
                 LastHitByPlayer = player;
             Stats.Health -= (int)(dmg * GetGame().GlobalDamageMultiplier);
@@ -148,6 +153,7 @@ namespace WizardIslandRestApi.Game
         }
         private void Die()
         {
+            ScoreStats.Deaths++;
             if (LastHitByPlayer != null)
             {
                 LastHitByPlayer.ScoreStats.Kills++;
@@ -163,6 +169,9 @@ namespace WizardIslandRestApi.Game
         public float Size { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
+        public int Kills { get; set; }
+        public int Deaths { get; set; }
+        public bool IsDead { get; set; }
         public PlayerMinimum(Player player) 
         {
             Id = player.Id;
@@ -170,6 +179,9 @@ namespace WizardIslandRestApi.Game
             Pos = player.Pos;
             Health = player.Stats.Health;
             MaxHealth = player.Stats.MaxHealth;
+            Kills = player.ScoreStats.Kills;
+            Deaths = player.ScoreStats.Deaths;
+            IsDead = player.IsDead;
         }
 
         public static IEnumerable<PlayerMinimum> Copy(IEnumerable<Player> players)

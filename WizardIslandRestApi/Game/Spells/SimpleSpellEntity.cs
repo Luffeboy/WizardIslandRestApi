@@ -19,7 +19,7 @@
         public override bool OnCollision(Player other)
         {
             other.TakeDamage(Damage, MyCollider.Owner);
-            other.ApplyKnockback((other.Pos - Pos).Normalized(), Knockback);
+            other.ApplyKnockback((other.Pos - MyCollider.PreviousPos).Normalized(), Knockback);
 
             return true;
         }

@@ -4,7 +4,7 @@
     {
         public virtual string Name { get { return GetType().Name; } }
         protected abstract int CooldownMax { get; set; }
-        protected int CurrentCooldown { get; set; }
+        public int CurrentCooldown { get; set; }
         public bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
         public Player MyPlayer { get; private set; }
         // static stuff

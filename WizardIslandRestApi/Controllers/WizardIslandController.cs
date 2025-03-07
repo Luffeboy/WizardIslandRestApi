@@ -75,11 +75,13 @@ namespace WizardIslandRestApi.Controllers
                 Player? p = game.AddPlayer(spells.ToArray());
                 if (p == null)
                     return BadRequest("Game has allready started!");
-                return Ok(new { 
-                    Id = p.Id, 
+                return Ok(new
+                {
+                    Id = p.Id,
                     Password = p.Password,
                     Map = game.GameMap,
                     YourSpells = spells,
+                    GameDuration = WizardIslandRestApi.Game.Game._gameDuration
                 });
             }
         }
@@ -106,7 +108,7 @@ namespace WizardIslandRestApi.Controllers
                             return Ok(new 
                             {
                                 GameTick = game.GameTick,
-                                Players = PlayerMinimum.Copy(game.Players.Values.Where(p => !p.IsDead)),
+                                Players = PlayerMinimum.Copy(game.Players.Values),
                                 Entities = game.Entities.Select(e => new { e.Pos, e.Size, e.Color }),
                             });
                         }

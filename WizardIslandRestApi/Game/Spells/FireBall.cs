@@ -18,7 +18,7 @@
             {
                 Pos = MyPlayer.Pos + dir * (MyPlayer.Size + size + .1f),
                 Dir = dir,
-                Speed = 1,
+                Speed = 2f,
                 Color = "255, 0, 0",
                 Size = size,
                 TicksUntilDeletion = 90,
