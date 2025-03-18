@@ -21,6 +21,11 @@
         {
             return x * other.x + y * other.y;
         }
+
+        public Vector2 Normal()
+        {
+            return new Vector2(-y, x);
+        }
         public void Normalize()
         {
             if (x == 0 && y == 0)
@@ -47,6 +52,20 @@
         public override string ToString()
         {
             return "x: " + x + ", y: " + y;
+        }
+
+        public static Vector2 Lerp(Vector2 startPoint, Vector2 endPoint, float t)
+        {
+            return startPoint + (endPoint - startPoint) * t;
+        }
+        public static Vector2 CalculatePointOnSpline(Vector2 startPoint, Vector2 endPoint, Vector2 controlPoint, float t)
+        {
+            // Bézier curve formula
+            float oneMinusT = 1 - t;
+            float x = (oneMinusT * oneMinusT) * startPoint.x + 2 * oneMinusT * t * controlPoint.x + (t * t) * endPoint.x;
+            float y = (oneMinusT * oneMinusT) * startPoint.y + 2 * oneMinusT * t * controlPoint.y + (t * t) * endPoint.y;
+
+            return new Vector2(x, y);
         }
     }
 }

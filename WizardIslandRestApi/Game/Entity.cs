@@ -3,13 +3,13 @@ namespace WizardIslandRestApi.Game
 {
     public abstract class Entity : IUpdateable
     {
+        private float _size;
         public Vector2 Pos { get; set; } = new Vector2();
         public string Color { get; set; } = "0, 0, 0";
-        public float Size { get; set; } = 1.0f;
-        public Collider MyCollider { get; } = new Collider();
+        public float Size { get { return _size; } set { _size = value; MyCollider.Size = _size; } }
+        public Collider MyCollider { get; } = new Collider(); // may be null :)
         public Entity(Player owner)
         {
-            MyCollider.Size = Size;
             MyCollider.Owner = owner;
         }
 

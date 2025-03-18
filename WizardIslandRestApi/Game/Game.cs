@@ -9,7 +9,7 @@
     public class Game
     {
         public const float LavaDamage = 1.0f;
-        public int AllowedSpellCount { get; private set; } = 1;
+        public int AllowedSpellCount { get; private set; } = 3;
         public const int _updatesPerSecond = 30;
         private const int _gameMaxLengthMs = 5 * 60 * 1000; // 5 min
         //                               ms     fps
@@ -96,24 +96,29 @@
                     continue;
                 }
                 // check collision with players
-                for (int j = 0; j < Players.Count; j++)
-                {
-                    if (!Players[j].IsDead && Entities[i].MyCollider.CheckCollision(Players[j].MyCollider))
+                if (Entities[i].MyCollider != null)
+                    for (int j = 0; j < Players.Count; j++)
                     {
-                        if (Entities[i].OnCollision(Players[j]))
+                        if (!Players[j].IsDead && Entities[i].MyCollider.CheckCollision(Players[j].MyCollider))
                         {
-                            Entities.RemoveAt(i);
-                            i--;
-                            break;
+                            if (Entities[i].OnCollision(Players[j]))
+                            {
+                                Entities.RemoveAt(i);
+                                i--;
+                                break;
+                            }
                         }
                     }
-                }
             }
             // check for entity collisions, with each other
             for (int i = 0; i < Entities.Count; i++)
             {
+                if (Entities[i].MyCollider == null)
+                    continue;
                 for (int j = i+1; j < Entities.Count; j++)
                 {
+                    if (Entities[j].MyCollider == null)
+                        continue;
                     if (Entities[i].MyCollider.CheckCollision(Entities[j].MyCollider))
                     {
                         bool deleteFirst = Entities[i].OnCollision(Entities[j]);
@@ -142,6 +147,13 @@
         {
             CurrentState = GameState.Ended;
             GameManager.Instance.DeleteGame(Id);
+        }
+
+        public Player? GetPlayer(int id, string password)
+        {
+            if (id < 0 || id >= Players.Count || Players[id].Password != password)
+                return null;
+            return Players[id];
         }
 
 

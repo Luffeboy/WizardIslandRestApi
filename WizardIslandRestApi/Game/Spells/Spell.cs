@@ -1,9 +1,11 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿using WizardIslandRestApi.Game.Spells.Movement;
+
+namespace WizardIslandRestApi.Game.Spells
 {
     public abstract class Spell
     {
         public virtual string Name { get { return GetType().Name; } }
-        protected abstract int CooldownMax { get; set; }
+        public abstract int CooldownMax { get; protected set; }
         public int CurrentCooldown { get; set; }
         public bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
         public Player MyPlayer { get; private set; }
@@ -11,6 +13,10 @@
         private static Func<Player, Spell>[] _availableSpells = new Func<Player, Spell>[]
         {
             (player) => new FireBall(player),
+            (player) => new FireBurst(player),
+            (player) => new CrescentMoon(player),
+            (player) => new Blink(player),
+            (player) => new BullCharge(player),
         };
         public static Spell GetSpell(Player player, int index)
         {

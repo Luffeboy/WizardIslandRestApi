@@ -1,5 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Physics;
 using WizardIslandRestApi.Game.Spells;
+using WizardIslandRestApi.Game.Spells.Debuffs;
 
 namespace WizardIslandRestApi.Game
 {
@@ -38,6 +39,7 @@ namespace WizardIslandRestApi.Game
         public bool IsDead { get { return TicksTillAlive > 0; } }
 
         Spell[] Spells;
+        List<DebuffBase> Debuffs = new List<DebuffBase>();
         public Player(int id, Game game, int[] spells)
         {
             Id = id;
@@ -66,6 +68,8 @@ namespace WizardIslandRestApi.Game
             TicksTillAlive = -1;
             Stats.Health = Stats.MaxHealth;
             Vel = new Vector2();
+            // remove debuffs
+            ClearDebuffs();
             // ready spells
             for (int i = 0; i < MySpells.Length; i++)
                 MySpells[i].CurrentCooldown = 0;
@@ -97,6 +101,7 @@ namespace WizardIslandRestApi.Game
                     Reset();
                 return;
             }
+            UpdateDebuffs();
             // update velocity
             // slow down a little
             Vector2 velNormalized = Vel.Normalized();
@@ -137,6 +142,42 @@ namespace WizardIslandRestApi.Game
             }
         }
 
+        public void ApplyDebuff(DebuffBase debuff)
+        {
+            // remove old instance of debuff
+            for (int i = 0; i < Debuffs.Count; i++) 
+            {
+                if (debuff.GetType().Name == Debuffs[i].GetType().Name)
+                {
+                    Debuffs[i].OnRemove();
+                    Debuffs.RemoveAt(i);
+                    break;
+                }
+            }
+            debuff.OnApply();
+            Debuffs.Add(debuff);
+        }
+        public void ClearDebuffs()
+        {
+            while (Debuffs.Count > 0)
+            {
+                Debuffs[Debuffs.Count - 1].OnRemove();
+                Debuffs.RemoveAt(Debuffs.Count - 1);
+            }
+        }
+        private void UpdateDebuffs()
+        {
+            for (int i = 0; i < Debuffs.Count; i++)
+            {
+                if (Debuffs[i].Update())
+                {
+                    Debuffs[i].OnRemove();
+                    Debuffs.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
         public void ApplyKnockback(Vector2 dir, float amount)
         {
             Vel += dir * amount;
@@ -161,7 +202,25 @@ namespace WizardIslandRestApi.Game
             }
             TicksTillAlive = 5 * Game._updatesPerSecond;
         }
+        public SpellCooldown[] GetSpellCooldowns()
+        {
+            SpellCooldown[] spells = new SpellCooldown[MySpells.Length];
+            for (int i = 0; i < spells.Length; i++)
+                spells[i] = new SpellCooldown()
+                {
+                    CooldownRemaining = MySpells[i].CurrentCooldown - _game.GameTick,
+                    CooldownMax = MySpells[i].CooldownMax
+                };
+            return spells;
+        }
     }
+
+    public class SpellCooldown
+    {
+        public int CooldownRemaining { get; set; }
+        public int CooldownMax { get; set; }
+    }
+
     public class PlayerMinimum
     {
         public int Id { get; set; }

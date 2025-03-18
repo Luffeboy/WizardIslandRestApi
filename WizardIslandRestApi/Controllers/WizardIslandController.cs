@@ -97,6 +97,9 @@ namespace WizardIslandRestApi.Controllers
             var game = _gameManager.GetGame(gameId);
             if (game == null)
                 return NotFound("Game does not exist");
+            var player = game.GetPlayer(playerId, password);
+            if (player == null)
+                return NotFound("player does not exist");
             try
             {
                 while (true)
@@ -110,6 +113,7 @@ namespace WizardIslandRestApi.Controllers
                                 GameTick = game.GameTick,
                                 Players = PlayerMinimum.Copy(game.Players.Values),
                                 Entities = game.Entities.Select(e => new { e.Pos, e.Size, e.Color }),
+                                YourSpells = player.GetSpellCooldowns()
                             });
                         }
                     }
