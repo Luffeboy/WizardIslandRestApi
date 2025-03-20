@@ -14,7 +14,7 @@ namespace WizardIslandRestApi.Game.Spells
         }
         public override void OnCast(Vector2 mousePos)
         {
-            float size = .5f;
+            float size = 1.0f;
             Vector2 endPos = mousePos;
             Vector2 dir = mousePos - MyPlayer.Pos;
             if (dir.LengthSqr() > _rangeMax * _rangeMax)
