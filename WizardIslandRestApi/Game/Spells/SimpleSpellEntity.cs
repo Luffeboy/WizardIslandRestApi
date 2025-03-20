@@ -6,11 +6,21 @@
         {
         }
 
+        private int _ticksUntilDeletion;
+        private int _ticksUntilDeletionMax;
         public Vector2 Dir { get; set; }
         public float Speed { get; set; }
         public float Damage { get; set; }
         public float Knockback { get; set; }
-        public int TicksUntilDeletion { get; set; }
+        public int TicksUntilDeletion
+        {
+            get { return _ticksUntilDeletion; }
+            set
+            {
+                _ticksUntilDeletionMax = value;
+                _ticksUntilDeletion = _ticksUntilDeletionMax - 1;
+            }
+        }
         public override bool OnCollision(Entity other)
         {
             return true;
@@ -18,6 +28,8 @@
 
         public override bool OnCollision(Player other)
         {
+            if (_ticksUntilDeletionMax - _ticksUntilDeletion < 5 && other == MyCollider.Owner)
+                return false;
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
 
@@ -27,9 +39,9 @@
         public override bool Update()
         {
             Pos += Dir * Speed;
-            TicksUntilDeletion--;
+            _ticksUntilDeletion--;
             MyCollider.Pos = Pos;
-            return TicksUntilDeletion <= 0;
+            return _ticksUntilDeletion <= 0;
         }
     }
 }
