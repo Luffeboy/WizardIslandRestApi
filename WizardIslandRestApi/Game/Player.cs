@@ -186,7 +186,7 @@ namespace WizardIslandRestApi.Game
         {
             if (IsDead)
                 return;
-            if (player != null)
+            if (player != null && player != this)
                 LastHitByPlayer = player;
             Stats.Health -= (int)(dmg * GetGame().GlobalDamageMultiplier);
             if (Stats.Health <= 0)
