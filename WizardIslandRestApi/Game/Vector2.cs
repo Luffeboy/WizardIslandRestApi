@@ -48,6 +48,8 @@
             => new Vector2(a.x - b.x, a.y - b.y);
         public static Vector2 operator *(Vector2 a, float b)
             => new Vector2(a.x * b, a.y * b);
+        public static Vector2 operator /(Vector2 a, float b)
+            => new Vector2(a.x / b, a.y / b);
 
         public override string ToString()
         {

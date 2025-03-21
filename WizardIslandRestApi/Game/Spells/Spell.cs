@@ -2,6 +2,11 @@
 
 namespace WizardIslandRestApi.Game.Spells
 {
+    public enum SpellType
+    {
+        Attack,
+        Movement,
+    }
     public abstract class Spell
     {
         public virtual string Name { get { return GetType().Name; } }
@@ -9,6 +14,7 @@ namespace WizardIslandRestApi.Game.Spells
         public int CurrentCooldown { get; set; }
         public bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
         public Player MyPlayer { get; private set; }
+        public virtual SpellType Type { get; set; } = SpellType.Attack;
         // static stuff
         private static Func<Player, Spell>[] _availableSpells = new Func<Player, Spell>[]
         {
@@ -16,6 +22,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new FireBurst(player),
             (player) => new CrescentMoon(player),
             (player) => new HomingBolt(player),
+            (player) => new Meteor(player),
             (player) => new Blink(player),
             (player) => new BullCharge(player),
         };

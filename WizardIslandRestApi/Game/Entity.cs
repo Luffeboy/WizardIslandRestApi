@@ -5,10 +5,10 @@ namespace WizardIslandRestApi.Game
     {
         private float _size;
         private Vector2 _pos;
-        public Vector2 Pos { get { return _pos; } set { _pos = value; MyCollider.Pos = value; } }
+        public Vector2 Pos { get { return _pos; } set { _pos = value; if (MyCollider != null) MyCollider.Pos = value; } }
         public string Color { get; set; } = "0, 0, 0";
-        public float Size { get { return _size; } set { _size = value; MyCollider.Size = _size; } }
-        public Collider MyCollider { get; } = new Collider(); // may be null :)
+        public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
+        public Collider MyCollider { get; protected set; } = new Collider(); // may be null :)
         public bool Visable { get; set; } = true;
         public Entity(Player owner)
         {

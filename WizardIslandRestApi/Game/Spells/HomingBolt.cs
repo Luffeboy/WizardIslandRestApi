@@ -6,7 +6,7 @@ namespace WizardIslandRestApi.Game.Spells
         public override string Name { get { return "Homing bolt"; } }
         private float _damage = 5;
         private float _knockback = 1.5f;
-        public override int CooldownMax { get; protected set; } = (int)(1.5f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
         public HomingBolt(Player player) : base(player)
         {
         }
@@ -85,8 +85,12 @@ namespace WizardIslandRestApi.Game.Spells
         {
             Player p = _game.Players[0];
             float closestDist = (pos - _game.Players[0].Pos).LengthSqr();
+            if (p.IsDead) // we would prefere not to fly towards a dead person
+                closestDist = float.MaxValue;
             for (int i = 1; i < _game.Players.Count; i++)
             {
+                if (_game.Players[i].IsDead)
+                    continue;
                 float dst = (pos - _game.Players[i].Pos).LengthSqr();
                 if (dst < closestDist)
                 {

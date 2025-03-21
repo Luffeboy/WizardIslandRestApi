@@ -5,6 +5,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     public class BullCharge : Spell
     {
         public override string Name { get { return "Bull-charge"; } }
+        public override SpellType Type { get; set; } = SpellType.Movement;
         private float _damage = 5;
         private float _knockback = 1.5f;
         private float _range = 30.0f;
