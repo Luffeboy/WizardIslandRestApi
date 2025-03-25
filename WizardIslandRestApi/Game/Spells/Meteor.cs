@@ -73,7 +73,7 @@ namespace WizardIslandRestApi.Game.Spells
         {
             if (FallTime < -3)
                 return true;
-            if (FallTime <= 0)
+            if (FallTime <= 0 && MyCollider == null)
             {
                 MyCollider = new Physics.Collider() { Owner = _player, Pos = Pos, Size = Size };
                 MyCollider.Pos = Pos; // to update prevpos, if used for something for some reason

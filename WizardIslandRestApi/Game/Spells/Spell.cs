@@ -23,6 +23,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new CrescentMoon(player),
             (player) => new HomingBolt(player),
             (player) => new Meteor(player),
+            (player) => new BlackHole(player),
             (player) => new Blink(player),
             (player) => new BullCharge(player),
         };
