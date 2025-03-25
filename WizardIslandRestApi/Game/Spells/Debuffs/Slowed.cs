@@ -1,25 +1,25 @@
 ﻿namespace WizardIslandRestApi.Game.Spells.Debuffs
 {
-    public class Shackled : DebuffBase
+    public class Slowed : DebuffBase
     {
-        public float _playerSpeedBefore;
+        public float SpeedMultiplier { get; set; }
         public int TicksTillRemoval { get; set; }
-        public Shackled(Player player) : base(player)
+        public Slowed(Player player) : base(player)
         {
         }
+
         public override void OnApply()
         {
-            _playerSpeedBefore = _player.Stats.Speed;
-            _player.Stats.Speed = 0;
+            _player.Stats.SpeedMultiplier = SpeedMultiplier;
         }
+
         public override void OnRemove()
         {
-            _player.Stats.Speed = _playerSpeedBefore;
+            _player.Stats.SpeedMultiplier = 1.0f;
         }
 
         public override bool Update()
         {
-            _player.Vel = new Vector2(0, 0);
             TicksTillRemoval--;
             return TicksTillRemoval < 0;
         }

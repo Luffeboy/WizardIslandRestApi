@@ -6,7 +6,10 @@ namespace WizardIslandRestApi.Game
 {
     public class PlayerStats
     {
-        public float Speed { get; set; } = 1f / Game._updatesPerSecond;
+        private float _speed = 1f / Game._updatesPerSecond;
+        private float _speedMultiplier = 1f;
+        public float Speed { get { return _speed * SpeedMultiplier; } set { _speed = value; } }
+        public float SpeedMultiplier { get { return _speedMultiplier; } set { _speedMultiplier = value; } }
         public float MaxSpeed { get { return Speed * Game._updatesPerSecond; } }
         public float SlowDownSpeed { get { return Speed / 3; } }
         public int Health { get; set; }
