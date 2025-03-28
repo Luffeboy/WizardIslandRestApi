@@ -28,7 +28,7 @@ namespace WizardIslandRestApi.Game.Spells
     }
     public class BlackHoleEntity : Entity
     {
-        private const float _gravitationalConstant = 5.0f;
+        private const float _gravitationalConstant = 10.0f;
         private Game _game;
         private int _TicksUntilDeletionMax;
         private int _TicksUntilDeletion;

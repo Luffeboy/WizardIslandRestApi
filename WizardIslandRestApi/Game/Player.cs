@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Physics;
+﻿using System.Drawing;
+using WizardIslandRestApi.Game.Physics;
 using WizardIslandRestApi.Game.Spells;
 using WizardIslandRestApi.Game.Spells.Debuffs;
 
@@ -6,7 +7,8 @@ namespace WizardIslandRestApi.Game
 {
     public class PlayerStats
     {
-        private float _speed = 1f / Game._updatesPerSecond;
+        public const float DefaultSpeed = 1f / Game._updatesPerSecond;
+        private float _speed = DefaultSpeed;
         private float _speedMultiplier = 1f;
         public float Speed { get { return _speed * SpeedMultiplier; } set { _speed = value; } }
         public float SpeedMultiplier { get { return _speedMultiplier; } set { _speedMultiplier = value; } }
@@ -33,6 +35,8 @@ namespace WizardIslandRestApi.Game
         public Vector2 Pos { get; set; }
         public Vector2 Vel {  get; set; }
         public float Size { get; set; } = 1.0f;
+        public string UserName { get; set; } = "Nameless";
+        public string Color { get; set; } = "255, 0, 0";
         public PlayerStats Stats { get; set; } = new PlayerStats();
         public PlayerScoreStats ScoreStats { get; set; } = new PlayerScoreStats();
         public Player? LastHitByPlayer { get; set; } = null; // the player that last hit this player
@@ -234,6 +238,8 @@ namespace WizardIslandRestApi.Game
         public int Kills { get; set; }
         public int Deaths { get; set; }
         public bool IsDead { get; set; }
+        public string Name { get; set; }
+        public string Color { get; set; }
         public PlayerMinimum(Player player) 
         {
             Id = player.Id;
@@ -244,6 +250,8 @@ namespace WizardIslandRestApi.Game
             Kills = player.ScoreStats.Kills;
             Deaths = player.ScoreStats.Deaths;
             IsDead = player.IsDead;
+            Name = player.UserName;
+            Color = player.Color;
         }
 
         public static IEnumerable<PlayerMinimum> Copy(IEnumerable<Player> players)

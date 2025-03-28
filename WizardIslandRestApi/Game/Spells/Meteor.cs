@@ -9,17 +9,16 @@ namespace WizardIslandRestApi.Game.Spells
         private float _damage = 5;
         private float _knockbackMin = 1.3f;
         private float _knockbackMax = 2.5f;
-        private int _fallTime = (int)(1.0f * Game._updatesPerSecond);
+        private int _fallTime = (int)(.5f * Game._updatesPerSecond);
         public Meteor(Player player) : base(player)
         {
         }
         public override void OnCast(Vector2 mousePos)
         {
             var dir = (mousePos - MyPlayer.Pos).Normalized();
-            float size = 2.5f;
-            GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer)
+            float size = 3.5f;
+            GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos)
             {
-                Pos = mousePos,
                 Color = "50, 50, 50",
                 Size = size,
                 FallTime = _fallTime,
@@ -32,16 +31,19 @@ namespace WizardIslandRestApi.Game.Spells
     }
     public class MeteorEntity : Entity
     {
+        private Vector2 _pos;
         public float Damage { get; set; }
         public float KnockbackMin { get; set; }
         public float KnockbackMax { get; set; }
         public int FallTime { get; set; }
         List<Player> _hitPlayers = new List<Player>();
         private Player _player;
-        public MeteorEntity(Player owner) : base(owner)
+        public MeteorEntity(Player owner, Vector2 pos) : base(owner)
         {
             _player = owner;
             MyCollider = null;
+            _pos = pos;
+            Pos = pos;
         }
 
         public override bool OnCollision(Entity other)
@@ -73,6 +75,7 @@ namespace WizardIslandRestApi.Game.Spells
         {
             if (FallTime < -3)
                 return true;
+            Pos = _pos;
             if (FallTime <= 0 && MyCollider == null)
             {
                 MyCollider = new Physics.Collider() { Owner = _player, Pos = Pos, Size = Size };

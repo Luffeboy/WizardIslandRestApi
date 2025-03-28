@@ -20,8 +20,7 @@
 
         public override bool Update()
         {
-            TicksTillRemoval--;
-            return TicksTillRemoval < 0;
+            return --TicksTillRemoval < 0;
         }
     }
 }

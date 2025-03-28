@@ -36,8 +36,9 @@ namespace WizardIslandRestApi.Controllers
             return Ok();
         }
         [HttpPost("/Join/{gameId}")]
-        public ActionResult<string> JoinGame(int gameId, [FromBody] List<int> spells)
+        public ActionResult<string> JoinGame(int gameId, [FromBody] PlayerCusomizationData playerCusomizationData)
         {
+            var spells = playerCusomizationData.Spells;
             // remove douplicate spells
             for (int i = 0; i < spells.Count; i++)
                 for (int j = i+1; j < spells.Count; j++)
@@ -70,11 +71,31 @@ namespace WizardIslandRestApi.Controllers
                     temp[i] = spells[i];
                 spells = temp.ToList();
             }
+            // check the color
+            string col = playerCusomizationData.Color;
+
+            if (!string.IsNullOrEmpty(col))
+            {
+                col = col.Replace(" ", "");
+                var colValues = col.Split(',');
+                if (colValues.Length == 3 && int.TryParse(colValues[0], out int value) && int.TryParse(colValues[1], out int value1) && int.TryParse(colValues[2], out int value2))
+                {
+                    if (value < 0 || value > 255 || value1 < 0 || value1 > 255 || value2 < 0 || value2 > 255)
+                        col = "255,0,0";
+                    else col = value + "," + value1 + "," + value2;
+                }
+                else col = "255,0,0";
+            }
+            else col = "255,0,0";
             lock (game)
             {
                 Player? p = game.AddPlayer(spells.ToArray());
                 if (p == null)
                     return BadRequest("Game has allready started!");
+                p.UserName = string.IsNullOrEmpty(playerCusomizationData.Name) ? "Nameless" : playerCusomizationData.Name;
+                if (p.UserName.Length > 16)
+                    p.UserName = p.UserName.Substring(0, 16);
+                p.Color = col;
                 return Ok(new
                 {
                     Id = p.Id,
@@ -187,6 +208,12 @@ namespace WizardIslandRestApi.Controllers
         {
             public int spellIndex { get; set; }
             public Vector2 mousePos { get; set; }
+        }
+        public class PlayerCusomizationData
+        {
+            public List<int> Spells { get; set; }
+            public string Name { get; set; }
+            public string Color { get; set; }
         }
     }
 }

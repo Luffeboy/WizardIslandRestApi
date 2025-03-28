@@ -21,10 +21,10 @@ namespace WizardIslandRestApi.Game.Spells
             }
             if (len > _range)
                 len = _range;
-            GetCurrentGame().Entities.Add(new FrostFieldEntity(MyPlayer)
+            Vector2 pos = MyPlayer.Pos + dir * len;
+            GetCurrentGame().Entities.Add(new FrostFieldEntity(MyPlayer, pos)
             {
                 Color = "100, 255, 100",
-                Pos = MyPlayer.Pos + dir * len,
                 Size = 5,
                 TicksUntilDeletion = 4 * Game._updatesPerSecond
             });
@@ -33,9 +33,12 @@ namespace WizardIslandRestApi.Game.Spells
     }
     public class FrostFieldEntity : Entity
     {
+        private Vector2 _pos;
         public int TicksUntilDeletion { get; set; }
-        public FrostFieldEntity(Player owner) : base(owner)
+        public FrostFieldEntity(Player owner, Vector2 pos) : base(owner)
         {
+            _pos = pos;
+            Pos = pos;
         }
 
         public override bool OnCollision(Entity other)
@@ -51,6 +54,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool Update()
         {
+            Pos = _pos;
             TicksUntilDeletion--;
             return TicksUntilDeletion < 0;
         }
