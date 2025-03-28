@@ -27,6 +27,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new FrostField(player),
             (player) => new Blink(player),
             (player) => new BullCharge(player),
+            (player) => new Swap(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
