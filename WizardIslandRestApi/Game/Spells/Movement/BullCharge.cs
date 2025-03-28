@@ -29,7 +29,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
                 StartPos = MyPlayer.Pos,
                 EndPos = MyPlayer.Pos + dir,
                 Knockback = _knockback,
-                Damage = _damage
+                Damage = _damage,
+                Color = "0,0,0"
             });
             GoOnCooldown();
         }
@@ -75,6 +76,10 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             Vector2 pos = Vector2.Lerp(StartPos, EndPos, t);
             MyCollider.Pos = pos;
             MyCollider.Owner.Pos = pos;
+            if (_ticksUntilDeletion > _ticksUntilDeletionMax-1)
+            {
+                Size *= 3;
+            }
             return _ticksUntilDeletion > _ticksUntilDeletionMax;
         }
     }

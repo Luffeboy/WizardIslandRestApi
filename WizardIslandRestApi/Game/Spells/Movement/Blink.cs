@@ -2,8 +2,6 @@
 {
     public class Blink : Spell
     {
-        private float _damage = 5;
-        private float _knockback = 1.5f;
         private float _range = 50.0f;
         public override SpellType Type { get; set; } = SpellType.Movement;
         public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;

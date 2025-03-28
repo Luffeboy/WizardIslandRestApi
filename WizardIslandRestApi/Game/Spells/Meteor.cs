@@ -5,10 +5,10 @@ namespace WizardIslandRestApi.Game.Spells
     public class Meteor : Spell
     {
         public override string Name { get { return "Meteor"; } }
-        public override int CooldownMax { get; protected set; } = (int)(8.0f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
         private float _damage = 5;
-        private float _knockbackMin = 1.3f;
-        private float _knockbackMax = 2.5f;
+        private float _knockbackMin = 2.5f;
+        private float _knockbackMax = 3.5f;
         private int _fallTime = (int)(.5f * Game._updatesPerSecond);
         public Meteor(Player player) : base(player)
         {
@@ -16,7 +16,7 @@ namespace WizardIslandRestApi.Game.Spells
         public override void OnCast(Vector2 mousePos)
         {
             var dir = (mousePos - MyPlayer.Pos).Normalized();
-            float size = 3.5f;
+            float size = 4.37f;
             GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos)
             {
                 Color = "50, 50, 50",
@@ -44,6 +44,7 @@ namespace WizardIslandRestApi.Game.Spells
             MyCollider = null;
             _pos = pos;
             Pos = pos;
+            Height = EntityHeight.Ground;
         }
 
         public override bool OnCollision(Entity other)
@@ -81,6 +82,7 @@ namespace WizardIslandRestApi.Game.Spells
                 MyCollider = new Physics.Collider() { Owner = _player, Pos = Pos, Size = Size };
                 MyCollider.Pos = Pos; // to update prevpos, if used for something for some reason
                 Color = "255, 0, 0";
+                Height = EntityHeight.Normal;
             }
             FallTime--;
             return false;

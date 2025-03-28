@@ -66,7 +66,7 @@ namespace WizardIslandRestApi.Game.Spells
             //
             foreach (Entity e in _game.Entities)
             {
-                if (e == this)
+                if (e == this || e.Height == EntityHeight.Ground)
                     continue;
                 Vector2 dir = Pos - e.Pos;
                 float amount = dir.LengthSqr();

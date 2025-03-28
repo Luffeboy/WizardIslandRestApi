@@ -39,6 +39,7 @@ namespace WizardIslandRestApi.Game.Spells
         {
             _pos = pos;
             Pos = pos;
+            Height = EntityHeight.Ground;
         }
 
         public override bool OnCollision(Entity other)

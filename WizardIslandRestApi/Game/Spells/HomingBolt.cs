@@ -31,7 +31,7 @@ namespace WizardIslandRestApi.Game.Spells
         public float Knockback { get; set; }
         public float Speed { get; set; }
         public int TicksUntilDeletion { get { return _ticksUntilDeletion; } set { _ticksUntilDeletion = value; _ticksUntilDeletionMax = value; } }
-        private float _rotationSpeed = .1f;
+        private float _rotationSpeed = .075f;
         private Player CurrentTarget { get; set; }
         private int _ticksUntilDeletion;
         private int _ticksUntilDeletionMax;
@@ -45,11 +45,6 @@ namespace WizardIslandRestApi.Game.Spells
             _angle = GetAngleToTarget();
             Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
             Pos += dir * Speed * 2;
-        }
-
-        public override bool OnCollision(Entity other)
-        {
-            return true;
         }
 
         public override bool OnCollision(Player other)

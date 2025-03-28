@@ -1,10 +1,16 @@
 ﻿using WizardIslandRestApi.Game.Physics;
 namespace WizardIslandRestApi.Game
 {
+    public enum EntityHeight
+    {
+        Normal,
+        Ground
+    }
     public abstract class Entity : IUpdateable
     {
         private float _size;
         private Vector2 _pos;
+        public EntityHeight Height {  get; protected set; } = EntityHeight.Normal;
         public Vector2 Pos { get { return _pos; } set { _pos = value; if (MyCollider != null) MyCollider.Pos = value; } }
         public string Color { get; set; } = "0, 0, 0";
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
@@ -25,7 +31,10 @@ namespace WizardIslandRestApi.Game
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public abstract bool OnCollision(Entity other);
+        public virtual bool OnCollision(Entity other)
+        {
+            return other.Height != EntityHeight.Ground;
+        }
         /// <summary>
         /// returns true, if this entity should be deleted
         /// </summary>

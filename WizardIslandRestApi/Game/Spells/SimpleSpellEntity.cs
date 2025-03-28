@@ -21,10 +21,10 @@
                 _ticksUntilDeletion = _ticksUntilDeletionMax - 1;
             }
         }
-        public override bool OnCollision(Entity other)
-        {
-            return true;
-        }
+        //public override bool OnCollision(Entity other)
+        //{
+        //    return true;
+        //}
 
         public override bool OnCollision(Player other)
         {
