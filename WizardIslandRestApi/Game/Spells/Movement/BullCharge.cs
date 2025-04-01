@@ -82,5 +82,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             }
             return _ticksUntilDeletion > _ticksUntilDeletionMax;
         }
+
+        public override void ReTarget(Vector2 pos)
+        {
+        }
     }
 }

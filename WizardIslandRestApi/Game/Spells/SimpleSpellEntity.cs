@@ -25,6 +25,11 @@
         //{
         //    return true;
         //}
+        public override void ReTarget(Vector2 pos)
+        {
+            _ticksUntilDeletion = _ticksUntilDeletionMax;
+            Dir = (pos - Pos).Normalized();
+        }
 
         public override bool OnCollision(Player other)
         {

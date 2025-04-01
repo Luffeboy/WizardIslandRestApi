@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game
+﻿using WizardIslandRestApi.Game.Events;
+
+namespace WizardIslandRestApi.Game
 {
     public enum GameState
     {
@@ -6,10 +8,16 @@
         Started,
         Ended
     }
+    public class GameModifier
+    {
+        public float KnockbackMultiplier { get; set; } = 1;
+        public float DamageMultiplier { get; set; } = 1;
+        public float CooldownMultiplier { get; set; } = 1;
+    }
     public class Game
     {
         public const float LavaDamage = 1.0f;
-        public int AllowedSpellCount { get; private set; } = 3;
+        public int AllowedSpellCount { get; private set; } = 5;
         public const int _updatesPerSecond = 30;
         private const int _gameMaxLengthMs = 5 * 60 * 1000; // 5 min
         //                               ms     fps
@@ -21,6 +29,11 @@
         private DateTime _gameWillEnd;
 
         public Map GameMap { get; } = new Map();
+        // event stuff
+        public EventBase CurrentEvent { get; private set; }
+        public int TicksTillNextEventMax { get; private set; } = _updatesPerSecond * 10;
+        public int TicksTillNextEvent { get; private set; }
+
         public int Id { get; private set; } // game id, for the GameManager
         private int _nextPlayerId;
         public int GameTick { get; private set; } = 0;
@@ -29,12 +42,16 @@
         public bool CanJoin { get { return CurrentState == GameState.Joinable; } }
         public GameState CurrentState { get; private set; }
         public float GlobalDamageMultiplier { get; private set; } = 0.0f;
+        public GameModifier GameModifiers { get; private set; } = new GameModifier();
 
         public Game(int id) 
         {
             Id = id;
             _gameCreated = DateTime.Now;
             CurrentState = GameState.Joinable;
+            CurrentEvent = new NoEvent(this);
+            TicksTillNextEvent = TicksTillNextEventMax;
+            GameModifiers.DamageMultiplier = 0;
         }
         public void GameLoop()
         {
@@ -56,7 +73,14 @@
             {
                 lock (this)
                 {
+                    // check if it is time for a new event
+                    TicksTillNextEvent--;
+                    if (TicksTillNextEvent < 0)
+                        SelectNewEvent();
+
+                    CurrentEvent.EarlyUpdate();
                     Update();
+                    CurrentEvent.LateUpdate();
                     GameTick++;
                     if (GameTick >= _gameDuration * 60)
                         CurrentState = GameState.Ended;
@@ -140,7 +164,8 @@
             {
                 Players[i].Reset();
             }
-            GlobalDamageMultiplier = 1;
+            GameModifiers.DamageMultiplier = 1;
+            SelectNewEvent();
         }
 
         public void EndGame()
@@ -160,6 +185,15 @@
         private void SleepBetweenUpdates()
         {
             Thread.Sleep(_sleepTimeMs);
+        }
+
+        public void SelectNewEvent()
+        {
+            CurrentEvent.End();
+            // todo
+            // select a new event at random
+            CurrentEvent.Start();
+            TicksTillNextEvent = TicksTillNextEventMax;
         }
     }
 }

@@ -87,5 +87,6 @@ namespace WizardIslandRestApi.Game.Spells
             FallTime--;
             return false;
         }
+        public override void ReTarget(Vector2 pos) { }
     }
 }

@@ -17,6 +17,10 @@ namespace WizardIslandRestApi.Game
         public int Health { get; set; }
         public int MaxHealth { get; set; } = 100;
 
+        public float CooldownMultiplier { get; set; } = 1;
+        public float KnockbackMultiplier { get; set; } = 1;
+        public float DamageMultiplier { get; set; } = 1;
+
     }
     public class PlayerScoreStats
     {
@@ -171,6 +175,8 @@ namespace WizardIslandRestApi.Game
                 Debuffs[Debuffs.Count - 1].OnRemove();
                 Debuffs.RemoveAt(Debuffs.Count - 1);
             }
+            Stats.Speed = PlayerStats.DefaultSpeed;
+            Stats.SpeedMultiplier = 1.0f;
         }
         private void UpdateDebuffs()
         {
@@ -187,7 +193,7 @@ namespace WizardIslandRestApi.Game
 
         public void ApplyKnockback(Vector2 dir, float amount)
         {
-            Vel += dir * amount;
+            Vel += dir * amount * GetGame().GameModifiers.KnockbackMultiplier * Stats.KnockbackMultiplier;
         }
         public void TakeDamage(float dmg, Player player = null)
         {
@@ -195,7 +201,7 @@ namespace WizardIslandRestApi.Game
                 return;
             if (player != null && player != this)
                 LastHitByPlayer = player;
-            Stats.Health -= (int)(dmg * GetGame().GlobalDamageMultiplier);
+            Stats.Health -= (int)(dmg * GetGame().GameModifiers.DamageMultiplier * Stats.DamageMultiplier);
             if (Stats.Health <= 0)
                 Die();
         }

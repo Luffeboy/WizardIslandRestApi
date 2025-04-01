@@ -11,17 +11,19 @@
         public override void OnCast(Vector2 mousePos)
         {
             var dir = (mousePos - MyPlayer.Pos).Normalized();
-            GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, 90)
+            int ticksUntillDeletion = 30; 
+            GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, ticksUntillDeletion)
             {
                 Dir = dir,
-                Speed = 2
+                Speed = 4,
+                Color = "0, 0, 0"
             });
             GoOnCooldown();
         }
     }
     public class SwapEntity : CantHitOwnerAtStartSpellEntity
     {
-        public override int TicksUntillCanHitOwner { get; set; } = 10;
+        public override int TicksUntillCanHitOwner { get; set; } = 30;
         public Vector2 Dir {  get; set; }
         public float Speed { get; set; }
 
@@ -64,6 +66,10 @@
                 return true;
             }
             return false;
+        }
+        public override void ReTarget(Vector2 pos)
+        {
+            Dir = (pos - Pos).Normalized();
         }
     }
 }

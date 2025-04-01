@@ -1,10 +1,10 @@
 ﻿namespace WizardIslandRestApi.Game.Spells.Debuffs
 {
-    public class Slowed : DebuffBase
+    public class SpeedBuff : DebuffBase
     {
         public float SpeedMultiplier { get; set; }
         public int TicksTillRemoval { get; set; }
-        public Slowed(Player player) : base(player)
+        public SpeedBuff(Player player) : base(player)
         {
         }
 

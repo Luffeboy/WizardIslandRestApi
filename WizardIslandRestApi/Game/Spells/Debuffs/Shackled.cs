@@ -10,11 +10,11 @@
         public override void OnApply()
         {
             //_playerSpeedBefore = _player.Stats.Speed;
-            _player.Stats.Speed = 0;
+            _player.Stats.SpeedMultiplier *= .0001f;
         }
         public override void OnRemove()
         {
-            _player.Stats.Speed = PlayerStats.DefaultSpeed;
+            _player.Stats.SpeedMultiplier /= .0001f;
         }
 
         public override bool Update()

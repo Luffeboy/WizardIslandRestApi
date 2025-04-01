@@ -59,5 +59,6 @@ namespace WizardIslandRestApi.Game.Spells
             TicksUntilDeletion--;
             return TicksUntilDeletion < 0;
         }
+        public override void ReTarget(Vector2 pos) { }
     }
 }

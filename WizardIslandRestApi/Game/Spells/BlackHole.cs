@@ -39,6 +39,11 @@ namespace WizardIslandRestApi.Game.Spells
         {
             _game = game;
         }
+        public override void ReTarget(Vector2 pos)
+        {
+            _TicksUntilDeletion = _TicksUntilDeletionMax;
+            Dir = (pos - Pos).Normalized();
+        }
 
         public override bool OnCollision(Entity other)
         {

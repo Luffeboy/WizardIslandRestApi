@@ -41,7 +41,11 @@ namespace WizardIslandRestApi.Game.Spells
         {
             _game = game;
             Pos = startPos;
-            CurrentTarget = FindClosestPlayer(mousePos);
+            ReTarget(mousePos);
+        }
+        public override void ReTarget(Vector2 pos)
+        {
+            CurrentTarget = FindClosestPlayer(pos);
             _angle = GetAngleToTarget();
             Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
             Pos += dir * Speed * 2;

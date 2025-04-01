@@ -21,6 +21,8 @@ namespace WizardIslandRestApi.Game
             MyCollider.Owner = owner;
         }
 
+        public abstract void ReTarget(Vector2 pos);
+
         /// <summary>
         /// returns true, if this entity should be deleted
         /// </summary>

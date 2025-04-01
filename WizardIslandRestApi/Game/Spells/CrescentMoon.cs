@@ -51,6 +51,16 @@ namespace WizardIslandRestApi.Game.Spells
             var normal = diff.Normal();
             ControlPoint += normal;
         }
+        public override void ReTarget(Vector2 pos)
+        {
+            StartPos = Pos;
+            EndPos = pos;
+            var diff = EndPos - StartPos;
+            ControlPoint = StartPos + diff * .5f;
+            var normal = diff.Normal();
+            ControlPoint += normal;
+            _ticksUntilDeletion = _ticksUntilDeletionMax - 1;
+        }
         private int _ticksUntilDeletion;
         private int _ticksUntilDeletionMax;
         public Vector2 StartPos { get; set; }

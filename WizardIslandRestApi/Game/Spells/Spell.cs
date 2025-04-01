@@ -27,6 +27,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new FrostField(player),
             (player) => new Blink(player),
             (player) => new BullCharge(player),
+            (player) => new Sprint(player),
             (player) => new Swap(player),
         };
         public static Spell GetSpell(Player player, int index)
@@ -52,7 +53,7 @@ namespace WizardIslandRestApi.Game.Spells
         public abstract void OnCast(Vector2 mousePos);
         public void GoOnCooldown()
         {
-            CurrentCooldown = GetCurrentGameTick() + CooldownMax;
+            CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
         }
     }
 }
