@@ -15,6 +15,7 @@
             (game) => new NoEvent(game),
             (game) => new FireStormEvent(game),
             (game) => new RisingTideEvent(game),
+            (game) => new UltraRapidFire(game),
         };
         public static EventBase GetRandomEvent(Game game)
         {
