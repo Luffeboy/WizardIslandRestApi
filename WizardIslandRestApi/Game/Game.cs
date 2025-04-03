@@ -190,8 +190,7 @@ namespace WizardIslandRestApi.Game
         public void SelectNewEvent()
         {
             CurrentEvent.End();
-            // todo
-            // select a new event at random
+            CurrentEvent = EventBase.GetRandomEvent(this);
             CurrentEvent.Start();
             TicksTillNextEvent = TicksTillNextEventMax;
         }

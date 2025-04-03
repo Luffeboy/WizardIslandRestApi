@@ -11,12 +11,14 @@
         public override void OnCast(Vector2 mousePos)
         {
             var dir = (mousePos - MyPlayer.Pos).Normalized();
-            int ticksUntillDeletion = 30; 
+            int ticksUntillDeletion = 10; 
             GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, ticksUntillDeletion)
             {
+                Pos = MyPlayer.Pos,
                 Dir = dir,
                 Speed = 4,
-                Color = "0, 0, 0"
+                Color = "0, 0, 0",
+                Size = 0.5f
             });
             GoOnCooldown();
         }

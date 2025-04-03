@@ -5,6 +5,7 @@
         float _prevCooldownMultiplier;
         public UltraRapidFire(Game game) : base(game)
         {
+            Name = "Ultra Rapid Fire";
         }
 
         public override void EarlyUpdate()
