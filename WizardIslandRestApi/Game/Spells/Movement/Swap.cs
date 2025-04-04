@@ -4,7 +4,7 @@
     {
         private float _range = 50.0f;
         public override SpellType Type { get; set; } = SpellType.Movement;
-        public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = 8 * Game._updatesPerSecond;
         public Swap(Player player) : base(player)
         {
         }
@@ -18,7 +18,7 @@
                 Dir = dir,
                 Speed = 4,
                 Color = "0, 0, 0",
-                Size = 0.5f
+                Size = 1.0f
             });
             GoOnCooldown();
         }

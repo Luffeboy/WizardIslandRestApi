@@ -9,18 +9,19 @@
             _game = game;
         }
         private static Random _random = new Random();
-        private static int ___temp = 0;
         private static Func<Game, EventBase>[] _gameFunc = new Func<Game, EventBase>[]
         {
             (game) => new NoEvent(game),
             (game) => new FireStormEvent(game),
             (game) => new RisingTideEvent(game),
             (game) => new UltraRapidFire(game),
+            (game) => new WinterEvent(game),
         };
+        //private static int ___temp = 0;
         public static EventBase GetRandomEvent(Game game)
         {
-            return _gameFunc[(++___temp) % _gameFunc.Length](game);
-            //return _gameFunc[_random.Next(_gameFunc.Length)](game);
+            //return _gameFunc[(++___temp) % _gameFunc.Length](game);
+            return _gameFunc[_random.Next(_gameFunc.Length)](game);
         }
 
         /// <summary>

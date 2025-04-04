@@ -14,7 +14,7 @@
 
         public override bool OnCollision(Player other)
         {
-            if (_ticksUntilDeletionMax - _ticksUntilDeletion < 5 && other == MyCollider.Owner)
+            if (_ticksUntilDeletionMax - _ticksUntilDeletion < TicksUntillCanHitOwner && other == MyCollider.Owner)
                 return false;
             return HitPlayer(other);
         }

@@ -4,7 +4,7 @@
     {
         public NoEvent(Game game) : base(game)
         {
-            Name = "No event currently";
+            Name = "Calmness";
         }
 
         public override void EarlyUpdate()

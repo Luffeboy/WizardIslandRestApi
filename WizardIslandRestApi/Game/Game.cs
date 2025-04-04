@@ -74,15 +74,15 @@ namespace WizardIslandRestApi.Game
                 lock (this)
                 {
                     // check if it is time for a new event
-                    TicksTillNextEvent--;
-                    if (TicksTillNextEvent < 0)
+                    if (--TicksTillNextEvent < 0)
                         SelectNewEvent();
 
                     CurrentEvent.EarlyUpdate();
                     Update();
                     CurrentEvent.LateUpdate();
                     GameTick++;
-                    if (GameTick >= _gameDuration * 60)
+                    // end game
+                    if (GameTick > _gameDuration)
                         CurrentState = GameState.Ended;
                 }
                 SleepBetweenUpdates();

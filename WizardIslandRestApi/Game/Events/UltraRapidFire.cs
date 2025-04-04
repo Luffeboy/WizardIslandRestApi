@@ -24,7 +24,7 @@
         public override void Start()
         {
             _prevCooldownMultiplier = _game.GameModifiers.CooldownMultiplier;
-            _game.GameModifiers.CooldownMultiplier = .25f;
+            _game.GameModifiers.CooldownMultiplier = .5f;
         }
     }
 }
