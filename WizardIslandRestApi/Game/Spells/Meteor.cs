@@ -6,7 +6,7 @@ namespace WizardIslandRestApi.Game.Spells
     {
         public override string Name { get { return "Meteor"; } }
         public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
-        private float _damage = 5;
+        private float _damage = 15;
         private float _knockbackMin = 2.5f;
         private float _knockbackMax = 3.5f;
         private int _fallTime = (int)(.5f * Game._updatesPerSecond);

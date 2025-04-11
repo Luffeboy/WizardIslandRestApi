@@ -3,6 +3,7 @@
     public abstract class EventBase
     {
         public string Name { get; set; } = "No event name...";
+        
         protected Game _game;
         public EventBase(Game game)
         {
@@ -16,6 +17,7 @@
             (game) => new RisingTideEvent(game),
             (game) => new UltraRapidFire(game),
             (game) => new WinterEvent(game),
+            (game) => new BackToBasicsEvent(game),
         };
         //private static int ___temp = 0;
         public static EventBase GetRandomEvent(Game game)

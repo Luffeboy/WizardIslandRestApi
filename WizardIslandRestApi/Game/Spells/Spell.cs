@@ -26,6 +26,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BlackHole(player),
             (player) => new FrostField(player),
             (player) => new CirclingSnake(player),
+            (player) => new Barrel(player),
             (player) => new Blink(player),
             (player) => new BullCharge(player),
             (player) => new Sprint(player),

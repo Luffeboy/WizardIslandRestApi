@@ -31,7 +31,7 @@ namespace WizardIslandRestApi.Game
         public Map GameMap { get; } = new Map();
         // event stuff
         public EventBase CurrentEvent { get; private set; }
-        public int TicksTillNextEventMax { get; private set; } = _updatesPerSecond * 10;
+        public int TicksTillNextEventMax { get; private set; } = 30 * _updatesPerSecond;
         public int TicksTillNextEvent { get; private set; }
 
         public int Id { get; private set; } // game id, for the GameManager

@@ -86,7 +86,7 @@ namespace WizardIslandRestApi.Game.Spells
             // create snake body
             if (_snakePartsToCreate > 0 && TickTillSnakePartCreation > _ticksUntilDeletionMax - _ticksUntilDeletion)
             {
-                _game.Entities.Add(new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, _snakePartsToCreate - 1, this)
+                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, _snakePartsToCreate - 1, this)
                 {
                     Pos = Pos,
                     Speed = Speed,
@@ -96,7 +96,8 @@ namespace WizardIslandRestApi.Game.Spells
                     Knockback = Knockback,
                     Target = Target,
                     CirclingDistance = CirclingDistance,
-                });
+                };
+                _game.Entities.Add(_child);
                 _snakePartsToCreate = 0;
             }
             // move snake

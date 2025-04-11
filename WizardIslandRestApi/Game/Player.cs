@@ -226,6 +226,9 @@ namespace WizardIslandRestApi.Game
                 };
             return spells;
         }
+
+        public Spell[] GetSpells() { return Spells; }
+        public void SetSpells(Spell[] spells) { Spells = spells; }
     }
 
     public class SpellCooldown
