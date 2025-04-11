@@ -22,8 +22,7 @@ namespace WizardIslandRestApi.Game
         private const int _gameMaxLengthMs = 5 * 60 * 1000; // 5 min
         //                               ms     fps
         private const int _sleepTimeMs = 1000 / _updatesPerSecond; // does not account for update time
-        //public const int _gameDuration = 5 * 60 * _updatesPerSecond;
-        public const int _gameDuration = 5 * _updatesPerSecond;
+        public const int _gameDuration = 5 * 60 * _updatesPerSecond;
         // unused, maybe...
         private DateTime _gameCreated;
         private DateTime _gameStarted;
