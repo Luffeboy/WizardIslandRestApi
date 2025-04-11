@@ -52,12 +52,14 @@ namespace WizardIslandRestApi.Game.Spells
         public override int TicksUntillCanHitOwner { get; set; } = 20;
         public float Damage { get; set; }
         public float Knockback { get; set; }
-        public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, int snakePartsToCreate = 5, CirclingSnakePart? parent = null) : base(owner, ticksUntilDeletion)
+        private List<Player> _hitPlayers;
+        public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<Player> hitPlayers = null) : base(owner, ticksUntilDeletion)
         {
             _parent = parent;
             _snakePartsToCreate = snakePartsToCreate;
             _ticksUntilDeletionMax = ticksUntilDeletion;
             _game = game;
+            _hitPlayers = (hitPlayers == null) ? new List<Player>() : hitPlayers;
         }
 
 
@@ -135,8 +137,12 @@ namespace WizardIslandRestApi.Game.Spells
 
         protected override bool HitPlayer(Player other)
         {
-            other.TakeDamage(Damage, MyCollider.Owner);
-            other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
+            if (!_hitPlayers.Contains(other))
+            {
+                other.TakeDamage(Damage, MyCollider.Owner);
+                other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
+                _hitPlayers.Add(other);
+            }
             if (_child != null)
                 _child._parent = _parent;
             return true;
