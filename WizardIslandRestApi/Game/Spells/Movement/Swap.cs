@@ -50,8 +50,8 @@
         protected override bool HitPlayer(Player other)
         {
             Vector2 pos = other.Pos;
-            other.Pos = MyCollider.Owner.Pos;
-            MyCollider.Owner.Pos = pos;
+            other.TeleportTo(MyCollider.Owner.Pos);
+            MyCollider.Owner.TeleportTo(pos);
 
             Vector2 vel = other.Vel;
             other.Vel = MyCollider.Owner.Vel;
@@ -63,8 +63,8 @@
             if (base.OnCollision(other))
             {
                 Vector2 pos = other.Pos;
-                other.Pos = MyCollider.Owner.Pos;
-                MyCollider.Owner.Pos = pos;
+                other.TeleportTo(MyCollider.Owner.Pos);
+                MyCollider.Owner.TeleportTo(pos);
                 return true;
             }
             return false;

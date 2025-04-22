@@ -20,6 +20,11 @@ namespace WizardIslandRestApi.Game
         {
             MyCollider.Owner = owner;
         }
+        public void TeleportTo(Vector2 pos)
+        {
+            Pos = pos;
+            Pos = pos; // also set the previous pos
+        }
 
         public abstract void ReTarget(Vector2 pos);
 

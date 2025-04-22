@@ -52,6 +52,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool OnCollision(Player other)
         {
+            other.TakeDamage(0, MyCollider.Owner);
             return false;
         }
 
@@ -59,7 +60,7 @@ namespace WizardIslandRestApi.Game.Spells
         {
             // move all players and entities towards it self
             // F = (G * m1 * m2) / d^2
-            float minAmount = .1f;
+            float minAmount = 1.0f;
             foreach (Player p in _game.Players.Values)
             {
                 Vector2 dir = Pos - p.Pos;

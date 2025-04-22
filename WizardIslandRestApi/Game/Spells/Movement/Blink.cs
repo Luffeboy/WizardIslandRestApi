@@ -15,7 +15,7 @@
             {
                 dir = dir.Normalized() * _range;
             }
-            MyPlayer.Pos += dir;
+            MyPlayer.TeleportTo(MyPlayer.Pos += dir);
             MyPlayer.TargetPos = mousePos;
             
             GoOnCooldown();

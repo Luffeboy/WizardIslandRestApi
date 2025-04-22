@@ -190,6 +190,12 @@ namespace WizardIslandRestApi.Game
                 }
             }
         }
+        public void TeleportTo(Vector2 pos)
+        {
+            Pos = pos;
+            Pos = pos; // also set the previous pos
+            TargetPos = pos;
+        }
 
         public void ApplyKnockback(Vector2 dir, float amount)
         {
