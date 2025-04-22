@@ -16,6 +16,7 @@ namespace WizardIslandRestApi.Game
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
         public Collider MyCollider { get; protected set; } = new Collider(); // may be null :)
         public bool Visable { get; set; } = true;
+        public string EntityId { get; set; } = "";
         public Entity(Player owner)
         {
             MyCollider.Owner = owner;

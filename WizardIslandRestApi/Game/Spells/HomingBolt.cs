@@ -42,6 +42,7 @@ namespace WizardIslandRestApi.Game.Spells
             _game = game;
             Pos = startPos;
             ReTarget(mousePos);
+            EntityId = GetType().Name;
         }
         public override void ReTarget(Vector2 pos)
         {

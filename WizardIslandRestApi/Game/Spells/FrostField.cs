@@ -40,6 +40,7 @@ namespace WizardIslandRestApi.Game.Spells
             _pos = pos;
             Pos = pos;
             Height = EntityHeight.Ground;
+            EntityId = "FrostField";
         }
 
         public override bool OnCollision(Entity other)

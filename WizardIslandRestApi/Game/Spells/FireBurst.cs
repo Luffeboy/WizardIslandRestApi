@@ -35,6 +35,7 @@
                     TicksUntilDeletion = 90,
                     Damage = _damage,
                     Knockback = _knockback,
+                    EntityId = "FireBall",
                 });
             }
 

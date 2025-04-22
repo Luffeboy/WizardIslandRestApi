@@ -48,8 +48,7 @@ namespace WizardIslandRestApi.Game
         private Spell[] MySpells { get; set; }
         public int TicksTillAlive { get; private set; }
         public bool IsDead { get { return TicksTillAlive > 0; } }
-
-        Spell[] Spells;
+        
         List<DebuffBase> Debuffs = new List<DebuffBase>();
         public Player(int id, Game game, int[] spells)
         {
@@ -233,8 +232,8 @@ namespace WizardIslandRestApi.Game
             return spells;
         }
 
-        public Spell[] GetSpells() { return Spells; }
-        public void SetSpells(Spell[] spells) { Spells = spells; }
+        public Spell[] GetSpells() { return MySpells; }
+        public void SetSpells(Spell[] spells) { MySpells = spells; }
     }
 
     public class SpellCooldown

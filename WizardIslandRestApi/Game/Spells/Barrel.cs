@@ -47,6 +47,7 @@ namespace WizardIslandRestApi.Game.Spells
         public BarrelEntity(Player owner, Game game) : base(owner)
         {
             _game = game;
+            EntityId = "Barrel";
         }
 
         public override bool OnCollision(Player other)

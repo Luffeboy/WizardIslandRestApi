@@ -23,6 +23,7 @@
                 TicksUntilDeletion = 90,
                 Damage = _damage,
                 Knockback = _knockback,
+                EntityId = GetType().Name,
             });
             GoOnCooldown();
         }

@@ -60,6 +60,16 @@ namespace WizardIslandRestApi.Game.Spells
             _ticksUntilDeletionMax = ticksUntilDeletion;
             _game = game;
             _hitPlayers = (hitPlayers == null) ? new List<Player>() : hitPlayers;
+            GetAndSetEntityId();
+        }
+
+        public void GetAndSetEntityId()
+        {
+            if (_parent == null) 
+                EntityId = "SnakeHead";
+            else if (_child == null)
+                EntityId = "SnakeTail";
+            else EntityId = "SnakeBody";
         }
 
 
@@ -70,7 +80,15 @@ namespace WizardIslandRestApi.Game.Spells
             if (base.OnCollision(other))
             {
                 if (_child != null)
+                {
                     _child._parent = _parent;
+                    _child.GetAndSetEntityId();
+                }
+                if (_parent != null)
+                {
+                    _parent._child = _child;
+                    _parent.GetAndSetEntityId();
+                }
                 return true;
             }
             return false;
@@ -144,7 +162,15 @@ namespace WizardIslandRestApi.Game.Spells
                 _hitPlayers.Add(other);
             }
             if (_child != null)
+            {
                 _child._parent = _parent;
+                _child.GetAndSetEntityId();
+            }
+            if (_parent != null)
+            {
+                _parent._child = _child;
+                _parent.GetAndSetEntityId();
+            }
             return true;
         }
     }

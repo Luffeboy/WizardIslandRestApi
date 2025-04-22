@@ -50,6 +50,7 @@ namespace WizardIslandRestApi.Game.Spells
             ControlPoint = StartPos + diff * .5f;
             var normal = diff.Normal();
             ControlPoint += normal;
+            EntityId = "CrescentMoon";
         }
         public override void ReTarget(Vector2 pos)
         {

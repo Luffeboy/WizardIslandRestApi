@@ -32,6 +32,7 @@
         public SwapEntity(Player owner, int ticksUntilDeletion) : base(owner, ticksUntilDeletion)
         {
             Height = EntityHeight.Ground; // just so we don't destroy all the other entities
+            EntityId = "Swap";
         }
 
 

@@ -25,6 +25,7 @@ namespace WizardIslandRestApi.Game.Spells
                 Damage = _damage,
                 KnockbackMin = _knockbackMin,
                 KnockbackMax = _knockbackMax,
+                EntityId = GetType().Name,
             });
             GoOnCooldown();
         }
