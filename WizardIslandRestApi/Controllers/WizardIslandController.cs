@@ -127,6 +127,8 @@ namespace WizardIslandRestApi.Controllers
                 {
                     lock (game)
                     {
+                        if (game.CurrentState == GameState.Ended)
+                            return StatusCode(418, "The game has ended");
                         if (game.GameTick != gameTick)
                         {
                             return Ok(new 

@@ -38,7 +38,7 @@ namespace WizardIslandRestApi.Game.Spells
         public BlackHoleEntity(Player owner, Game game) : base(owner)
         {
             _game = game;
-            EntityId = "BlackHold";
+            EntityId = "BlackHole";
         }
         public override void ReTarget(Vector2 pos)
         {
