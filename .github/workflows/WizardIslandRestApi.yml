@@ -1,14 +1,18 @@
 name: Build and deploy .NET Core application to Web App WizardIslandRestApi
+
 on:
   push:
     branches:
-    - master
+      - master
+
 env:
   AZURE_WEBAPP_NAME: WizardIslandRestApi
   AZURE_WEBAPP_PACKAGE_PATH: WizardIslandRestApi\publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: WizardIslandRestApi
+  ARTIFACTS_PATH: ${{ github.workspace }}/webapp-artifacts  # New path for artifact download
+
 jobs:
   build:
     runs-on: windows-latest
@@ -27,22 +31,46 @@ jobs:
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  
   deploy:
     runs-on: windows-latest
     needs: build
     steps:
     - name: Download artifact from build job
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        path: ${{ env.ARTIFACTS_PATH }}  # Updated to use different path
+
+
+
+#    - name: Login to Azure using Service Principal
+#      uses: azure/login@v1
+#      with:
+#          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+#          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+#          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+#          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+
+    - name: Login to Azure using Service Principal
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  # Here we use the stored JSON credentials
+
+
+    
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.WizardIslandRestApi_F6AE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        package: ${{ env.ARTIFACTS_PATH }}  # Ensure it points to the correct download path
+
+
+
+
