@@ -106,7 +106,7 @@ namespace WizardIslandRestApi.Game.Spells
             // create snake body
             if (_snakePartsToCreate > 0 && TickTillSnakePartCreation > _ticksUntilDeletionMax - _ticksUntilDeletion)
             {
-                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, _snakePartsToCreate - 1, this)
+                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, _snakePartsToCreate - 1, this, _hitPlayers)
                 {
                     Pos = Pos,
                     Speed = Speed,

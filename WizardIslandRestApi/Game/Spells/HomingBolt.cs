@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 namespace WizardIslandRestApi.Game.Spells
 {
     public class HomingBolt : Spell
@@ -41,13 +42,14 @@ namespace WizardIslandRestApi.Game.Spells
         {
             _game = game;
             Pos = startPos;
+            _angle = MathF.Atan2(mousePos.y - startPos.y, mousePos.x - startPos.x);
             ReTarget(mousePos);
             EntityId = "HomingBolt";
         }
         public override void ReTarget(Vector2 pos)
         {
             CurrentTarget = FindClosestPlayer(pos);
-            _angle = GetAngleToTarget();
+            //_angle = GetAngleToTarget();
             Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
             Pos += dir * Speed * 2;
         }
@@ -71,6 +73,7 @@ namespace WizardIslandRestApi.Game.Spells
             }
             // rotate towards new angle
             var tempAngle = GetAngleToTarget();
+            ForwardAngle = tempAngle; // looks at target
             float diff = DeltaAngle(_angle, tempAngle);
             _angle += Math.Sign(diff) * Math.Min(Math.Abs(diff), _rotationSpeed);
             // move

@@ -135,7 +135,7 @@ namespace WizardIslandRestApi.Controllers
                             {
                                 GameTick = game.GameTick,
                                 Players = PlayerMinimum.Copy(game.Players.Values),
-                                Entities = game.Entities.Select(e => new { e.Pos, e.Size, e.Color, e.EntityId }),
+                                Entities = game.Entities.Where(e => e.Visable).Select(e => new { e.Pos, e.Size, e.Color, e.EntityId, angle = e.ForwardAngle }),
                                 YourSpells = player.GetSpellCooldowns(),
                                 Map = game.GameMap,
                                 Event = game.CurrentEvent
