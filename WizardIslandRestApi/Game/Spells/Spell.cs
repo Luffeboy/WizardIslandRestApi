@@ -37,6 +37,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Swap(player),
 
             (player) => new Luna(player),
+            (player) => new Stella(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
