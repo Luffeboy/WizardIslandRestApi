@@ -1,14 +1,18 @@
 name: Build and deploy .NET Core application to Web App WizardIslandRestApi
+
 on:
   push:
     branches:
-    - master
+      - master
+
 env:
   AZURE_WEBAPP_NAME: WizardIslandRestApi
   AZURE_WEBAPP_PACKAGE_PATH: WizardIslandRestApi\publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: WizardIslandRestApi
+  ARTIFACTS_PATH: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/webapp-artifacts  # New path for artifact download
+
 jobs:
   build:
     runs-on: windows-latest
@@ -31,6 +35,7 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  
   deploy:
     runs-on: windows-latest
     needs: build
@@ -39,10 +44,10 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        path: ${{ env.ARTIFACTS_PATH }}  # Updated to use different path
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.WizardIslandRestApi_F6AE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        package: ${{ env.ARTIFACTS_PATH }}  # Ensure it points to the correct download path
