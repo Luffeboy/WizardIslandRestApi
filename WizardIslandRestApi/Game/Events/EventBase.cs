@@ -29,7 +29,7 @@ namespace WizardIslandRestApi.Game.Events
             new EventAndWeight(2, (game) => new RisingTideEvent(game)),
             new EventAndWeight(1, (game) => new UltraRapidFire(game)),
             new EventAndWeight(1, (game) => new WinterEvent(game)),
-            new EventAndWeight(1, (game) => new BackToBasicsEvent(game)),
+            new EventAndWeight(0, (game) => new BackToBasicsEvent(game)),
         };
     //private static int ___temp = 0;
     public static EventBase GetRandomEvent(Game game)
