@@ -9,7 +9,7 @@
         private Vector2 _pos = new Vector2();
         public Vector2 Pos { get { return _pos; } set { PreviousPos = _pos; _pos = value;  } }
         public Vector2 PreviousPos { get; private set; }
-        public Player? Owner {  get; set; }
+        public Player Owner {  get; set; }
         public bool CheckCollision(Collider other)
         {
             // simple check

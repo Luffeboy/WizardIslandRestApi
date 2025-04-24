@@ -42,20 +42,16 @@ namespace WizardIslandRestApi.Game.Spells
         {
             _game = game;
             Pos = startPos;
+            _angle = MathF.Atan2(mousePos.y - startPos.y, mousePos.x - startPos.x);
             ReTarget(mousePos);
-            //_angle = MathF.Atan2(mousePos.y - startPos.y, mousePos.x - startPos.x);
-            //CurrentTarget = FindClosestPlayer(mousePos);
-            //Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
-            //Pos += dir * Speed * 2;
             EntityId = "HomingBolt";
         }
         public override void ReTarget(Vector2 pos)
         {
-            _angle = MathF.Atan2(pos.y - Pos.y, pos.x - Pos.x);
             CurrentTarget = FindClosestPlayer(pos);
+            //_angle = GetAngleToTarget();
             Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
             Pos += dir * Speed * 2;
-            _ticksUntilDeletion = _ticksUntilDeletionMax;
         }
 
         public override bool OnCollision(Player other)

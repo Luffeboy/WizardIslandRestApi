@@ -39,8 +39,8 @@ namespace WizardIslandRestApi.Game.Spells
         private float _angle; // circling angle
         private int _snakePartsToCreate;
         private int _ticksUntilDeletionMax;
-        public CirclingSnakePart? _parent; // body part in front
-        public CirclingSnakePart? _child; // body part in front
+        private CirclingSnakePart? _parent; // body part in front
+        private CirclingSnakePart? _child; // body part in front
         private Game _game;
         private bool _isCircling = false;
 
@@ -65,7 +65,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public void GetAndSetEntityId()
         {
-            if (_parent == null)
+            if (_parent == null) 
                 EntityId = "SnakeHead";
             else if (_child == null)
                 EntityId = "SnakeTail";
@@ -79,7 +79,16 @@ namespace WizardIslandRestApi.Game.Spells
                 return false;
             if (base.OnCollision(other))
             {
-                Died();
+                if (_child != null)
+                {
+                    _child._parent = _parent;
+                    _child.GetAndSetEntityId();
+                }
+                if (_parent != null)
+                {
+                    _parent._child = _child;
+                    _parent.GetAndSetEntityId();
+                }
                 return true;
             }
             return false;
@@ -87,16 +96,9 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override void ReTarget(Vector2 pos)
         {
-            if (_parent != null)
-                _parent.ReTarget(pos);
-            else
-            {
-                _target = pos;
-                _dir = (Target - Pos).Normalized();
-                _isCircling = false;
-                _ticksUntilDeletion = _ticksUntilDeletionMax;
-                Pos += _dir * Speed;
-            }
+            _target = pos;
+            _dir = (Target - Pos).Normalized();
+            _isCircling = false;
         }
 
         public override bool Update()
@@ -112,12 +114,11 @@ namespace WizardIslandRestApi.Game.Spells
                     Color = Color,
                     Damage = Damage,
                     Knockback = Knockback,
-                    //Target = Target,
+                    Target = Target,
                     CirclingDistance = CirclingDistance,
                 };
                 _game.Entities.Add(_child);
                 _snakePartsToCreate = 0;
-                GetAndSetEntityId();
             }
             // move snake
             if (IsHead)
@@ -148,18 +149,8 @@ namespace WizardIslandRestApi.Game.Spells
                 // not head
                 var dir = (Pos - _parent.Pos).Normalized();
                 Pos = _parent.Pos + dir * (Size + _parent.Size);
-                if (!_game.Entities.Contains(_parent))
-                {
-                    int a = 1;
-
-                }
             }
-            if (--_ticksUntilDeletion < 0)
-            {
-                Died();
-                return true;
-            }
-            return false;
+            return --_ticksUntilDeletion < 0;
         }
 
         protected override bool HitPlayer(Player other)
@@ -169,27 +160,18 @@ namespace WizardIslandRestApi.Game.Spells
                 other.TakeDamage(Damage, MyCollider.Owner);
                 other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
                 _hitPlayers.Add(other);
-                Died();
-                return true;
             }
-            //Died();
-            return false;
-        }
-
-        private void Died()
-        {
             if (_child != null)
             {
                 _child._parent = _parent;
                 _child.GetAndSetEntityId();
-                if (IsHead)
-                    _child.Target = Target;
             }
             if (_parent != null)
             {
                 _parent._child = _child;
                 _parent.GetAndSetEntityId();
             }
+            return true;
         }
     }
 }

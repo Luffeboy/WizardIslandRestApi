@@ -52,9 +52,9 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool OnCollision(Player other)
         {
-            Vector2 dir = Pos - other.MyCollider.Pos;
+            Vector2 dir = Pos - other.MyCollider.PreviousPos;
             dir.Normalize();
-            Pos = other.Pos + dir * (Size + other.Size + .1f);
+            Pos = other.Pos + dir * (Size + other.Size);
             return false;
         }
         public override bool OnCollision(Entity other)
