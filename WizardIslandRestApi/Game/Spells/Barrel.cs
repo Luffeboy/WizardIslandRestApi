@@ -9,7 +9,7 @@ namespace WizardIslandRestApi.Game.Spells
         public override string Name { get { return "Barrel"; } }
         private float _damage = 5;
         private float _knockback = 2.0f;
-        public override int CooldownMax { get; protected set; } = (int)(1.5f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
         private float _range = 30;
         public Barrel(Player player) : base(player)
         {

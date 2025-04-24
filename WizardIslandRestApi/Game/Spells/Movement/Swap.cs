@@ -57,6 +57,7 @@
             Vector2 vel = other.Vel;
             other.Vel = MyCollider.Owner.Vel;
             MyCollider.Owner.Vel = vel;
+            other.TakeDamage(0, MyCollider.Owner);
             return true;
         }
         public override bool OnCollision(Entity other)
