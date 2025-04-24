@@ -8,7 +8,7 @@ namespace WizardIslandRestApi.Game.Spells
         private float _damage = 5;
         private float _knockback = 1.5f;
         private float _rangeMax = 40;
-        public override int CooldownMax { get; protected set; } = 2 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = (int)(2.5f * Game._updatesPerSecond);
         public CrescentMoon(Player player) : base(player)
         {
         }

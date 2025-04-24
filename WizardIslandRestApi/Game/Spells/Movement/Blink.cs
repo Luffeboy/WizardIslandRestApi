@@ -4,7 +4,7 @@
     {
         private float _range = 50.0f;
         public override SpellType Type { get; set; } = SpellType.Movement;
-        public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = (int)(10 * Game._updatesPerSecond);
         public Blink(Player player) : base(player)
         {
         }

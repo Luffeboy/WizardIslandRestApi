@@ -25,7 +25,7 @@ namespace WizardIslandRestApi.Game.Spells
             GetCurrentGame().Entities.Add(new FrostFieldEntity(MyPlayer, pos)
             {
                 Color = "100, 255, 100",
-                Size = 5,
+                Size = 7,
                 TicksUntilDeletion = 4 * Game._updatesPerSecond
             });
             GoOnCooldown();

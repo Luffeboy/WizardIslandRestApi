@@ -6,7 +6,7 @@
         {
         }
 
-        public override int CooldownMax { get; protected set; } = 3 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 mousePos)
         {
@@ -19,6 +19,7 @@
                 Color = "255,255,255",
                 EntityId = "Parry",
             });
+            GoOnCooldown();
         }
     }
     public class ParryEntity : Entity

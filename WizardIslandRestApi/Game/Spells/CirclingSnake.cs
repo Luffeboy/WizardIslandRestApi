@@ -7,8 +7,8 @@ namespace WizardIslandRestApi.Game.Spells
     {
         public override string Name { get { return "Circling snake"; } }
         private float _damage = 5;
-        private float _knockback = 1.5f;
-        public override int CooldownMax { get; protected set; } = (int)(8.0f * Game._updatesPerSecond);
+        private float _knockback = 1.75f;
+        public override int CooldownMax { get; protected set; } = (int)(12.0f * Game._updatesPerSecond);
         public CirclingSnake(Player player) : base(player)
         {
         }
