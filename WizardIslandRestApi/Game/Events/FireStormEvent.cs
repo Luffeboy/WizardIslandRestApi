@@ -30,6 +30,7 @@ namespace WizardIslandRestApi.Game.Events
                     TicksUntilDeletion = 90,
                     Damage = 5,
                     Knockback = 1.5f,
+                    EntityId = "FireBall",
                 });
                 _ticksTillNextFireball = _ticksTillNextFireballMax;
             }
