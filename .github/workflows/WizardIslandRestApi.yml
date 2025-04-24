@@ -45,9 +45,15 @@ jobs:
       with:
         name: webapp
         path: ${{ env.ARTIFACTS_PATH }}  # Updated to use different path
+
+    - name: Login to Azure using Service Principal
+      uses: azure/login@v1
+      with:
+        credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.WizardIslandRestApi_F6AE }}
+        #publish-profile: ${{ secrets.WizardIslandRestApi_F6AE }}
         package: ${{ env.ARTIFACTS_PATH }}  # Ensure it points to the correct download path
