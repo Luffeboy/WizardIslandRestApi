@@ -7,7 +7,7 @@ namespace WizardIslandRestApi.Game.Spells
         public override string Name { get { return "Homing bolt"; } }
         private float _damage = 5;
         private float _knockback = 1.5f;
-        public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(7.5f * Game._updatesPerSecond);
         public HomingBolt(Player player) : base(player)
         {
         }

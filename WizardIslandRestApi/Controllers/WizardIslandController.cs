@@ -110,7 +110,13 @@ namespace WizardIslandRestApi.Controllers
         [HttpGet("/AvailableGames")]
         public ActionResult<string> Get()
         {
-            return Ok(new { Games = _gameManager.GetAvailableGames(), AvailableSpells = Spell.GetSpells().Select(spell => spell.Name) });
+            var spells = Spell.GetSpells();
+            return Ok(new
+            {
+                Games = _gameManager.GetAvailableGames(),
+                SpellTypes = Enum.GetNames(typeof(SpellType)),
+                AvailableSpells = spells.Select(spell => new { spell.Name, spell.Type, Cooldown = ((float)spell.CooldownMax / Game.Game._updatesPerSecond) })
+            });
         }
         [HttpGet("/{gameId}")]
         public ActionResult<string> GetGameInfo(int gameId, [FromHeader] int playerId, [FromHeader] string password, [FromHeader] int gameTick)

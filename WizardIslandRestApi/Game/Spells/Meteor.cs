@@ -5,7 +5,7 @@ namespace WizardIslandRestApi.Game.Spells
     public class Meteor : Spell
     {
         public override string Name { get { return "Meteor"; } }
-        public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(15.0f * Game._updatesPerSecond);
         private float _damage = 15;
         private float _knockbackMin = 2.5f;
         private float _knockbackMax = 3.5f;

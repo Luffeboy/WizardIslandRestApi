@@ -5,7 +5,7 @@
         public override string Name { get { return "Fire burst"; } }
         private float _damage = 1;
         private float _knockback = 1.1f;
-        public override int CooldownMax { get; protected set; } = 5 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = (int)(7.5f * Game._updatesPerSecond);
         public FireBurst(Player player) : base(player)
         {
         }

@@ -82,7 +82,8 @@ namespace WizardIslandRestApi.Game
             ClearDebuffs();
             // ready spells
             for (int i = 0; i < MySpells.Length; i++)
-                MySpells[i].CurrentCooldown = 0;
+                if (MySpells[i].Type != SpellType.Ultimate)
+                    MySpells[i].CurrentCooldown = 0;
             //get random spawn on the map
             Random r = new Random();
             float angle = (float)(r.NextDouble() * Math.PI * 2);

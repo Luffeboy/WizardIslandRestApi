@@ -9,7 +9,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         private float _damage = 5;
         private float _knockback = 1.5f;
         private float _range = 30.0f;
-        public override int CooldownMax { get; protected set; } = 8 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = (int)(13 * Game._updatesPerSecond);
         public BullCharge(Player player) : base(player)
         {
         }

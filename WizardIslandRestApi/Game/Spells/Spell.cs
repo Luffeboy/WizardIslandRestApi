@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Spells.Movement;
+using WizardIslandRestApi.Game.Spells.Ultimates;
 
 namespace WizardIslandRestApi.Game.Spells
 {
@@ -6,6 +7,7 @@ namespace WizardIslandRestApi.Game.Spells
     {
         Attack,
         Movement,
+        Ultimate,
     }
     public abstract class Spell
     {
@@ -28,10 +30,14 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new CirclingSnake(player),
             (player) => new Barrel(player),
             (player) => new Parry(player),
+
             (player) => new Blink(player),
             (player) => new BullCharge(player),
             (player) => new Sprint(player),
             (player) => new Swap(player),
+
+            (player) => new Luna(player),
+            (player) => new Stella(player),
         };
         public static Spell GetSpell(Player player, int index)
         {

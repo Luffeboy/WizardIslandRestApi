@@ -8,7 +8,7 @@ namespace WizardIslandRestApi.Game.Spells
         private float _damage = 5;
         private float _knockback = 1.5f;
         private float _rangeMax = 40;
-        public override int CooldownMax { get; protected set; } = 2 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = (int)(2.5f * Game._updatesPerSecond);
         public CrescentMoon(Player player) : base(player)
         {
         }
@@ -42,14 +42,16 @@ namespace WizardIslandRestApi.Game.Spells
 
     public class CrescentMoonEntity : Entity
     {
-        public CrescentMoonEntity(Player owner, Vector2 startPos, Vector2 endPos) : base(owner)
+        public float AmountToSideMultiplier { get; set; } = 1.0f;
+        public CrescentMoonEntity(Player owner, Vector2 startPos, Vector2 endPos, float amountToSideMultiplier = 1) : base(owner)
         {
             StartPos = startPos;
             EndPos = endPos;
             var diff = EndPos - StartPos;
             ControlPoint = StartPos + diff * .5f;
             var normal = diff.Normal();
-            ControlPoint += normal;
+            AmountToSideMultiplier = amountToSideMultiplier;
+            ControlPoint += normal * AmountToSideMultiplier;
             EntityId = "CrescentMoon";
         }
         public override void ReTarget(Vector2 pos)
@@ -59,7 +61,7 @@ namespace WizardIslandRestApi.Game.Spells
             var diff = EndPos - StartPos;
             ControlPoint = StartPos + diff * .5f;
             var normal = diff.Normal();
-            ControlPoint += normal;
+            ControlPoint += normal * AmountToSideMultiplier;
             _ticksUntilDeletion = _ticksUntilDeletionMax - 1;
         }
         private int _ticksUntilDeletion;
@@ -96,7 +98,7 @@ namespace WizardIslandRestApi.Game.Spells
             Pos = Vector2.CalculatePointOnSpline(StartPos, EndPos, ControlPoint, (float)(TicksUntilDeletionMax - _ticksUntilDeletion) / (float)TicksUntilDeletionMax);
             _ticksUntilDeletion--;
             MyCollider.Pos = Pos;
-            return _ticksUntilDeletion < -1;
+            return _ticksUntilDeletion < -3;
         }
     }
 }

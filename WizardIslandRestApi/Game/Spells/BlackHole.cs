@@ -5,7 +5,7 @@ namespace WizardIslandRestApi.Game.Spells
     public class BlackHole : Spell
     {
         public override string Name { get { return "Black hole"; } }
-        public override int CooldownMax { get; protected set; } = (int)(8.0f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
         public BlackHole(Player player) : base(player)
         {
         }
