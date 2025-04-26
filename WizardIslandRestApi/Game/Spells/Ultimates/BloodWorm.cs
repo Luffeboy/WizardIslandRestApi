@@ -82,8 +82,12 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 Speed = (100.0f / Game._updatesPerSecond),
             };
             if (_tail != null)
+            {
                 _tail.Child = temp;
+                _tail.EntityId = _tail.Parent == null ? "BloodWormHead" : "BloodWormBody";
+            }
             _tail = temp;
+            _tail.EntityId = "BloodWormTail";
             GetCurrentGame().Entities.Add(temp);
         }
         private void ShootWorm(Vector2 target)
@@ -232,6 +236,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             // set the child as the new head
             if (Child != null)
             {
+                Child.EntityId = "BloodWormHead";
                 Child._circlingAngle = HomingBoltEntity.GetAngleFromDirection(_dir);
                 Child.Parent = null;
             }

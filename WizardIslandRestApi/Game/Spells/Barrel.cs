@@ -62,7 +62,7 @@ namespace WizardIslandRestApi.Game.Spells
             if (!base.OnCollision(other))
                 return false;
             // create explosion
-            _game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos)
+            _game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos, _game)
             {
                 Color = "50, 50, 50",
                 Size = Size * 3,

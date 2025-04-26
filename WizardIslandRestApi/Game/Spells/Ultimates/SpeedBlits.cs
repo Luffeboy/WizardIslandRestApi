@@ -4,7 +4,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class SpeedBlits : MultiUseSpell
     {
-        private float _maxRange = 10;
+        private float _maxRange = 5;
         public override string Name => "Speed blitz";
         public SpeedBlits(Player player) : base(player)
         {
@@ -103,13 +103,13 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             if (other is SpeedBlitsEntity && !_hasSpawnedMeteor)
             {
                 _hasSpawnedMeteor = true;
-                _game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos)
+                _game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos, _game)
                 {
                     FallTime = 10,
                     Damage = Damage,
-                    KnockbackMin = Knockback,
+                    KnockbackMin = Knockback / 2,
                     KnockbackMax = Knockback,
-                    Size = 10,
+                    Size = 3,
                     Color = "100,100,0",
                     EntityId = "ElectricExplosion",
                 });

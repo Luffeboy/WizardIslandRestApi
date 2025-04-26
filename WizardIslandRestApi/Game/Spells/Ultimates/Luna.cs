@@ -50,7 +50,7 @@
             GetCurrentGame().Entities.Add(new WaitToDoSomethingEntity(ticksUntilDeletion, () => 
             {
                 // when the two cresent moons hit each other
-                GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, endPos)
+                GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, endPos, GetCurrentGame())
                 {
                     Color = "50, 50, 200",
                     FallTime = 5,
