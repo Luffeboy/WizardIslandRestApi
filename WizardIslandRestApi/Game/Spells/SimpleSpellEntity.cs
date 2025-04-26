@@ -36,7 +36,8 @@
             if (_ticksUntilDeletionMax - _ticksUntilDeletion < 5 && other == MyCollider.Owner)
                 return false;
             other.TakeDamage(Damage, MyCollider.Owner);
-            other.ApplyKnockback((other.MyCollider.Pos - MyCollider.PreviousPos).Normalized(), Knockback);
+            other.ApplyKnockback((other.MyCollider.Pos - (Pos - Dir * Speed * 5)).Normalized(), Knockback);
+            //other.ApplyKnockback((other.MyCollider.Pos - MyCollider.PreviousPos).Normalized(), Knockback);
 
             return true;
         }

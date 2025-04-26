@@ -18,13 +18,9 @@
 
         public override bool Update()
         {
-            
-            if (TicksToWait-- < 0)
-            {
+            if (--TicksToWait < 0)
                 ActionAfterWaiting();
-                return true;
-            }
-            return false;
+            return TicksToWait < 0; // in case ActionAfterWaiting changes TicksToWait, we have to check it again
         }
     }
 }

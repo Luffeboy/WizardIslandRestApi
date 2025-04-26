@@ -23,6 +23,7 @@ namespace WizardIslandRestApi.Game
             if (startPos == null) startPos = new Vector2();
             Pos = startPos.Value;
             MyCollider = new Collider(startPos.Value);
+            MyCollider.Owner = owner;
         }
         public void TeleportTo(Vector2 pos)
         {

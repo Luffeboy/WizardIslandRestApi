@@ -235,7 +235,14 @@ namespace WizardIslandRestApi.Game
         }
 
         public Spell[] GetSpells() { return MySpells; }
-        public void SetSpells(Spell[] spells) { MySpells = spells; }
+        public void SetSpells(Spell[] spells) 
+        {
+            var oldSpells = MySpells;
+            MySpells = spells;
+            for (int i = 0; i < oldSpells.Length && i < MySpells.Length; i++)
+                if (!oldSpells[i].CanBeReplaced)
+                    MySpells[i] = oldSpells[i];
+        }
     }
 
     public class SpellCooldown

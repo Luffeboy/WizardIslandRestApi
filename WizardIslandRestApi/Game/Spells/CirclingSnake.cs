@@ -60,6 +60,7 @@ namespace WizardIslandRestApi.Game.Spells
             _game = game;
             _hitPlayers = (hitPlayers == null) ? new List<Player>() : hitPlayers;
             GetAndSetEntityId();
+            ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x);
         }
 
         public void GetAndSetEntityId()
@@ -86,6 +87,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override void ReTarget(Vector2 pos)
         {
+            _ticksUntilDeletion = _ticksUntilDeletionMax;
             if (_parent != null)
                 _parent.ReTarget(pos);
             else
@@ -93,8 +95,8 @@ namespace WizardIslandRestApi.Game.Spells
                 _target = pos;
                 _dir = (Target - Pos).Normalized();
                 _isCircling = false;
-                _ticksUntilDeletion = _ticksUntilDeletionMax;
                 Pos += _dir * Speed;
+                ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x);
             }
         }
 
@@ -125,6 +127,7 @@ namespace WizardIslandRestApi.Game.Spells
                 {
                     // circling
                     _angle -= CirclingSpeed;
+                    ForwardAngle = _angle - MathF.PI * .5f;
                     Pos = Target + new Vector2(MathF.Cos(_angle), MathF.Sin(_angle)) * CirclingDistance;
                 }
                 else
@@ -147,11 +150,7 @@ namespace WizardIslandRestApi.Game.Spells
                 // not head
                 var dir = (Pos - _parent.Pos).Normalized();
                 Pos = _parent.Pos + dir * (Size + _parent.Size);
-                if (!_game.Entities.Contains(_parent))
-                {
-                    int a = 1;
-
-                }
+                ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x); // starting angle
             }
             if (--_ticksUntilDeletion < 0)
             {

@@ -17,6 +17,7 @@ namespace WizardIslandRestApi.Game.Spells
         public bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
         public Player MyPlayer { get; private set; }
         public virtual SpellType Type { get; set; } = SpellType.Attack;
+        public virtual bool CanBeReplaced { get; protected set; } = true; // set this to false, if it could "dangerous" to replace this spell currently
         // static stuff
         private static Func<Player, Spell>[] _availableSpells = new Func<Player, Spell>[]
         {
@@ -38,6 +39,7 @@ namespace WizardIslandRestApi.Game.Spells
 
             (player) => new Luna(player),
             (player) => new Stella(player),
+            (player) => new BloodWorm(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
@@ -62,7 +64,10 @@ namespace WizardIslandRestApi.Game.Spells
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
+#if DEBUG
+#else
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
+#endif
         }
     }
 }

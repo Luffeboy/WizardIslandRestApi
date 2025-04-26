@@ -109,7 +109,13 @@ namespace WizardIslandRestApi.Game.Spells
         }
         private float GetAngleToTarget()
         {
-            Vector2 dir = CurrentTarget.Pos - Pos;
+            return GetAngleFromDirection(CurrentTarget.Pos - Pos);
+            //Vector2 dir = CurrentTarget.Pos - Pos;
+            //float angle = MathF.Atan2(dir.y, dir.x);
+            //return angle;
+        }
+        public static float GetAngleFromDirection(Vector2 dir)
+        {
             float angle = MathF.Atan2(dir.y, dir.x);
             return angle;
         }
