@@ -4,9 +4,9 @@
     {
         private float _range = 50.0f;
         private float _lavaPoolSize = 15.0f;
-        private int _waitUntillPoolActivates = (int)(1.0f * Game._updatesPerSecond);
-        private int _duration = (int)(10.0f * Game._updatesPerSecond); // the actual duration is this - _waitUntillPoolActivates
-        public override int CooldownMax { get; protected set; } = 30 * Game._updatesPerSecond;
+        private int _waitUntillPoolActivates = (int)(.1f * Game._updatesPerSecond);
+        private int _duration = (int)(20.0f * Game._updatesPerSecond); // the actual duration is this - _waitUntillPoolActivates
+        public override int CooldownMax { get; protected set; } = 15 * Game._updatesPerSecond;
         public Stella(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
