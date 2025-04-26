@@ -9,13 +9,12 @@
         public FireBall(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos).Normalized();
+            var dir = (mousePos - pos).Normalized();
             float size = .5f;
-            GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer)
+            GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, pos + dir * (MyPlayer.Size + size + .1f))
             {
-                Pos = MyPlayer.Pos + dir * (MyPlayer.Size + size + .1f),
                 Dir = dir,
                 Speed = 2f,
                 Color = "255, 0, 0",

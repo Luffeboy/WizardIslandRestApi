@@ -16,7 +16,7 @@
                 _ticksUntilDeletion = _ticksUntilDeletionMax;
             }
         }
-        public LavaPoolEntity(Player owner) : base(owner)
+        public LavaPoolEntity(Player owner, Vector2 pos) : base(owner, pos)
         {
             Color = "255, 150, 0";
             Height = EntityHeight.Ground;

@@ -13,9 +13,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public BullCharge(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos);
+            var dir = (mousePos - pos);
             if (dir.LengthSqr() > _range * _range)
             {
                 dir = dir.Normalized() * _range;
@@ -24,10 +24,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             MyPlayer.Vel = new Vector2(0, 0);
             MyPlayer.ApplyDebuff(new Shackled(MyPlayer));
             MyPlayer.TargetPos = mousePos;
-            GetCurrentGame().Entities.Add(new BullChargeEntity(MyPlayer, ticksUntillDeletion) 
+            GetCurrentGame().Entities.Add(new BullChargeEntity(MyPlayer, ticksUntillDeletion, pos) 
             {
-                StartPos = MyPlayer.Pos,
-                EndPos = MyPlayer.Pos + dir,
+                EndPos = pos + dir,
                 Knockback = _knockback,
                 Damage = _damage,
                 Color = "0,0,0"
@@ -45,8 +44,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public Vector2 EndPos { get; set; }
         public float Knockback { get; set; }
         public float Damage { get; set; }
-        public BullChargeEntity(Player owner, int ticksUntilDeletion) : base(owner)
+        public BullChargeEntity(Player owner, int ticksUntilDeletion, Vector2 startPos) : base(owner, startPos)
         {
+            StartPos = startPos;
             _ticksUntilDeletion = 0;
             _ticksUntilDeletionMax = ticksUntilDeletion;
             _hasHitPlayers.Add(owner);

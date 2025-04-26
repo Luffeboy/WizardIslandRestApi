@@ -13,20 +13,20 @@
 
         public override int CooldownMax { get; protected set; } = 20 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             float size = 1.0f;
             Vector2 endPos = mousePos;
-            Vector2 dir = mousePos - MyPlayer.Pos;
+            Vector2 dir = mousePos - pos;
             if (dir.LengthSqr() > _rangeMax * _rangeMax)
             {
                 dir = dir.Normalized() * _rangeMax;
-                endPos = MyPlayer.Pos + dir;
+                endPos = pos + dir;
             }
             var ticksUntilDeletion = (int)(dir.Length() * .75f);
             dir.Normalize();
             Vector2 dirNormal = dir.Normal();
-            Vector2 startPos = MyPlayer.Pos +
+            Vector2 startPos = pos +
                                dir * (MyPlayer.Size + size + .1f) +
                                dirNormal * (MyPlayer.Size + size + .1f);
             float amountToSide = 1.0f;

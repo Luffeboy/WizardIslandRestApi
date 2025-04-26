@@ -14,12 +14,15 @@ namespace WizardIslandRestApi.Game
         public Vector2 Pos { get { return _pos; } set { _pos = value; if (MyCollider != null) MyCollider.Pos = value; } }
         public string Color { get; set; } = "0, 0, 0";
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
-        public Collider MyCollider { get; protected set; } = new Collider(); // may be null :)
+        public Collider MyCollider { get; protected set; } // may be null :)
         public bool Visable { get; set; } = true;
         public string EntityId { get; set; } = "";
         public float ForwardAngle { get; protected set; } = 0;
-        public Entity(Player owner)
+        public Entity(Player owner, Vector2? startPos = null)
         {
+            if (startPos == null) startPos = new Vector2();
+            Pos = startPos.Value;
+            MyCollider = new Collider(startPos.Value);
             MyCollider.Owner = owner;
         }
         public void TeleportTo(Vector2 pos)

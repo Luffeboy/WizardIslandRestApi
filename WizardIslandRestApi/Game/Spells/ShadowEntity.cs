@@ -15,6 +15,7 @@
         }
         public ShadowEntity(Player owner = null) : base(owner)
         {
+            MyCollider = null;
             Color = "30, 30, 30";
             Height = EntityHeight.Ground;
             EntityId = "Shadow";

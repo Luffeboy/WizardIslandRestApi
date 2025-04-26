@@ -10,13 +10,12 @@ namespace WizardIslandRestApi.Game.Spells
         {
         }
 
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            Vector2 dir = (mousePos - MyPlayer.Pos).Normalized();
+            Vector2 dir = (mousePos - pos).Normalized();
             float size = 1.5f;
-            GetCurrentGame().Entities.Add(new BlackHoleEntity(MyPlayer, GetCurrentGame())
+            GetCurrentGame().Entities.Add(new BlackHoleEntity(MyPlayer, GetCurrentGame(), pos + dir * (size + MyPlayer.Size + 1.0f))
             {
-                Pos = MyPlayer.Pos + dir * (size + MyPlayer.Size + 1.0f),
                 Color = "0, 0, 0",
                 TicksUntilDeletion = (int)(3.0f * Game._updatesPerSecond),
                 Size = size,
@@ -35,7 +34,7 @@ namespace WizardIslandRestApi.Game.Spells
         public int TicksUntilDeletion { get { return _TicksUntilDeletion; } set { _TicksUntilDeletion = value; _TicksUntilDeletionMax = value; } }
         public Vector2 Dir {  get; set; }
         public float Speed {  get; set; }
-        public BlackHoleEntity(Player owner, Game game) : base(owner)
+        public BlackHoleEntity(Player owner, Game game, Vector2 startPos) : base(owner, startPos)
         {
             _game = game;
             EntityId = "BlackHole";

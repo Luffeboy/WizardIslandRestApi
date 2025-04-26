@@ -8,13 +8,13 @@
 
         public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            Vector2 dir = (mousePos - MyPlayer.Pos).Normalized();
+            Vector2 dir = (mousePos - pos).Normalized();
             float size = 2;
             GetCurrentGame().Entities.Add(new ParryEntity(MyPlayer)
             {
-                Pos = MyPlayer.Pos + dir * (size*.5f + MyPlayer.Size),
+                Pos = pos + dir * (size*.5f + MyPlayer.Size),
                 Size = size,
                 Color = "255,255,255",
                 EntityId = "Parry",

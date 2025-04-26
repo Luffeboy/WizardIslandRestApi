@@ -20,9 +20,8 @@ namespace WizardIslandRestApi.Game.Events
             if (_ticksTillNextFireball < 0)
             {
                 float angle = (float)(_random.NextDouble() * Math.PI * 2);
-                _game.Entities.Add(new SimpleSpellEntity(null)
+                _game.Entities.Add(new SimpleSpellEntity(null, _game.GameMap.GroundMiddle)
                 {
-                    Pos = _game.GameMap.GroundMiddle,
                     Dir = new Vector2(MathF.Cos(angle), MathF.Sin(angle)),
                     Speed = 2f,
                     Color = "255, 0, 0",

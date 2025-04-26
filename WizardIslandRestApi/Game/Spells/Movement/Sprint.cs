@@ -11,7 +11,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public Sprint(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             MyPlayer.ApplyDebuff(new SpeedBuff(MyPlayer) { SpeedMultiplier = _speedMultiplier, TicksTillRemoval = Duration });
             GoOnCooldown();

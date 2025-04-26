@@ -8,13 +8,12 @@
         public Swap(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos).Normalized();
+            var dir = (mousePos - pos).Normalized();
             int ticksUntillDeletion = 10; 
-            GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, ticksUntillDeletion)
+            GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, ticksUntillDeletion, pos)
             {
-                Pos = MyPlayer.Pos,
                 Dir = dir,
                 Speed = 4,
                 Color = "0, 0, 0",
@@ -29,7 +28,7 @@
         public Vector2 Dir {  get; set; }
         public float Speed { get; set; }
 
-        public SwapEntity(Player owner, int ticksUntilDeletion) : base(owner, ticksUntilDeletion)
+        public SwapEntity(Player owner, int ticksUntilDeletion, Vector2 pos) : base(owner, ticksUntilDeletion, pos)
         {
             Height = EntityHeight.Ground; // just so we don't destroy all the other entities
             EntityId = "Swap";

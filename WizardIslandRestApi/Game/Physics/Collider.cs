@@ -10,6 +10,11 @@
         public Vector2 Pos { get { return _pos; } set { PreviousPos = _pos; _pos = value;  } }
         public Vector2 PreviousPos { get; private set; }
         public Player? Owner {  get; set; }
+        public Collider(Vector2 pos)
+        {
+            _pos = pos;
+            PreviousPos = pos;
+        }
         public bool CheckCollision(Collider other)
         {
             // simple check
@@ -20,7 +25,9 @@
             // raycast check
             // Step 1: Calculate the closest point on the line to the circle's center
             // Calculate the direction vector of the line (normalized)
-            Vector2 lineDir = (Pos - PreviousPos).Normalized();
+
+            float maxLength = (Pos - PreviousPos).Length();
+            Vector2 lineDir = (Pos - PreviousPos) / maxLength;
 
             // Find the projection of the circle's center onto the line
             // Vector from lineStart to the circle's center
@@ -28,18 +35,15 @@
 
             // Projection of circleToLineStart onto the line direction
             float projectionLength = circleToLineStart.Dot(lineDir);
-            projectionLength = Math.Max(0, Math.Min(projectionLength, (PreviousPos - Pos).Length()));
+            projectionLength = Math.Max(0, Math.Min(projectionLength, maxLength));
             // Calculate the closest point on the line
             Vector2 closestPoint = PreviousPos + lineDir * projectionLength;
 
             // Step 2: Calculate the distance between the circle's center and the closest point on the line
             float distanceToClosestPoint = (other.Pos - closestPoint).LengthSqr();
+
             // Step 3: Check if the distance is less than or equal to the circle's radius
-            if (distanceToClosestPoint < other.Size * other.Size)
-            {
-                return true;
-            }
-            return false;
+            return distanceToClosestPoint < (other.Size + Size) * (other.Size + Size);
         }
     }
 }

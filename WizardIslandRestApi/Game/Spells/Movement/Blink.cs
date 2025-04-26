@@ -8,14 +8,14 @@
         public Blink(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos);
+            var dir = (mousePos - pos);
             if (dir.LengthSqr() > _range * _range)
             {
                 dir = dir.Normalized() * _range;
             }
-            MyPlayer.TeleportTo(MyPlayer.Pos + dir);
+            MyPlayer.TeleportTo(pos + dir);
             MyPlayer.Vel = new Vector2();
             MyPlayer.TargetPos = mousePos;
             

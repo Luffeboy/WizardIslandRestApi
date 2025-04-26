@@ -12,20 +12,20 @@ namespace WizardIslandRestApi.Game.Spells
         public CrescentMoon(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             float size = 1.0f;
             Vector2 endPos = mousePos;
-            Vector2 dir = mousePos - MyPlayer.Pos;
+            Vector2 dir = mousePos - pos;
             if (dir.LengthSqr() > _rangeMax * _rangeMax)
             {
                 dir = dir.Normalized() * _rangeMax;
-                endPos = MyPlayer.Pos + dir;
+                endPos = pos + dir;
             }
             var ticksUntilDeletion = (int)(dir.Length() * .75f);
             dir.Normalize();
             Vector2 dirNormal = dir.Normal();
-            Vector2 startPos = MyPlayer.Pos + 
+            Vector2 startPos = pos + 
                                dir * (MyPlayer.Size + size + .1f) + 
                                dirNormal * (MyPlayer.Size + size + .1f);
             GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, startPos, endPos)
@@ -43,7 +43,7 @@ namespace WizardIslandRestApi.Game.Spells
     public class CrescentMoonEntity : Entity
     {
         public float AmountToSideMultiplier { get; set; } = 1.0f;
-        public CrescentMoonEntity(Player owner, Vector2 startPos, Vector2 endPos, float amountToSideMultiplier = 1) : base(owner)
+        public CrescentMoonEntity(Player owner, Vector2 startPos, Vector2 endPos, float amountToSideMultiplier = 1) : base(owner, startPos)
         {
             StartPos = startPos;
             EndPos = endPos;

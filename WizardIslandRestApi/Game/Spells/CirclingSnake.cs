@@ -12,14 +12,13 @@ namespace WizardIslandRestApi.Game.Spells
         public CirclingSnake(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos).Normalized();
+            var dir = (mousePos - pos).Normalized();
             float size = .5f;
             int snakeParts = 10;
-            GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, 5 * Game._updatesPerSecond, GetCurrentGame(), snakeParts)
+            GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, 5 * Game._updatesPerSecond, GetCurrentGame(), pos, snakeParts)
             {
-                Pos = MyPlayer.Pos,
                 Target = mousePos,
                 Speed = 2,
                 CirclingDistance = 10,
@@ -53,7 +52,7 @@ namespace WizardIslandRestApi.Game.Spells
         public float Damage { get; set; }
         public float Knockback { get; set; }
         private List<Player> _hitPlayers;
-        public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<Player> hitPlayers = null) : base(owner, ticksUntilDeletion)
+        public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, Vector2 startPos, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<Player> hitPlayers = null) : base(owner, ticksUntilDeletion, startPos)
         {
             _parent = parent;
             _snakePartsToCreate = snakePartsToCreate;
@@ -61,6 +60,7 @@ namespace WizardIslandRestApi.Game.Spells
             _game = game;
             _hitPlayers = (hitPlayers == null) ? new List<Player>() : hitPlayers;
             GetAndSetEntityId();
+            ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x);
         }
 
         public void GetAndSetEntityId()
@@ -87,6 +87,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override void ReTarget(Vector2 pos)
         {
+            _ticksUntilDeletion = _ticksUntilDeletionMax;
             if (_parent != null)
                 _parent.ReTarget(pos);
             else
@@ -94,8 +95,8 @@ namespace WizardIslandRestApi.Game.Spells
                 _target = pos;
                 _dir = (Target - Pos).Normalized();
                 _isCircling = false;
-                _ticksUntilDeletion = _ticksUntilDeletionMax;
                 Pos += _dir * Speed;
+                ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x);
             }
         }
 
@@ -104,7 +105,7 @@ namespace WizardIslandRestApi.Game.Spells
             // create snake body
             if (_snakePartsToCreate > 0 && TickTillSnakePartCreation > _ticksUntilDeletionMax - _ticksUntilDeletion)
             {
-                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, _snakePartsToCreate - 1, this, _hitPlayers)
+                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, Pos, _snakePartsToCreate - 1, this, _hitPlayers)
                 {
                     Pos = Pos,
                     Speed = Speed,
@@ -126,6 +127,7 @@ namespace WizardIslandRestApi.Game.Spells
                 {
                     // circling
                     _angle -= CirclingSpeed;
+                    ForwardAngle = _angle - MathF.PI * .5f;
                     Pos = Target + new Vector2(MathF.Cos(_angle), MathF.Sin(_angle)) * CirclingDistance;
                 }
                 else
@@ -148,11 +150,7 @@ namespace WizardIslandRestApi.Game.Spells
                 // not head
                 var dir = (Pos - _parent.Pos).Normalized();
                 Pos = _parent.Pos + dir * (Size + _parent.Size);
-                if (!_game.Entities.Contains(_parent))
-                {
-                    int a = 1;
-
-                }
+                ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x); // starting angle
             }
             if (--_ticksUntilDeletion < 0)
             {
