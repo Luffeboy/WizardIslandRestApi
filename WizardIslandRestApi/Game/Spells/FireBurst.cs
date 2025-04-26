@@ -9,7 +9,7 @@
         public FireBurst(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             float distanceBetweenFireballs = 8;
             int fireballs = 8;
@@ -25,9 +25,8 @@
                 fireballStartPos -= fwd * (MathF.Abs(half) * distanceBetweenFireballs / 4);
                 fireballStartPos += fwd * (MyPlayer.Size + size + .6f);
                 var dir = (mousePos - fireballStartPos).Normalized();
-                GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer)
+                GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, fireballStartPos)
                 {
-                    Pos = fireballStartPos,
                     Dir = dir,
                     Speed = 2f,
                     Color = "255, 0, 0",

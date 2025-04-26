@@ -13,14 +13,14 @@
         }
 
 
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos);
+            var dir = (mousePos - pos);
             if (dir.LengthSqr() > _range * _range)
             {
                 dir = dir.Normalized() * _range;
             }
-            var target = MyPlayer.Pos + dir;
+            var target = pos + dir;
 
             GetCurrentGame().Entities.Insert(0, new ShadowEntity() // we insert it at index 0, so everything else will be rendered on top of it
             {
@@ -31,12 +31,11 @@
 
             GetCurrentGame().Entities.Add(new WaitToDoSomethingEntity(_waitUntillPoolActivates, () =>
             {
-                GetCurrentGame().Entities.Add(new LavaPoolEntity(MyPlayer)
+                GetCurrentGame().Entities.Add(new LavaPoolEntity(MyPlayer, target)
                 {
                     MinSize = 0,
                     MaxSize = _lavaPoolSize,
                     TicksUntilDeletion = (_duration - _waitUntillPoolActivates),
-                    Pos = target,
                 });
             }
             ));

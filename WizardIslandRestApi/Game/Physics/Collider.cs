@@ -10,6 +10,11 @@
         public Vector2 Pos { get { return _pos; } set { PreviousPos = _pos; _pos = value;  } }
         public Vector2 PreviousPos { get; private set; }
         public Player? Owner {  get; set; }
+        public Collider(Vector2 pos)
+        {
+            _pos = pos;
+            PreviousPos = pos;
+        }
         public bool CheckCollision(Collider other)
         {
             // simple check
@@ -21,7 +26,7 @@
             // Step 1: Calculate the closest point on the line to the circle's center
             // Calculate the direction vector of the line (normalized)
 
-            float maxLength = Vector2Length(Pos - PreviousPos);
+            float maxLength = (Pos - PreviousPos).Length();
             Vector2 lineDir = (Pos - PreviousPos) / maxLength;
 
             // Find the projection of the circle's center onto the line

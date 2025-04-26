@@ -14,9 +14,9 @@ namespace WizardIslandRestApi.Game.Spells
         public Barrel(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            Vector2 dir = mousePos - MyPlayer.Pos;
+            Vector2 dir = mousePos - startPos;
             float len = dir.Length();
             if (len != 0)
             {
@@ -25,10 +25,9 @@ namespace WizardIslandRestApi.Game.Spells
             }
             if (len > _range)
                 len = _range;
-            Vector2 pos = MyPlayer.Pos + dir * len;
-            GetCurrentGame().Entities.Add(new BarrelEntity(MyPlayer, GetCurrentGame())
+            Vector2 pos = startPos + dir * len;
+            GetCurrentGame().Entities.Add(new BarrelEntity(MyPlayer, GetCurrentGame(), pos)
             {
-                Pos = pos,
                 Color = "255, 0, 0",
                 Size = 1.5f,
                 TicksUntilDeletion = 30 * Game._updatesPerSecond,
@@ -44,10 +43,11 @@ namespace WizardIslandRestApi.Game.Spells
         public int TicksUntilDeletion { get; set; }
         public float Damage { get; set; }
         public float Knockback { get; set; }
-        public BarrelEntity(Player owner, Game game) : base(owner)
+        public BarrelEntity(Player owner, Game game, Vector2 startPos) : base(owner, startPos)
         {
             _game = game;
             EntityId = "Barrel";
+            TeleportTo(startPos);
         }
 
         public override bool OnCollision(Player other)

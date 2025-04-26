@@ -59,7 +59,7 @@ namespace WizardIslandRestApi.Game.Spells
         protected Game GetCurrentGame() { return MyPlayer.GetGame(); }
         protected int GetCurrentGameTick() { return GetCurrentGame().GameTick; }
         //protected int GetCurrentGameTick() { return MyPlayer != null ? GetCurrentGame().GameTick : 0; }
-        public abstract void OnCast(Vector2 mousePos);
+        public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);

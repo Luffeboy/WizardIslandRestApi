@@ -11,10 +11,10 @@ namespace WizardIslandRestApi.Game.Spells
         public HomingBolt(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             float size = .5f;
-            GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, MyPlayer.Pos, mousePos, GetCurrentGame())
+            GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, pos, mousePos, GetCurrentGame())
             {
                 Speed = 1.0f,
                 Color = "255, 255, 255",
@@ -38,7 +38,7 @@ namespace WizardIslandRestApi.Game.Spells
         private int _ticksUntilDeletionMax;
         private Game _game;
         private float _angle = 0;
-        public HomingBoltEntity(Player owner, Vector2 startPos, Vector2 mousePos, Game game) : base(owner)
+        public HomingBoltEntity(Player owner, Vector2 startPos, Vector2 mousePos, Game game) : base(owner, startPos)
         {
             _game = game;
             Pos = startPos;

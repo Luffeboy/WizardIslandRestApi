@@ -2,7 +2,7 @@
 {
     public class SimpleSpellEntity : Entity
     {
-        public SimpleSpellEntity(Player owner) : base(owner)
+        public SimpleSpellEntity(Player owner, Vector2 startPos) : base(owner, startPos)
         {
         }
 

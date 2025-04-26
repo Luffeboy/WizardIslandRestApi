@@ -10,9 +10,9 @@ namespace WizardIslandRestApi.Game.Spells
         public FrostField(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            Vector2 dir = mousePos - MyPlayer.Pos;
+            Vector2 dir = mousePos - pos;
             float len = dir.Length();
             if (len != 0)
             {
@@ -21,7 +21,7 @@ namespace WizardIslandRestApi.Game.Spells
             }
             if (len > _range)
                 len = _range;
-            Vector2 pos = MyPlayer.Pos + dir * len;
+            pos = pos + dir * len;
             GetCurrentGame().Entities.Add(new FrostFieldEntity(MyPlayer, pos)
             {
                 Color = "100, 255, 100",
@@ -35,10 +35,9 @@ namespace WizardIslandRestApi.Game.Spells
     {
         private Vector2 _pos;
         public int TicksUntilDeletion { get; set; }
-        public FrostFieldEntity(Player owner, Vector2 pos) : base(owner)
+        public FrostFieldEntity(Player owner, Vector2 pos) : base(owner, pos)
         {
             _pos = pos;
-            Pos = pos;
             Height = EntityHeight.Ground;
             EntityId = "FrostField";
         }
@@ -56,7 +55,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool Update()
         {
-            Pos = _pos;
+            //Pos = _pos;
             TicksUntilDeletion--;
             return TicksUntilDeletion < 0;
         }

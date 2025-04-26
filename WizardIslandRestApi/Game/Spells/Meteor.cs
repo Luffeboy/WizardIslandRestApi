@@ -13,9 +13,9 @@ namespace WizardIslandRestApi.Game.Spells
         public Meteor(Player player) : base(player)
         {
         }
-        public override void OnCast(Vector2 mousePos)
+        public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - MyPlayer.Pos).Normalized();
+            var dir = (mousePos - pos).Normalized();
             float size = 4.37f;
             GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos)
             {
@@ -77,11 +77,10 @@ namespace WizardIslandRestApi.Game.Spells
         {
             if (FallTime < -3)
                 return true;
-            Pos = _pos;
+            //Pos = _pos;
             if (FallTime <= 0 && MyCollider == null)
             {
-                MyCollider = new Physics.Collider() { Owner = _player, Pos = Pos, Size = Size };
-                MyCollider.Pos = Pos; // to update prevpos, if used for something for some reason
+                MyCollider = new Physics.Collider(Pos) { Owner = _player, Pos = Pos, Size = Size };
                 Color = "255, 0, 0";
                 Height = EntityHeight.Normal;
             }

@@ -44,7 +44,7 @@ namespace WizardIslandRestApi.Game
         public PlayerStats Stats { get; set; } = new PlayerStats();
         public PlayerScoreStats ScoreStats { get; set; } = new PlayerScoreStats();
         public Player? LastHitByPlayer { get; set; } = null; // the player that last hit this player
-        public Collider MyCollider { get; } = new Collider();
+        public Collider MyCollider { get; }
         private Spell[] MySpells { get; set; }
         public int TicksTillAlive { get; private set; }
         public bool IsDead { get { return TicksTillAlive > 0; } }
@@ -52,6 +52,7 @@ namespace WizardIslandRestApi.Game
         List<DebuffBase> Debuffs = new List<DebuffBase>();
         public Player(int id, Game game, int[] spells)
         {
+            MyCollider = new Collider(new Vector2());
             Id = id;
             _game = game;
             MyCollider.Owner = this;
@@ -70,7 +71,7 @@ namespace WizardIslandRestApi.Game
         {
             if (IsDead || spellIndex < 0 || spellIndex >= MySpells.Length || !MySpells[spellIndex].CanCast)
                 return;
-            MySpells[spellIndex].OnCast(mousePos);
+            MySpells[spellIndex].OnCast(Pos, mousePos);
         }
 
         public void Reset()
@@ -89,7 +90,7 @@ namespace WizardIslandRestApi.Game
             float angle = (float)(r.NextDouble() * Math.PI * 2);
             var map = GetMap();
             float distance = (float)(r.NextDouble() * (map.CircleRadius - map.CircleInnerRadius)) + map.CircleInnerRadius;
-            Pos = map.GroundMiddle + new Vector2(MathF.Cos(angle) * distance, MathF.Sin(angle) * distance);
+            TeleportTo(map.GroundMiddle + new Vector2(MathF.Cos(angle) * distance, MathF.Sin(angle) * distance));
             TargetPos = Pos;
         }
 #pragma warning disable
