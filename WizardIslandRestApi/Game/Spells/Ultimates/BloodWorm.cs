@@ -5,6 +5,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class BloodWorm : Spell
     {
+        public override string Name { get { return "Blood worm"; } }
         private const int _wormPartCost = 10;
         private const int _minWormPartCount = 3; // shoots, you get for free
         private const int _ticksBetweenWormCreation = 1 * Game._updatesPerSecond;
