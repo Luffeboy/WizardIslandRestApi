@@ -10,6 +10,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             UsesMax = 5;
             CooldownBetweenUses = 3;
+            Type = SpellType.Ultimate;
         }
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
