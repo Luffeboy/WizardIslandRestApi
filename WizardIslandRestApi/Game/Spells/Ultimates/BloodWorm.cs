@@ -6,7 +6,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
     public class BloodWorm : Spell
     {
         public override string Name { get { return "Blood worm"; } }
-        private const int _wormPartCost = 10;
+        public const int WormPartCost = 10;
         private const int _minWormPartCount = 3; // shoots, you get for free
         private const int _ticksBetweenWormCreation = 1 * Game._updatesPerSecond;
         private const int _wormLifetime = (int)(30 * Game._updatesPerSecond);
@@ -45,12 +45,12 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     {
                         _entityToCreateWorm.TicksToWait = _ticksBetweenWormCreation;
                         // check the player has the health required
-                        if (MyPlayer.Stats.Health <= _wormPartCost)
+                        if (MyPlayer.Stats.Health <= WormPartCost)
                         {
                             OnCast(pos, mousePos);
                             return;
                         }
-                        MyPlayer.TakeDamage(_wormPartCost);
+                        MyPlayer.Stats.Health -= WormPartCost; // we don't want to scale it with damage multipliers, in this case
                         // actually create the worm part
                         CreateWormPart(pos, mousePos);
                     });
@@ -227,6 +227,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         }
         private void Die()
         {
+            // give the player the health back
+            MyCollider.Owner.Stats.Health += BloodWorm.WormPartCost;
+            // set the child as the new head
             if (Child != null)
             {
                 Child._circlingAngle = HomingBoltEntity.GetAngleFromDirection(_dir);

@@ -212,6 +212,15 @@ namespace WizardIslandRestApi.Game
             if (Stats.Health <= 0)
                 Die();
         }
+        public void Heal(float amount)
+        {
+            var scaledAmount = (int)(amount);
+            if (scaledAmount < 0) 
+                scaledAmount = 0;
+            Stats.Health += scaledAmount;
+            if (Stats.Health > Stats.MaxHealth)
+                Stats.Health = Stats.MaxHealth;
+        }
         private void Die()
         {
             ScoreStats.Deaths++;
