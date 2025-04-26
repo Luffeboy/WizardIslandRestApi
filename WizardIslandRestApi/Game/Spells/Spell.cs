@@ -41,6 +41,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Stella(player),
             (player) => new BloodWorm(player),
             (player) => new FireAtWill(player),
+            (player) => new SpeedBlits(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
@@ -69,6 +70,10 @@ namespace WizardIslandRestApi.Game.Spells
 #else
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
 #endif
+        }
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

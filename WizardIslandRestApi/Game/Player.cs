@@ -228,6 +228,7 @@ namespace WizardIslandRestApi.Game
             for (int i = 0; i < spells.Length; i++)
                 spells[i] = new SpellCooldown()
                 {
+                    SpellName = MySpells[i].ToString(),
                     CooldownRemaining = MySpells[i].CurrentCooldown - _game.GameTick,
                     CooldownMax = MySpells[i].CooldownMax
                 };
@@ -247,6 +248,7 @@ namespace WizardIslandRestApi.Game
 
     public class SpellCooldown
     {
+        public string SpellName { get; set; }
         public int CooldownRemaining { get; set; }
         public int CooldownMax { get; set; }
     }
