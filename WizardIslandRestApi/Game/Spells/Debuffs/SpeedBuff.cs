@@ -23,5 +23,10 @@
         {
             return --TicksTillRemoval < 0;
         }
+
+        public override string ToString()
+        {
+            return "Speed";
+        }
     }
 }

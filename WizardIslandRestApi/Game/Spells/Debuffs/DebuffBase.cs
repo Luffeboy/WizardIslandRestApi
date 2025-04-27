@@ -9,5 +9,10 @@
         //public abstract void OnReApply(DebuffBase theNewOne);
         public abstract bool Update();
         public abstract void OnRemove();
+
+        public override string ToString()
+        {
+            return GetType().Name;
+        }
     }
 }

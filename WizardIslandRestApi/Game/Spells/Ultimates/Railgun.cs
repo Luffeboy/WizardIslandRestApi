@@ -49,6 +49,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     }
                 }
             }));
+            GoOnCooldown();
         }
     }
 }

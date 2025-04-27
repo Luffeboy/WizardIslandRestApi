@@ -280,6 +280,8 @@ namespace WizardIslandRestApi.Game
                 if (!oldSpells[i].CanBeReplaced)
                     MySpells[i] = oldSpells[i];
         }
+
+        public IEnumerable<DebuffBase> GetDebuffs() { return Debuffs; }
     }
 
     public class SpellCooldown
@@ -301,6 +303,7 @@ namespace WizardIslandRestApi.Game
         public bool IsDead { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
+        public IEnumerable<string> Debuffs { get; set; }
         public PlayerMinimum(Player player) 
         {
             Id = player.Id;
@@ -313,6 +316,7 @@ namespace WizardIslandRestApi.Game
             IsDead = player.IsDead;
             Name = player.UserName;
             Color = player.Color;
+            Debuffs = player.GetDebuffs().Select(d => d.ToString());
         }
 
         public static IEnumerable<PlayerMinimum> Copy(IEnumerable<Player> players)
