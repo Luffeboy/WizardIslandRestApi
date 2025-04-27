@@ -158,7 +158,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 case BloodWormEntityState.Dorment:
                     _circlingAngle += Speed / CirclingRadius;
                     Pos = MyCollider.Owner.Pos + new Vector2( MathF.Cos(_circlingAngle), MathF.Sin(_circlingAngle) ) * CirclingRadius;
-                    ForwardAngle = _circlingAngle;
+                    ForwardAngle = _circlingAngle + MathF.PI / 2;
                     break;
                 case BloodWormEntityState.Attacking:
                     Pos += _dir * Speed;
@@ -243,6 +243,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             // give the player the health back
             MyCollider.Owner.Stats.Health += BloodWorm.WormPartCost;
+            if (MyCollider.Owner.Stats.Health > MyCollider.Owner.Stats.MaxHealth)
+                MyCollider.Owner.Stats.Health = MyCollider.Owner.Stats.MaxHealth;
             // set the child as the new head
             if (Child != null)
             {
