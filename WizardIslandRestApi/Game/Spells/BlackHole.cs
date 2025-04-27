@@ -67,7 +67,7 @@ namespace WizardIslandRestApi.Game.Spells
                 float amount = dir.LengthSqr();
                 if (amount < minAmount)
                     amount = minAmount;
-                p.ApplyKnockback(dir.Normalized(), _gravitationalConstant / amount * .1f);
+                p.ApplyKnockback(dir.Normalized(), _gravitationalConstant / amount * .35f);
             }
             //
             foreach (Entity e in _game.Entities)

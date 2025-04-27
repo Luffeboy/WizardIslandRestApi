@@ -23,7 +23,7 @@ namespace WizardIslandRestApi.Game.Spells
                 spellDir /= spellLen;
 
             var collider = new Collider(startPos);
-            collider.Pos = mousePos;
+            collider.Pos = startPos + spellDir * spellLen;
             // check player hits
             foreach (Player player in GetCurrentGame().Players.Values)
             {
@@ -36,6 +36,7 @@ namespace WizardIslandRestApi.Game.Spells
                     if (dir.LengthSqr() == 0)
                         dir = startPos - mousePos;
                     dir.Normalize();
+                    player.TakeDamage(0, MyPlayer);
                     player.ApplyKnockback(dir, _knockback);
                 }
             }

@@ -8,13 +8,13 @@
             Type = SpellType.Ultimate;
         }
 
-        public override int CooldownMax { get; protected set; } = 20 * Game._updatesPerSecond;
+        public override int CooldownMax { get; protected set; } = 18 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             GetCurrentGame().Entities.Add(new FireAtWillEntity(MyPlayer, GetCurrentGame(), mousePos)
             {
-                Damage = 20,
+                Damage = 5,
                 Knockback = 1.3f,
                 ShotsBeforeDeleing = 50,
                 TicksBeforeShootingMax = (int)((float)Game._updatesPerSecond / 15),

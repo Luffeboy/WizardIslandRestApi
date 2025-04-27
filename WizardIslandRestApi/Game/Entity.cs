@@ -17,7 +17,7 @@ namespace WizardIslandRestApi.Game
         public Collider MyCollider { get; protected set; } // may be null :)
         public bool Visable { get; set; } = true;
         public string EntityId { get; set; } = "";
-        public float ForwardAngle { get; protected set; } = 0;
+        public float ForwardAngle { get; set; } = 0;
         public Entity(Player owner, Vector2? startPos = null)
         {
             if (startPos == null) startPos = new Vector2();
