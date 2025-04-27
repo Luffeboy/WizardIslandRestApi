@@ -42,6 +42,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BloodWorm(player),
             (player) => new FireAtWill(player),
             (player) => new SpeedBlits(player),
+            (player) => new CopySpell(player),
         };
         public static Spell GetSpell(Player player, int index)
         {

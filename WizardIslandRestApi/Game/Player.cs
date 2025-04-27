@@ -28,6 +28,12 @@ namespace WizardIslandRestApi.Game
         public int Deaths { get; set; }
 
     }
+    public class PlayerOverrideAndObservers
+    {
+        public Action<int> OnSpellCast;
+        public Action OnRespawnPreReset;
+        public Action OnRespawnPostReset;
+    }
     public class Player
     {
         public int Id { get; set; }
@@ -43,6 +49,7 @@ namespace WizardIslandRestApi.Game
         public string Color { get; set; } = "255, 0, 0";
         public PlayerStats Stats { get; set; } = new PlayerStats();
         public PlayerScoreStats ScoreStats { get; set; } = new PlayerScoreStats();
+        public PlayerOverrideAndObservers OverridesAndObservers { get; set; } = new PlayerOverrideAndObservers();
         public Player? LastHitByPlayer { get; set; } = null; // the player that last hit this player
         public Collider MyCollider { get; }
         private Spell[] MySpells { get; set; }
@@ -71,6 +78,7 @@ namespace WizardIslandRestApi.Game
         {
             if (IsDead || spellIndex < 0 || spellIndex >= MySpells.Length || !MySpells[spellIndex].CanCast)
                 return;
+            OverridesAndObservers.OnSpellCast?.Invoke(spellIndex);
             MySpells[spellIndex].OnCast(Pos, mousePos);
         }
 
@@ -81,6 +89,8 @@ namespace WizardIslandRestApi.Game
             Vel = new Vector2();
             // remove debuffs
             ClearDebuffs();
+            // add a little invulnerability
+            ApplyDebuff(new Invulnerability(this) { TicksTillRemoval = 3 * Game._updatesPerSecond });
             // ready spells
             for (int i = 0; i < MySpells.Length; i++)
                 if (MySpells[i].Type != SpellType.Ultimate)

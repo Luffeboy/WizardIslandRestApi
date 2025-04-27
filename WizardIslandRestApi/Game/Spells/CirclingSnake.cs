@@ -32,7 +32,8 @@ namespace WizardIslandRestApi.Game.Spells
     }
     class CirclingSnakePart : CantHitOwnerAtStartSpellEntity
     {
-        private const int TickTillSnakePartCreation = 3;
+        private const int TickTillSnakePartCreation = 1;
+        private const int _hitCooldown = 1 * Game._updatesPerSecond;
         private Vector2 _dir;
         private Vector2 _target;
         private float _angle; // circling angle
@@ -42,6 +43,7 @@ namespace WizardIslandRestApi.Game.Spells
         public CirclingSnakePart? _child; // body part in front
         private Game _game;
         private bool _isCircling = false;
+        private List<PlayerAndHitTime> _hitPlayers;
 
         private bool IsHead { get { return _parent == null;  } }
         public Vector2 Target { get { return _target; } set { ReTarget(value); } }
@@ -51,14 +53,13 @@ namespace WizardIslandRestApi.Game.Spells
         public override int TicksUntillCanHitOwner { get; set; } = 20;
         public float Damage { get; set; }
         public float Knockback { get; set; }
-        private List<Player> _hitPlayers;
-        public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, Vector2 startPos, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<Player> hitPlayers = null) : base(owner, ticksUntilDeletion, startPos)
+        public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, Vector2 startPos, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<PlayerAndHitTime> hitPlayers = null) : base(owner, ticksUntilDeletion, startPos)
         {
             _parent = parent;
             _snakePartsToCreate = snakePartsToCreate;
             _ticksUntilDeletionMax = ticksUntilDeletion;
             _game = game;
-            _hitPlayers = (hitPlayers == null) ? new List<Player>() : hitPlayers;
+            _hitPlayers = (hitPlayers == null) ? new List<PlayerAndHitTime>() : hitPlayers;
             GetAndSetEntityId();
             ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x);
         }
@@ -103,9 +104,9 @@ namespace WizardIslandRestApi.Game.Spells
         public override bool Update()
         {
             // create snake body
-            if (_snakePartsToCreate > 0 && TickTillSnakePartCreation > _ticksUntilDeletionMax - _ticksUntilDeletion)
+            if (_snakePartsToCreate > 0 && TickTillSnakePartCreation < _ticksUntilDeletionMax - _ticksUntilDeletion)
             {
-                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion, _game, Pos, _snakePartsToCreate - 1, this, _hitPlayers)
+                _child = new CirclingSnakePart(MyCollider.Owner, _ticksUntilDeletion - 1, _game, Pos, _snakePartsToCreate - 1, this, _hitPlayers)
                 {
                     Pos = Pos,
                     Speed = Speed,
@@ -162,11 +163,13 @@ namespace WizardIslandRestApi.Game.Spells
 
         protected override bool HitPlayer(Player other)
         {
-            if (!_hitPlayers.Contains(other))
+            PlayerAndHitTime paht = _hitPlayers.FirstOrDefault(p => p.HitPlayer == other);
+            if (paht == null || paht.HitTick + _hitCooldown < _game.GameTick)
             {
                 other.TakeDamage(Damage, MyCollider.Owner);
                 other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
-                _hitPlayers.Add(other);
+                //_hitPlayers.Add(other);
+                if (paht == null) _hitPlayers.Add(new PlayerAndHitTime() { HitPlayer = other, HitTick = _game.GameTick }); else paht.HitTick = _game.GameTick;
                 Died();
                 return true;
             }
@@ -188,6 +191,12 @@ namespace WizardIslandRestApi.Game.Spells
                 _parent._child = _child;
                 _parent.GetAndSetEntityId();
             }
+        }
+
+        public class PlayerAndHitTime
+        {
+            public Player HitPlayer { get; set; }
+            public int HitTick { get; set; }
         }
     }
 }
