@@ -6,6 +6,7 @@
         public int TicksTillRemoval { get; set; }
         public SpeedBuff(Player player) : base(player)
         {
+            Stackable = true;
         }
 
         public override void OnApply()

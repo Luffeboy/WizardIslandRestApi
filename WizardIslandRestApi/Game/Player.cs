@@ -36,15 +36,17 @@ namespace WizardIslandRestApi.Game
     }
     public class Player
     {
+        private Vector2 _pos;
+        private float _size = 1.0f;
         public int Id { get; set; }
         public Game _game { get; set; }
         public string Name { get; set; }
         public string Password { get; }
-        public float CanStopSpeed { get { return Stats.MaxSpeed * 1.1f; } }
+        public float CanStopSpeed { get { return Stats.Speed * 1.1f; } }
         public Vector2 TargetPos { get; set; }
-        public Vector2 Pos { get; set; }
+        public Vector2 Pos { get { return _pos; } set { _pos = value; MyCollider.Pos = value; } }
         public Vector2 Vel {  get; set; }
-        public float Size { get; set; } = 1.0f;
+        public float Size { get { return _size; } set { _size = value; MyCollider.Size = value; } }
         public string UserName { get; set; } = "Nameless";
         public string Color { get; set; } = "255, 0, 0";
         public PlayerStats Stats { get; set; } = new PlayerStats();
@@ -124,37 +126,10 @@ namespace WizardIslandRestApi.Game
                 return;
             }
             UpdateDebuffs();
-            // update velocity
-            // slow down a little
-            Vector2 velNormalized = Vel.Normalized();
-            if (Vel.LengthSqr() > Stats.SlowDownSpeed)
-            {
-                Vel -= velNormalized * Stats.SlowDownSpeed;
-            }
-
-            // add more velocity
-            //Vector2 dir = TargetPos - Pos;
-            //dir.Normalize();
-            // if we move along our current velocity, we might need to move a bit to the right or left, to correctly hit the target position
-            Vector2 posPlusVelocityDir = TargetPos - (Pos + Vel * 10);
-            posPlusVelocityDir.Normalize();
-            //dir = dir + (posPlusVelocityDir * 10);
-            //dir.Normalize();
-            Vector2 dir = posPlusVelocityDir;
-            if (velNormalized.Dot(dir) < .5f || Vel.LengthSqr() < Stats.MaxSpeed * Stats.MaxSpeed)
-                Vel += dir * Stats.Speed;
-
-            // update position
-            Pos += Vel;
-            Vector2 dirAfter = TargetPos - Pos;
-            if ((TargetPos - Pos).LengthSqr() < Size && Vel.LengthSqr() < CanStopSpeed * CanStopSpeed)
-            {
-                Vel = new Vector2(0, 0);
-                Pos = TargetPos;
-            }
+            Move();
             // update collider
-            MyCollider.Pos = Pos;
-            MyCollider.Size = Size;
+            //MyCollider.Pos = Pos;
+            //MyCollider.Size = Size;
             // take damage from lava
             Map map = GetMap();
             float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr(); 
@@ -164,18 +139,59 @@ namespace WizardIslandRestApi.Game
             }
         }
 
+        private void Move()
+        {
+            // update velocity
+            // slow down a little
+            var velLen = Vel.Length();
+            Vector2 velNormalized = Vel / velLen;
+            if (Vel.LengthSqr() > Stats.SlowDownSpeed)
+            {
+                Vel -= velNormalized * MathF.Sqrt(velLen) * Stats.SlowDownSpeed;
+            }
+
+            // add more velocity
+            //Vector2 dir = TargetPos - Pos;
+            //dir.Normalize();
+            // if we move along our current velocity, we might need to move a bit to the right or left, to correctly hit the target position
+            Vector2 posPlusVelocityDir = TargetPos - (Pos + Vel * (10 * PlayerStats.DefaultSpeed / Stats.Speed));
+            posPlusVelocityDir.Normalize();
+            //dir = dir + (posPlusVelocityDir * 10);
+            //dir.Normalize();
+            Vector2 dir = posPlusVelocityDir;
+            Vector2 velToAdd = new Vector2();
+            if (velNormalized.Dot(dir) < .7f || velLen < Stats.MaxSpeed)
+                velToAdd = dir * Stats.Speed;
+            // check for overshooting
+            if (Stats.Speed * Stats.Speed > (TargetPos - Pos).LengthSqr() && Vel.LengthSqr() < Stats.Speed * Stats.Speed)
+            {
+                velToAdd = Vel * -1 + (TargetPos - Pos);
+            }
+
+            Vel += velToAdd;
+            // update position
+            Pos += Vel;
+            //Vector2 dirAfter = TargetPos - Pos;
+            //if ((TargetPos - Pos).LengthSqr() < Size && Vel.LengthSqr() < CanStopSpeed * CanStopSpeed)
+            //{
+            //    Vel = new Vector2(0, 0);
+            //    Pos = TargetPos;
+            //}
+        }
+
         public void ApplyDebuff(DebuffBase debuff)
         {
-            // remove old instance of debuff
-            for (int i = 0; i < Debuffs.Count; i++) 
-            {
-                if (debuff.GetType().Name == Debuffs[i].GetType().Name)
+            // remove old instance of debuff, if not stackable
+            if (!debuff.Stackable)
+                for (int i = 0; i < Debuffs.Count; i++) 
                 {
-                    Debuffs[i].OnRemove();
-                    Debuffs.RemoveAt(i);
-                    break;
+                    if (debuff.GetType().Name == Debuffs[i].GetType().Name)
+                    {
+                        Debuffs[i].OnRemove();
+                        Debuffs.RemoveAt(i);
+                        break;
+                    }
                 }
-            }
             debuff.OnApply();
             Debuffs.Add(debuff);
         }
