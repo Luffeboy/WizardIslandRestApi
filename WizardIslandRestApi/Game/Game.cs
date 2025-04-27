@@ -31,6 +31,7 @@ namespace WizardIslandRestApi.Game
         public Map GameMap { get; } = new Map();
         // event stuff
         public EventBase CurrentEvent { get; private set; }
+        public EventBase NextEvent { get; private set; }
         public int TicksTillNextEventMax { get; private set; } = 30 * _updatesPerSecond;
         public int TicksTillNextEvent { get; private set; }
 
@@ -50,6 +51,7 @@ namespace WizardIslandRestApi.Game
             _gameCreated = DateTime.Now;
             CurrentState = GameState.Joinable;
             CurrentEvent = new NoEvent(this);
+            NextEvent = new NoEvent(this);
             TicksTillNextEvent = TicksTillNextEventMax;
             GameModifiers.DamageMultiplier = 0;
         }
@@ -193,7 +195,8 @@ namespace WizardIslandRestApi.Game
         public void SelectNewEvent()
         {
             CurrentEvent.End();
-            CurrentEvent = EventBase.GetRandomEvent(this);
+            CurrentEvent = NextEvent;
+            NextEvent = EventBase.GetRandomEvent(this);
             CurrentEvent.Start();
             TicksTillNextEvent = TicksTillNextEventMax;
         }

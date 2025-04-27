@@ -19,6 +19,7 @@
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
+#if DEBUG
             int cooldown = (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
             _lastUseTick += cooldown;
             int highestPosibleCooldown = GetCurrentGameTick() - (UsesMax - 1) * cooldown;
@@ -28,7 +29,7 @@
                 CurrentCooldown = GetCurrentGameTick() + CooldownBetweenUses;
             else
                 CurrentCooldown = _lastUseTick + cooldown;
-
+#endif
             OnUse(startPos, mousePos);
         }
 

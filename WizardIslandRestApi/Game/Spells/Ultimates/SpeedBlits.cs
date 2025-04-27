@@ -4,7 +4,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class SpeedBlits : MultiUseSpell
     {
-        private float _maxRange = 5;
+        private float _maxRange = 10;
         public override string Name => "Speed blitz";
         public SpeedBlits(Player player) : base(player)
         {
@@ -54,7 +54,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 TicksUntilDeletion = 100,
             });
 
-            MyPlayer.TeleportTo(pos);
+            MyPlayer.TeleportTo(endPos);
         }
     }
 

@@ -87,7 +87,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 _tail.EntityId = _tail.Parent == null ? "BloodWormHead" : "BloodWormBody";
             }
             _tail = temp;
-            _tail.EntityId = _tail.Child == null ? "BloodWormHead" : "BloodWormTail";
+            _tail.EntityId = _tail.Parent == null ? "BloodWormHead" : "BloodWormTail";
             GetCurrentGame().Entities.Add(temp);
         }
         private void ShootWorm(Vector2 target)
@@ -148,6 +148,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             if (Parent != null)
             {
                 _dir = (Parent.Pos - Pos).Normalized();
+                ForwardAngle = HomingBoltEntity.GetAngleFromDirection(_dir);
                 Pos = Parent.Pos - _dir * (Size + Parent.Size);
                 return false;
             }
@@ -157,6 +158,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 case BloodWormEntityState.Dorment:
                     _circlingAngle += Speed / CirclingRadius;
                     Pos = MyCollider.Owner.Pos + new Vector2( MathF.Cos(_circlingAngle), MathF.Sin(_circlingAngle) ) * CirclingRadius;
+                    ForwardAngle = _circlingAngle;
                     break;
                 case BloodWormEntityState.Attacking:
                     Pos += _dir * Speed;
@@ -227,6 +229,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             _target = target + _dir * Speed * 5;
             CurrentState = BloodWormEntityState.Attacking;
             Height = EntityHeight.Normal;
+            ForwardAngle = HomingBoltEntity.GetAngleFromDirection(_dir);
             return true;
         }
 

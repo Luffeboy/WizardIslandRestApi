@@ -39,6 +39,7 @@ namespace WizardIslandRestApi.Game.Spells
     }
     public class BarrelEntity : Entity
     {
+        private bool _justMoved = false;
         private Game _game;
         public int TicksUntilDeletion { get; set; }
         public float Damage { get; set; }
@@ -54,13 +55,29 @@ namespace WizardIslandRestApi.Game.Spells
         {
             Vector2 dir = Pos - other.MyCollider.Pos;
             dir.Normalize();
-            Pos = other.Pos + dir * (Size + other.Size + .1f);
+            TeleportTo(other.Pos + dir * (Size + other.Size + .1f));
             return false;
         }
         public override bool OnCollision(Entity other)
         {
             if (!base.OnCollision(other))
                 return false;
+            if (other is BarrelEntity barrel)
+            {
+                if (barrel._justMoved)
+                {
+                    barrel._justMoved = false;
+                    return false;
+                }
+                _justMoved = true;
+                Vector2 midpoint = (Pos + other.Pos) / 2;
+                Vector2 dir = (Pos - other.Pos).Normalized();
+                if (dir.LengthSqr() == 0) dir.x = .1f;
+                float moveAmount = (Size + other.Size + .01f) * .5f;
+                barrel.TeleportTo(midpoint + dir * moveAmount);
+                TeleportTo(Pos = midpoint - dir * moveAmount);
+                return false;
+            }
             // create explosion
             _game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos, _game)
             {
