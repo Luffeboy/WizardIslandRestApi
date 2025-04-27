@@ -31,6 +31,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new CirclingSnake(player),
             (player) => new Barrel(player),
             (player) => new Parry(player),
+            (player) => new Zap(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),

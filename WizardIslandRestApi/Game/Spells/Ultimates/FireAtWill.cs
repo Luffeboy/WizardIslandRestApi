@@ -14,10 +14,10 @@
         {
             GetCurrentGame().Entities.Add(new FireAtWillEntity(MyPlayer, GetCurrentGame(), mousePos)
             {
-                Damage = 5,
+                Damage = 20,
                 Knockback = 1.3f,
                 ShotsBeforeDeleing = 50,
-                TicksBeforeShootingMax = (int)((float)5 / Game._updatesPerSecond),
+                TicksBeforeShootingMax = (int)((float)Game._updatesPerSecond / 15),
                 Size = .5f,
             });
             GoOnCooldown();
@@ -79,7 +79,7 @@
                     Color = "255, 0, 0",
                     EntityId = "FireBall",
                     Size = size,
-                    Speed = 4,
+                    Speed = CirclingRadius/(8),
                     TicksUntilDeletion = 10,
                     Dir = dir,
                     TimeUntilCanHitOwner = 0,

@@ -7,7 +7,7 @@ namespace WizardIslandRestApi.Game
 {
     public class PlayerStats
     {
-        public const float DefaultSpeed = 1f / Game._updatesPerSecond;
+        public const float DefaultSpeed = 1.5f / Game._updatesPerSecond;
         private float _speed = DefaultSpeed;
         private float _speedMultiplier = 1f;
         public float Speed { get { return _speed * SpeedMultiplier; } set { _speed = value; } }
@@ -37,7 +37,7 @@ namespace WizardIslandRestApi.Game
     public class Player
     {
         private Vector2 _pos;
-        private float _size = 1.0f;
+        private float _size; // don't set here
         public int Id { get; set; }
         public Game _game { get; set; }
         public string Name { get; set; }
@@ -62,6 +62,7 @@ namespace WizardIslandRestApi.Game
         public Player(int id, Game game, int[] spells)
         {
             MyCollider = new Collider(new Vector2());
+            Size = 1.0f;
             Id = id;
             _game = game;
             MyCollider.Owner = this;

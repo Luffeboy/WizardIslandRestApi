@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game.Physics
+﻿using WizardIslandRestApi.Game.Spells;
+
+namespace WizardIslandRestApi.Game.Physics
 {
     /// <summary>
     /// All colliders are circle colliders
@@ -18,15 +20,16 @@
         public bool CheckCollision(Collider other)
         {
             // simple check
-            Vector2 diff = Pos - other.Pos;
-            float size = Size + other.Size;
-            if (diff.x * diff.x + diff.y * diff.y < size * size)
-                return true;
+            //Vector2 diff = Pos - other.Pos;
+            //float size = Size + other.Size;
+            //if (diff.x * diff.x + diff.y * diff.y < size * size)
+            //    return true;
             // raycast check
             // Step 1: Calculate the closest point on the line to the circle's center
             // Calculate the direction vector of the line (normalized)
 
             float maxLength = (Pos - PreviousPos).Length();
+            if (maxLength == 0) maxLength = .001f;
             Vector2 lineDir = (Pos - PreviousPos) / maxLength;
 
             // Find the projection of the circle's center onto the line

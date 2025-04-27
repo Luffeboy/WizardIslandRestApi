@@ -64,7 +64,7 @@ namespace WizardIslandRestApi.Game
                 {
                     LobbyUpdate();
                     GameTick++;
-                    if (GameTick >= _gameDuration)
+                    if (GameTick >= _gameDuration || (GameTick > 5 * _updatesPerSecond && Players.Count == 0))
                         CurrentState = GameState.Ended;
                 }
                 SleepBetweenUpdates();
