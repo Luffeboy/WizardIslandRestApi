@@ -12,7 +12,7 @@
         }
 
         public override int CooldownMax { get; protected set; } = 5 * Game._updatesPerSecond;
-        public override string Name => "Name";
+        public override string Name => "Copy";
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
