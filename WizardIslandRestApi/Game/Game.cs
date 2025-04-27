@@ -161,9 +161,11 @@ namespace WizardIslandRestApi.Game
             CurrentState = GameState.Started;
             Entities.Clear();
             // reset all players
-            for (int i = 0; i < Players.Count; i++) 
+            for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].Reset();
+                for (int j = 0; j < Players[i].GetSpells().Length; j++)
+                    Players[i].GetSpells()[j].FullReset();
             }
             GameModifiers.DamageMultiplier = 1;
             SelectNewEvent();

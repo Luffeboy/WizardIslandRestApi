@@ -87,7 +87,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 _tail.EntityId = _tail.Parent == null ? "BloodWormHead" : "BloodWormBody";
             }
             _tail = temp;
-            _tail.EntityId = "BloodWormTail";
+            _tail.EntityId = _tail.Child == null ? "BloodWormHead" : "BloodWormTail";
             GetCurrentGame().Entities.Add(temp);
         }
         private void ShootWorm(Vector2 target)
@@ -102,6 +102,13 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             GoOnCooldown();
             _currentState = BloodWormStates.Ready;
             _tail = null;
+        }
+
+        public override void FullReset()
+        {
+            _currentState = BloodWormStates.Ready;
+            _tail = null;
+            base.FullReset();
         }
     }
     public class BloodWormEntity : Entity

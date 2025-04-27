@@ -18,7 +18,7 @@ namespace WizardIslandRestApi.Game
         public int MaxHealth { get; set; } = 100;
 
         public float CooldownMultiplier { get; set; } = 1;
-        public float KnockbackMultiplier { get; set; } = 1;
+        public float KnockbackMultiplier { get; set; } = .75f;
         public float DamageMultiplier { get; set; } = 1;
 
     }

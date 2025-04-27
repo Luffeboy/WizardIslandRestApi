@@ -75,5 +75,9 @@ namespace WizardIslandRestApi.Game.Spells
         {
             return Name;
         }
+        public virtual void FullReset()
+        {
+            CurrentCooldown = -9999;
+        }
     }
 }
