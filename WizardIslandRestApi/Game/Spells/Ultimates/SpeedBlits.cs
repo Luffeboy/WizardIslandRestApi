@@ -54,7 +54,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 TicksUntilDeletion = 100,
             });
 
-            MyPlayer.TeleportTo(mousePos);
+            MyPlayer.TeleportTo(pos);
         }
     }
 
