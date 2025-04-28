@@ -20,9 +20,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             {
                 dir = dir.Normalized() * _range;
             }
-            int ticksUntillDeletion = (int)(dir.Length() * .3f);
+            int ticksUntillDeletion = Math.Max((int)(dir.Length() * .3f), 1);
             MyPlayer.Vel = new Vector2(0, 0);
-            MyPlayer.ApplyDebuff(new Shackled(MyPlayer));
+            MyPlayer.ApplyDebuff(new Shackled(MyPlayer) { TicksTillRemoval = ticksUntillDeletion});
             MyPlayer.TargetPos = mousePos;
             GetCurrentGame().Entities.Add(new BullChargeEntity(MyPlayer, ticksUntillDeletion, pos) 
             {
@@ -74,7 +74,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             _ticksUntilDeletion++;
             float t = (float)_ticksUntilDeletion / (float)_ticksUntilDeletionMax;
             Vector2 pos = Vector2.Lerp(StartPos, EndPos, t);
-            MyCollider.Pos = pos;
+            Pos = pos;
             MyCollider.Owner.Pos = pos;
             if (_ticksUntilDeletion > _ticksUntilDeletionMax-1)
             {
