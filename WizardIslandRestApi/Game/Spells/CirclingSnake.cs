@@ -38,7 +38,7 @@ namespace WizardIslandRestApi.Game.Spells
         private Vector2 _target;
         private float _angle; // circling angle
         private int _snakePartsToCreate;
-        private int _ticksUntilDeletionMax;
+        //private int _ticksUntilDeletionMax;
         public CirclingSnakePart? _parent; // body part in front
         public CirclingSnakePart? _child; // body part in front
         private Game _game;

@@ -32,6 +32,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Barrel(player),
             (player) => new Parry(player),
             (player) => new Zap(player),
+            (player) => new IceLance(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
@@ -63,7 +64,7 @@ namespace WizardIslandRestApi.Game.Spells
         {
             MyPlayer = player;
         }
-        protected Game GetCurrentGame() { return MyPlayer.GetGame(); }
+        public Game GetCurrentGame() { return MyPlayer.GetGame(); }
         protected int GetCurrentGameTick() { return GetCurrentGame().GameTick; }
         //protected int GetCurrentGameTick() { return MyPlayer != null ? GetCurrentGame().GameTick : 0; }
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);

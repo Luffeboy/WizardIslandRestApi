@@ -22,7 +22,7 @@ namespace WizardIslandRestApi.Game.Spells
                 dir = dir.Normalized() * _rangeMax;
                 endPos = pos + dir;
             }
-            var ticksUntilDeletion = (int)(dir.Length() * .75f);
+            var ticksUntilDeletion = Math.Max((int)(dir.Length() * .75f), 1);
             dir.Normalize();
             Vector2 dirNormal = dir.Normal();
             Vector2 startPos = pos + 

@@ -27,6 +27,7 @@ namespace WizardIslandRestApi.Game
         private DateTime _gameCreated;
         private DateTime _gameStarted;
         private DateTime _gameWillEnd;
+        private long _lastUpdateMs;
 
         public Map GameMap { get; } = new Map();
         // event stuff
@@ -57,6 +58,7 @@ namespace WizardIslandRestApi.Game
         }
         public void GameLoop()
         {
+            _lastUpdateMs = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             while (CurrentState == GameState.Joinable)
             {
                 // waiting for players
@@ -189,7 +191,10 @@ namespace WizardIslandRestApi.Game
 
         private void SleepBetweenUpdates()
         {
-            Thread.Sleep(_sleepTimeMs);
+            var now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            var sleepTime = Math.Max(_sleepTimeMs - (now - _lastUpdateMs), 1);
+            Thread.Sleep((int)sleepTime);
+            _lastUpdateMs = now;
         }
 
         public void SelectNewEvent()

@@ -3,7 +3,7 @@
     public abstract class CantHitOwnerAtStartSpellEntity : Entity
     {
         protected int _ticksUntilDeletion;
-        private int _ticksUntilDeletionMax;
+        protected int _ticksUntilDeletionMax;
         public abstract int TicksUntillCanHitOwner { get; set; }
         public CantHitOwnerAtStartSpellEntity(Player owner, int ticksUntilDeletion, Vector2 startPos) : base(owner, startPos)
         {

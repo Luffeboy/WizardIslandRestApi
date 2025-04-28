@@ -35,6 +35,7 @@ namespace WizardIslandRestApi.Game.Spells
     {
         private Vector2 _pos;
         public int TicksUntilDeletion { get; set; }
+        public float SlowAmount { get; set; } = .1f;
         public FrostFieldEntity(Player owner, Vector2 pos) : base(owner, pos)
         {
             _pos = pos;
@@ -49,7 +50,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool OnCollision(Player other)
         {
-            other.ApplyDebuff(new Slowed(other) { SpeedMultiplier = .1f, TicksTillRemoval = 3 });
+            other.ApplyDebuff(new Slowed(other) { SpeedMultiplier = SlowAmount, TicksTillRemoval = 3 });
             return false;
         }
 
