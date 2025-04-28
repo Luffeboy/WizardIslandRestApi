@@ -16,7 +16,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            int ticksUntillDeletion = 1 * Game._updatesPerSecond;
+            int ticksUntillDeletion = (int)(.5f * Game._updatesPerSecond);
             if (_entity == null)
             {
                 _usedSpellTick = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
@@ -64,6 +64,7 @@ namespace WizardIslandRestApi.Game.Spells
         {
             _spell = spell;
             EntityId = "IceLance";
+            Color = "100, 100, 255";
         }
         public override bool OnCollision(Entity other)
         {
