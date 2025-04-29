@@ -40,7 +40,6 @@
             // spell can be cast, again
             GetCurrentGame().Entities.Add(new WaitUntillSpellOnCooldownEntity(MyPlayer, _spell, () =>
             {
-                Console.WriteLine("abc");
                 CopyGoOnCooldown();
             }));
         }
