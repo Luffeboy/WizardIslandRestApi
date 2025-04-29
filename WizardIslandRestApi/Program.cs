@@ -1,5 +1,4 @@
 using WizardIslandRestApi.Game;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

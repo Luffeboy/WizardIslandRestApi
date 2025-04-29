@@ -11,6 +11,7 @@ namespace WizardIslandRestApi.Game.Spells
     }
     public abstract class Spell
     {
+        public int SpellIndex { get; private set; }
         public virtual string Name { get { return GetType().Name; } }
         public abstract int CooldownMax { get; protected set; }
         public int CurrentCooldown { get; set; }
@@ -70,8 +71,7 @@ namespace WizardIslandRestApi.Game.Spells
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
-#if DEBUG
-#else
+#if !DEBUG
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
 #endif
         }
@@ -82,6 +82,15 @@ namespace WizardIslandRestApi.Game.Spells
         public virtual void FullReset()
         {
             CurrentCooldown = -9999;
+        }
+
+        /// <summary>
+        /// This is called in, when creating instance of spell, do not call
+        /// </summary>
+        /// <param name="index"></param>
+        public void SetSpellIndex (int index)
+        {
+            SpellIndex = index;
         }
     }
 }

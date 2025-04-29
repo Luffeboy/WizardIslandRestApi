@@ -69,7 +69,10 @@ namespace WizardIslandRestApi.Game
             // spells
             MySpells = new Spell[spells.Length];
             for (int i = 0; i < spells.Length; i++)
+            {
                 MySpells[i] = Spell.GetSpell(this, spells[i]);
+                MySpells[i].SetSpellIndex(spells[i]);
+            }
 
             Password = "";
             Random random = new Random();
