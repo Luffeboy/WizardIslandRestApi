@@ -34,6 +34,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Parry(player),
             (player) => new Zap(player),
             (player) => new IceLance(player),
+            (player) => new Link(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
