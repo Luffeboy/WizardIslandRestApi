@@ -102,7 +102,8 @@ namespace WizardIslandRestApi.Controllers
                     Password = p.Password,
                     Map = game.GameMap,
                     YourSpells = spells,
-                    GameDuration = WizardIslandRestApi.Game.Game._gameDuration
+                    GameDuration = WizardIslandRestApi.Game.Game._gameDuration,
+                    EventDuration = game.TicksTillNextEventMax,
                 });
             }
         }
@@ -115,7 +116,7 @@ namespace WizardIslandRestApi.Controllers
             {
                 Games = _gameManager.GetAvailableGames(),
                 SpellTypes = Enum.GetNames(typeof(SpellType)),
-                AvailableSpells = spells.Select(spell => new { spell.Name, spell.Type, Cooldown = ((float)spell.CooldownMax / Game.Game._updatesPerSecond) })
+                AvailableSpells = spells.Select(spell => new { spell.Name, spell.Type, Cooldown = ((float)spell.CooldownMax / Game.Game._updatesPerSecond) }),
             });
         }
         [HttpGet("/{gameId}")]
