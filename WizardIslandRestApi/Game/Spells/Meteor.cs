@@ -25,7 +25,6 @@ namespace WizardIslandRestApi.Game.Spells
                 Damage = _damage,
                 KnockbackMin = _knockbackMin,
                 KnockbackMax = _knockbackMax,
-                EntityId = GetType().Name,
             });
             GoOnCooldown();
         }
@@ -48,6 +47,7 @@ namespace WizardIslandRestApi.Game.Spells
             Pos = pos;
             Height = EntityHeight.Ground;
             _game = game;
+            EntityId = "Meteor";
         }
 
         public override bool OnCollision(Entity other)
