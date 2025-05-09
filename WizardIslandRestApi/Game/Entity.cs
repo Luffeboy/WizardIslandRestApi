@@ -15,7 +15,10 @@ namespace WizardIslandRestApi.Game
         public string Color { get; set; } = "0, 0, 0";
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
         public Collider MyCollider { get; protected set; } // may be null :)
-        public bool Visable { get; set; } = true;
+        /// <summary>
+        /// VisableTo -1 is everyone, else it is their id. Any other number makes it invisable to everyone
+        /// </summary>
+        public int VisableTo { get; set; } = -1;
         public string EntityId { get; set; } = "";
         public float ForwardAngle { get; set; } = 0;
         public Entity(Player owner, Vector2? startPos = null)

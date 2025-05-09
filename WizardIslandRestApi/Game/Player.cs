@@ -99,8 +99,7 @@ namespace WizardIslandRestApi.Game
             ApplyDebuff(new Invulnerability(this) { TicksTillRemoval = 3 * Game._updatesPerSecond });
             // ready spells
             for (int i = 0; i < MySpells.Length; i++)
-                if (MySpells[i].Type != SpellType.Ultimate)
-                    MySpells[i].CurrentCooldown = 0;
+                MySpells[i].OnPlayerReset();
             //get random spawn on the map
             Random r = new Random();
             float angle = (float)(r.NextDouble() * Math.PI * 2);

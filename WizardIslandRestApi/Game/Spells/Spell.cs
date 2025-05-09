@@ -40,6 +40,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BullCharge(player),
             (player) => new Sprint(player),
             (player) => new Swap(player),
+            (player) => new KeyOfDestiny(player),
 
             (player) => new Luna(player),
             (player) => new Stella(player),
@@ -79,6 +80,11 @@ namespace WizardIslandRestApi.Game.Spells
         public override string ToString()
         {
             return Name;
+        }
+        public virtual void OnPlayerReset()
+        {
+            if (Type != SpellType.Ultimate)
+                CurrentCooldown = 0;
         }
         public virtual void FullReset()
         {

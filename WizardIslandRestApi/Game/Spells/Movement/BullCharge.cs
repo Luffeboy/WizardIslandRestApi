@@ -51,6 +51,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             _ticksUntilDeletionMax = ticksUntilDeletion;
             _hasHitPlayers.Add(owner);
             Size = owner.Size;
+            VisableTo = -2;
         }
 
         public override bool OnCollision(Entity other)
