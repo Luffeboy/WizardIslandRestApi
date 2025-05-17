@@ -15,7 +15,11 @@ namespace WizardIslandRestApi.Game.Spells.Movement
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
+            var dir = _teleportToLocation.Pos - startPos;
             MyPlayer.TeleportTo(_teleportToLocation.Pos);
+            MyPlayer.Vel = new Vector2();
+            MyPlayer.ApplyKnockback(dir.Normalized(), 1.25f); 
+
             GoOnCooldown();
         }
         public override void OnPlayerReset()
@@ -33,8 +37,10 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         private Game _game;
         public bool ShouldBeDestroyed { get; set; } = false;
         public float Speed { get; set; } = .75f;
+        private Player _player;
         public KeyOfDestinyEntity(Player owner, Game game, Vector2? startPos = null) : base(owner, startPos)
         {
+            _player = owner;
             MyCollider = null;
             Height = EntityHeight.Ground;
             VisableTo = owner.Id;
@@ -47,29 +53,31 @@ namespace WizardIslandRestApi.Game.Spells.Movement
 
         public override bool Update()
         {
-            Vector2 pos = new Vector2();
+            Vector2 pos = _player.Pos;
+            Vector2 dir = new Vector2();
             var playerCount = _game.Players.Count;
             for (int i = 0; i < playerCount; i++)
-                pos += _game.Players[i].Pos;
-            pos /= playerCount;
+                if (_game.Players[i] != _player && !_game.Players[i].IsDead)
+                    dir += (_game.Players[i].Pos - _player.Pos) * .75f;
+            pos += dir / ((playerCount == 1 ? 2 : playerCount) - 1);
             // check if we are in the lave
 
             Map map = _game.GameMap;
-            float distanceToMapCenterSqr = (map.GroundMiddle - pos).LengthSqr();
+            dir = (pos - Pos).Normalized();
+            Pos += dir * Speed;
+            float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
             // in middle
             if (distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius)
-                pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * map.CircleInnerRadius;
+                Pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * map.CircleInnerRadius;
             // outside
             else if (distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius)
-                pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * (map.CircleRadius-.1f);
-            var dir = (pos - Pos).Normalized();
-            Pos += dir * Speed;
+                Pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * (map.CircleRadius - .1f);
             if (dir.Dot(pos - Pos) < 0)
                 Pos = pos;
             return ShouldBeDestroyed;
         }
 
-        // these should not be called.
+        // these should not be called, as it doesn't have a collider.
         public override bool OnCollision(Player other)
         { return false; }
         public override bool OnCollision(Entity other)
