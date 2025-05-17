@@ -220,6 +220,18 @@ namespace WizardIslandRestApi.Game
                 }
             }
         }
+        public void RemoveDebuff(string name)
+        {
+            for (int i = 0; i < Debuffs.Count; i++)
+            {
+                if (Debuffs[i].ToString() == name)
+                {
+                    Debuffs[i].OnRemove();
+                    Debuffs.RemoveAt(i);
+                    return;
+                }
+            }
+        }
         public void TeleportTo(Vector2 pos)
         {
             Pos = pos;

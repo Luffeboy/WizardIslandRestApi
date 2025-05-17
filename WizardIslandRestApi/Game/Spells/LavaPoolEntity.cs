@@ -7,6 +7,9 @@
 
         private int _ticksUntilDeletion;
         private int _ticksUntilDeletionMax;
+
+        private int _lastHealedTick = -1;
+        private int _healCooldown = Game._updatesPerSecond / 3;
         public int TicksUntilDeletion
         {
             get { return _ticksUntilDeletion; }
@@ -25,7 +28,17 @@
 
         public override bool OnCollision(Player other)
         {
-            other.TakeDamage(Game.LavaDamage, MyCollider.Owner);
+            if (other == MyCollider.Owner)
+            {
+                var gameTick = other._game.GameTick;
+                if (_lastHealedTick + _healCooldown < gameTick && (other.Pos - Pos).LengthSqr() < Size / 10)
+                {
+                    other.Heal(Game.LavaDamage * 2.0f);
+                    _lastHealedTick = gameTick;
+                }
+            }
+            else
+                other.TakeDamage(Game.LavaDamage, MyCollider.Owner);
             return false;
         }
         public override bool OnCollision(Entity other)

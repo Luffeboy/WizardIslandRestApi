@@ -14,8 +14,8 @@ namespace WizardIslandRestApi.Game.Spells
         public int SpellIndex { get; private set; }
         public virtual string Name { get { return GetType().Name; } }
         public abstract int CooldownMax { get; protected set; }
-        public int CurrentCooldown { get; set; }
-        public bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
+        public virtual int CurrentCooldown { get; set; }
+        public virtual bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
         public Player MyPlayer { get; private set; }
         public virtual SpellType Type { get; set; } = SpellType.Attack;
         public virtual bool CanBeReplaced { get; protected set; } = true; // set this to false, if it could "dangerous" to replace this spell currently
@@ -35,6 +35,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Zap(player),
             (player) => new IceLance(player),
             (player) => new Link(player),
+            (player) => new BrickThrow(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
@@ -73,9 +74,9 @@ namespace WizardIslandRestApi.Game.Spells
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
-#if !DEBUG
+//#if !DEBUG
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
-#endif
+//#endif
         }
         public override string ToString()
         {
