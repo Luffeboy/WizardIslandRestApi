@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+﻿using System.Numerics;
+using WizardIslandRestApi.Game.Spells.Debuffs;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Spells
@@ -20,6 +21,11 @@ namespace WizardIslandRestApi.Game.Spells
         {
             MyPlayer.RemoveDebuff(BrickBuff.BrickName);
             GoOnCooldown();
+        }
+        public override void OnPlayerReset()
+        {
+            base.OnPlayerReset();
+            MyPlayer.ApplyDebuff(new BrickBuff(MyPlayer));
         }
     }
 
