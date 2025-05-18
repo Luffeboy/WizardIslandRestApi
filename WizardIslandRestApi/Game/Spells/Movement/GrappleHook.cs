@@ -6,6 +6,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     {
         private GrappleHookEntity? _hook = null;
         public override SpellType Type { get; set; } = SpellType.Movement;
+        public override string Name => "Grapple hook";
         public GrappleHook(Player player) : base(player)
         {
         }

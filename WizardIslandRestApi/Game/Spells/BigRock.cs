@@ -4,6 +4,7 @@
     {
         private float _range = 20;
         private int _rockLifetime = 5 * Game._updatesPerSecond;
+        public override string Name => "Big rock";
         public BigRock(Player player) : base(player)
         {
         }
