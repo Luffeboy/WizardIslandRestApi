@@ -4,7 +4,7 @@ namespace WizardIslandRestApi.Game.Events
 {
     public class PenguinEvent : EventBase
     {
-        private int _penguinCount = 10;
+        private int _penguinCount = 15;
         private List<PenguinEntity> _penguins = new List<PenguinEntity>();
         public PenguinEvent(Game game) : base(game)
         {

@@ -92,7 +92,7 @@ namespace WizardIslandRestApi.Game.Spells.ExtraEntities
             {
                 Color = "50, 50, 50",
                 Size = ExplosionSize,
-                FallTime = 5,
+                FallTime = 3,
                 Damage = Damage,
                 KnockbackMin = Knockback * .75f,
                 KnockbackMax = Knockback,
