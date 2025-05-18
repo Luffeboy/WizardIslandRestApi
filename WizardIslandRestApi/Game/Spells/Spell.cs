@@ -42,6 +42,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Sprint(player),
             (player) => new Swap(player),
             (player) => new KeyOfDestiny(player),
+            (player) => new GrappleHook(player),
 
             (player) => new Luna(player),
             (player) => new Stella(player),
@@ -70,13 +71,12 @@ namespace WizardIslandRestApi.Game.Spells
         }
         public Game GetCurrentGame() { return MyPlayer.GetGame(); }
         protected int GetCurrentGameTick() { return GetCurrentGame().GameTick; }
-        //protected int GetCurrentGameTick() { return MyPlayer != null ? GetCurrentGame().GameTick : 0; }
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
-//#if !DEBUG
+#if !DEBUG
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
-//#endif
+#endif
         }
         public override string ToString()
         {

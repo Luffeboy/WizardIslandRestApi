@@ -10,5 +10,11 @@
         protected EntityPlus(Player owner, int ticksUntilDeletion, Vector2 startPos) : base(owner, ticksUntilDeletion, startPos)
         {
         }
+
+        public override void ReTarget(Vector2 pos)
+        {
+            _ticksUntilDeletion = _ticksUntilDeletionMax;
+            Dir = (pos - Pos).Normalized();
+        }
     }
 }
