@@ -41,13 +41,13 @@ namespace WizardIslandRestApi.Game.Spells
             _instancesOfDamageTaken -= sawCount * _stackCost;
 #endif
             // entity attibutes
-            int ticksUntillDeletion = 5 * Game._updatesPerSecond;
-            float size = 1.5f;
-            float damage = 7.5f;
-            float knockback = 1.3f;
-            float speed = 7.5f / ticksUntillDeletion; // It will go 3 units away from the player
+            const int ticksUntillDeletion = 5 * Game._updatesPerSecond;
+            const float size = 1.5f;
+            const float damage = 7.5f;
+            const float knockback = 1.3f;
+            const float speed = 7.5f / ticksUntillDeletion; // It will go 3 units away from the player
             const float rotationsPerSecond = .5f; // how many times each saw should go around the player, each second
-            float rotSpeed = MathF.PI * 2 / Game._updatesPerSecond * rotationsPerSecond;
+            const float rotSpeed = MathF.PI * 2 / Game._updatesPerSecond * rotationsPerSecond;
 
             // get starting angle
             float angle = Vector2.AngleBetween(startPos, mousePos) - MathF.PI / 2; // 90° offset

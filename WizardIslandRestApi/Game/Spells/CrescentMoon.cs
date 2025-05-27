@@ -66,6 +66,8 @@ namespace WizardIslandRestApi.Game.Spells
         }
         private int _ticksUntilDeletion;
         private int _ticksUntilDeletionMax;
+        public int DeleteWhenLessThan = -3;
+        public int TicksUntillCanHitPlayer = 5;
         public Vector2 StartPos { get; set; }
         public Vector2 EndPos { get; set; }
         public Vector2 ControlPoint { get; private set; }
@@ -85,7 +87,7 @@ namespace WizardIslandRestApi.Game.Spells
         public override bool OnCollision(Player other)
         {
             // just created entity
-            if (TicksUntilDeletionMax - _ticksUntilDeletion < 5 && other == MyCollider.Owner)
+            if (TicksUntilDeletionMax - _ticksUntilDeletion < TicksUntillCanHitPlayer && other == MyCollider.Owner)
                 return false;
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
@@ -98,7 +100,7 @@ namespace WizardIslandRestApi.Game.Spells
             Pos = Vector2.CalculatePointOnSpline(StartPos, EndPos, ControlPoint, (float)(TicksUntilDeletionMax - _ticksUntilDeletion) / (float)TicksUntilDeletionMax);
             _ticksUntilDeletion--;
             MyCollider.Pos = Pos;
-            return _ticksUntilDeletion < -3;
+            return _ticksUntilDeletion < DeleteWhenLessThan;
         }
     }
 }

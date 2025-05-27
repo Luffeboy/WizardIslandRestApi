@@ -53,6 +53,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new SpeedBlits(player),
             (player) => new CopySpell(player),
             (player) => new Railgun(player),
+            (player) => new LastResort(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
