@@ -33,12 +33,11 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            //Console.WriteLine("Current state: " + _currentState.ToString());
             switch (_currentState)
             {
                 case BloodWormStates.Ready:
-                    _shots = 0;
                     _currentState = BloodWormStates.CreatingWorm;
+                    _shots = 0;
                     for (int i = 0; i < _minWormPartCount; i++)
                         CreateWormPart(pos, mousePos);
                     _entityToCreateWorm = new WaitToDoSomethingEntity(0, () =>
@@ -51,7 +50,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                             return;
                         }
                         MyPlayer.Stats.Health -= WormPartCost; // we don't want to scale it with damage multipliers, in this case
-                        // actually create the worm part
+                                                                // actually create the worm part
                         CreateWormPart(pos, mousePos);
                     });
                     GetCurrentGame().Entities.Add(_entityToCreateWorm);
@@ -66,6 +65,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                         ForceGoOnCooldown();
                     break;
             }
+            
         }
         private void CreateWormPart(Vector2 pos, Vector2 target)
         {
@@ -243,8 +243,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             // give the player the health back
             MyCollider.Owner.Stats.Health += BloodWorm.WormPartCost;
-            if (MyCollider.Owner.Stats.Health > MyCollider.Owner.Stats.MaxHealth)
-                MyCollider.Owner.Stats.Health = MyCollider.Owner.Stats.MaxHealth;
             // set the child as the new head
             if (Child != null)
             {

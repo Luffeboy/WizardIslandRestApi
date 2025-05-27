@@ -6,6 +6,7 @@
 
         public BrickBuff(Player player) : base(player)
         {
+            Stackable = true;
         }
 
         public override void OnApply()

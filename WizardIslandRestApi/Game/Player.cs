@@ -5,16 +5,25 @@ using WizardIslandRestApi.Game.Spells.Debuffs;
 
 namespace WizardIslandRestApi.Game
 {
+    public class PlayerStatObservers
+    {
+        /// <summary>
+        /// Health before, then health after
+        /// </summary>
+        public Action<int, int> OnHealthChanged;
+    }
     public class PlayerStats
     {
+        public PlayerStatObservers Observers {  get; } = new PlayerStatObservers();
         public const float DefaultSpeed = 1.5f / Game._updatesPerSecond;
         private float _speed = DefaultSpeed;
         private float _speedMultiplier = 1f;
+        private int _health = 0;
         public float Speed { get { return _speed * SpeedMultiplier; } set { _speed = value; } }
         public float SpeedMultiplier { get { return _speedMultiplier; } set { _speedMultiplier = value; } }
         public float MaxSpeed { get { return Speed * Game._updatesPerSecond; } }
         public float SlowDownSpeed { get { return Speed / 3; } }
-        public int Health { get; set; }
+        public int Health { get { return _health; } set { if (value > MaxHealth) value = MaxHealth; if (Observers.OnHealthChanged != null) Observers.OnHealthChanged(_health, value); _health = value; } }
         public int MaxHealth { get; set; } = 100;
 
         public float CooldownMultiplier { get; set; } = 1;
@@ -33,6 +42,7 @@ namespace WizardIslandRestApi.Game
         public Action<int> OnSpellCast;
         public Action OnRespawnPreReset;
         public Action OnRespawnPostReset;
+        public Action OnHealthChanged;
     }
     public class Player
     {
@@ -85,7 +95,8 @@ namespace WizardIslandRestApi.Game
             if (IsDead || spellIndex < 0 || spellIndex >= MySpells.Length || !MySpells[spellIndex].CanCast)
                 return;
             OverridesAndObservers.OnSpellCast?.Invoke(spellIndex);
-            MySpells[spellIndex].OnCast(Pos, mousePos);
+            lock(MySpells[spellIndex])
+                MySpells[spellIndex].OnCast(Pos, mousePos);
         }
 
         public void Reset()
@@ -259,8 +270,6 @@ namespace WizardIslandRestApi.Game
             if (scaledAmount < 0) 
                 scaledAmount = 0;
             Stats.Health += scaledAmount;
-            if (Stats.Health > Stats.MaxHealth)
-                Stats.Health = Stats.MaxHealth;
         }
         private void Die()
         {

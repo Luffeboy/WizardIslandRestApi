@@ -69,5 +69,28 @@
 
             return new Vector2(x, y);
         }
+        /// <summary>
+        /// Gets the angle between p0 and p1.
+        /// </summary>
+        /// <param name="p0">Starting point</param>
+        /// <param name="p1">Target point</param>
+        /// <returns></returns>
+        public static float AngleBetween(Vector2 p0, Vector2 p1)
+        {
+            float yDiff = p1.y - p0.y;
+            float xDiff = p1.x - p0.x;
+            return MathF.Atan2(yDiff, xDiff);
+            /*
+            // for testing if it works
+            Random r = new Random();
+            for (int i = 0; i < 360; i++)
+            {
+                float rad = MathF.PI * i / 180;
+                Vector2 p0 = new Vector2((float)(r.NextDouble() * 1000), (float)(r.NextDouble() * 1000));
+                Vector2 p1 = p0 + new Vector2(MathF.Cos(rad), MathF.Sin(rad));
+                Console.WriteLine(rad + ": " + Vector2.AngleBetween(p0, p1));
+            }
+            */
+        }
     }
 }
