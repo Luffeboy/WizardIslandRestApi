@@ -38,8 +38,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             for (int i = 0; i < boltCount; i++)
             {
                 if (MyPlayer.Stats.Health > healthCost)
-                    MyPlayer.TakeDamage(healthCost);
-                GetCurrentGame().Entities.Add(new ChaosBolt(MyPlayer, ticksUntilDeletion, startPos, endPos + GetRandomPosInRange(maxDeviation), healthCost, (float)(r.NextDouble() * 2 - 1) * maxToSide)
+                    MyPlayer.Stats.Health -= healthCost;
+                GetCurrentGame().Entities.Add(new ChaosBolt(MyPlayer, ticksUntilDeletion, startPos, endPos + GetRandomPosInRange(maxDeviation), healthCost, (float)(r.NextDouble() * 2 - 1) * maxToSide, (float)r.NextDouble() * .6f + .2f)
                 {
                     Size = .35f,
                     Color = $"{r.Next(256)},{r.Next(256)},{r.Next(256)}",
@@ -111,7 +111,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         }
         private void Die()
         {
-            MyCollider.Owner.Heal(_healthCost);
+            MyCollider.Owner.Stats.Health += _healthCost;
         }
     }
 }

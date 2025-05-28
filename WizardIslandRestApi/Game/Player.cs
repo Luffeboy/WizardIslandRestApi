@@ -23,7 +23,7 @@ namespace WizardIslandRestApi.Game
         public float SpeedMultiplier { get { return _speedMultiplier; } set { _speedMultiplier = value; } }
         public float MaxSpeed { get { return Speed * Game._updatesPerSecond; } }
         public float SlowDownSpeed { get { return Speed / 3; } }
-        public int Health { get { return _health; } set { if (value > MaxHealth) value = MaxHealth; if (Observers.OnHealthChanged != null) Observers.OnHealthChanged(_health, value); _health = value; } }
+        public int Health { get { return _health; } set { if (value > MaxHealth) value = MaxHealth; Observers.OnHealthChanged?.Invoke(_health, value); _health = value; } }
         public int MaxHealth { get; set; } = 100;
 
         public float CooldownMultiplier { get; set; } = 1;

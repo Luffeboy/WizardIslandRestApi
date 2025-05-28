@@ -45,6 +45,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Swap(player),
             (player) => new KeyOfDestiny(player),
             (player) => new GrappleHook(player),
+            (player) => new Phoenix(player),
 
             (player) => new Luna(player),
             (player) => new Stella(player),
