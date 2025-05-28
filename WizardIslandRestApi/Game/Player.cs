@@ -67,6 +67,10 @@ namespace WizardIslandRestApi.Game
         private Spell[] MySpells { get; set; }
         public int TicksTillAlive { get; private set; }
         public bool IsDead { get { return TicksTillAlive > 0; } }
+        /// <summary>
+        /// This is set in the update, damage for beeing in lava, is calculated after debuffs update
+        /// </summary>
+        public bool IsInLava { get; set; } = false;
         
         List<DebuffBase> Debuffs = new List<DebuffBase>();
         public Player(int id, Game game, int[] spells)
@@ -139,18 +143,18 @@ namespace WizardIslandRestApi.Game
                     Reset();
                 return;
             }
-            UpdateDebuffs();
             Move();
             // update collider
             //MyCollider.Pos = Pos;
             //MyCollider.Size = Size;
             // take damage from lava
             Map map = GetMap();
-            float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr(); 
-            if (distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius || distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius)
-            {
+            float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
+            IsInLava = distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius || distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius;
+            UpdateDebuffs();
+            if (IsInLava)
                 TakeDamage(Game.LavaDamage);
-            }
+            
         }
 
         private void Move()

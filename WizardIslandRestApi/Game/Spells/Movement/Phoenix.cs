@@ -6,7 +6,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     {
         private int _currentCooldown;
         public override int CooldownMax { get; protected set; } = 35 * Game._updatesPerSecond;
-        public override int CurrentCooldown { get => MyPlayer.Stats.Health < MyPlayer.Stats.MaxHealth / 3 ? _currentCooldown : GetCurrentGameTick() + Game._updatesPerSecond; set => _currentCooldown = value; }
+        public override int CurrentCooldown { get => (MyPlayer.IsInLava && MyPlayer.Stats.Health < MyPlayer.Stats.MaxHealth / 3) ? _currentCooldown : GetCurrentGameTick() + Game._updatesPerSecond*100/3; set => _currentCooldown = value; }
         public Phoenix(Player player) : base(player)
         {
             Type = SpellType.Movement;
