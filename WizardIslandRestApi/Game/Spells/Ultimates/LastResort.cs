@@ -12,7 +12,13 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         }
         public override string Name => "Last Resort";
 
-        public override int CurrentCooldown { get => MyPlayer.Stats.Health <= MyPlayer.Stats.MaxHealth/3 ? _cooldown : GetCurrentGameTick()+Game._updatesPerSecond*100/3; set => _cooldown = value; }
+        public override int CurrentCooldown 
+        { 
+            get => (_cooldown > GetCurrentGameTick() || MyPlayer.Stats.Health <= MyPlayer.Stats.MaxHealth / 3) ? 
+                _cooldown : 
+                GetCurrentGameTick()+Game._updatesPerSecond*100/3; 
+            set => _cooldown = value; 
+        }
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
