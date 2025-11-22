@@ -20,6 +20,7 @@
             {
                 Size = 3
             });
+            GoOnCooldown();
         }
     }
     public class BigRockEntity : Entity
