@@ -68,6 +68,8 @@ namespace WizardIslandRestApi.Game
                     GameTick++;
                     if (GameTick >= _gameDuration || (GameTick > 5 * _updatesPerSecond && Players.Count == 0))
                         CurrentState = GameState.Ended;
+                    foreach (Player p in Players.Values)
+                        p.SendGameState();
                 }
                 SleepBetweenUpdates();
 
@@ -88,6 +90,8 @@ namespace WizardIslandRestApi.Game
                     // end game
                     if (GameTick > _gameDuration)
                         CurrentState = GameState.Ended;
+                    foreach (Player p in Players.Values)
+                        p.SendGameState();
                 }
                 SleepBetweenUpdates();
             }
@@ -178,6 +182,8 @@ namespace WizardIslandRestApi.Game
         public void EndGame()
         {
             CurrentState = GameState.Ended;
+            foreach (Player p in Players.Values)
+                p.SendData("{\"ended\":\"true\"}");
             GameManager.Instance.DeleteGame(Id);
         }
 

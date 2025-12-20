@@ -1,7 +1,12 @@
 ﻿using System.Drawing;
+using System.Net.Sockets;
+using System.Net.WebSockets;
+using System.Numerics;
+using System.Text.Json;
 using WizardIslandRestApi.Game.Physics;
 using WizardIslandRestApi.Game.Spells;
 using WizardIslandRestApi.Game.Spells.Debuffs;
+using static WizardIslandRestApi.Controllers.WizardIslandController;
 
 namespace WizardIslandRestApi.Game
 {
@@ -50,6 +55,7 @@ namespace WizardIslandRestApi.Game
         private float _size; // don't set here
         public int Id { get; set; }
         public Game _game { get; set; }
+        public WebSocket? WebSocket { get; private set; } = null;
         public string Name { get; set; }
         public string Password { get; }
         public float CanStopSpeed { get { return Stats.Speed * 1.1f; } }
@@ -309,6 +315,100 @@ namespace WizardIslandRestApi.Game
         }
 
         public IEnumerable<DebuffBase> GetDebuffs() { return Debuffs; }
+
+
+        internal void SetWebSocket(WebSocket socket)
+        {
+            WebSocket = socket;
+        }
+        internal async Task readSocketDataAsync()
+        {
+
+            while (_game.CurrentState != GameState.Ended &&
+                WebSocket.State == WebSocketState.Open)
+            {
+                try
+                {
+                    var segment = new ArraySegment<byte>(new byte[1024]);
+                    await WebSocket.ReceiveAsync(segment, System.Threading.CancellationToken.None);
+                    var message = System.Text.Encoding.UTF8.GetString(segment.Array, 0, segment.Count).Trim('\0');
+                    var data = System.Text.Json.JsonSerializer.Deserialize<PlayerSendDataPacket>(message);
+
+                    // get action type
+                    string packetTypeAsString = "";
+                    int index;
+                    for (index = 0; index < data.ExtraData.Length; index++)
+                    {
+                        if (data.ExtraData[index] < '0' || data.ExtraData[index] > '9')
+                            break;
+                        packetTypeAsString += data.ExtraData[index];
+                    }
+                    if (index == 0 || index == data.ExtraData.Length)
+                        continue;
+                    int packetType = int.Parse(packetTypeAsString);
+                    string extraData = data.ExtraData.Substring(index);
+
+                    lock (_game)
+                    {
+                        switch (packetType)
+                        {
+                            case (int)ActionPacketType.Move:
+                                TargetPos = JsonSerializer.Deserialize<Vector2>(extraData);
+                                break;
+                            case (int)ActionPacketType.Spell:
+                                SpellData spellData = JsonSerializer.Deserialize<SpellData>(extraData);
+                                CastSpell(spellData.spellIndex, spellData.mousePos);
+                                break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+#if DEBUG
+                    Console.WriteLine(ex.Message);
+#endif
+                }
+            Thread.Sleep(10);
+            }
+            WebSocket = null;
+        }
+
+        public void SendGameState()
+        {
+            if (WebSocket is null)
+                return;
+            SendData(new
+            {
+                GameTick = _game.GameTick,
+                Players = PlayerMinimum.Copy(_game.Players.Values),
+                Entities = _game.Entities.Where(e => e.VisableTo == -1 || e.VisableTo == Id).Select(e => new { e.Pos, e.Size, e.Color, e.EntityId, angle = e.ForwardAngle }).ToArray(),
+                YourSpells = GetSpellCooldowns(),
+                Map = _game.GameMap,
+                Event = _game.CurrentEvent,
+                NextEvent = _game.NextEvent,
+            });
+        }
+
+        public void SendData<T>(T data)
+        {
+            SendData(JsonSerializer.Serialize(data, new JsonSerializerOptions
+            {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}));
+        }
+        public void SendData(string data)
+        {
+            try
+            {
+                var buffer = System.Text.Encoding.UTF8.GetBytes(data);
+                var segment = new ArraySegment<byte>(buffer);
+                WebSocket.SendAsync(segment, WebSocketMessageType.Text, true, System.Threading.CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Console.WriteLine(ex.Message);
+#endif
+            }
+        }
     }
 
     public class SpellCooldown
