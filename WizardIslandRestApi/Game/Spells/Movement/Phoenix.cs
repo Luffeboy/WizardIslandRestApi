@@ -17,8 +17,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         {
             const int ticksTillRemoval = 3 * Game._updatesPerSecond;
             MyPlayer.ApplyDebuff(new Invulnerability(MyPlayer) { TicksTillRemoval = ticksTillRemoval });
-            const int regenAmount = 5;
-            const int ticksBetweenRegen = 5;
+            const int regenAmount = 1;
+            const int ticksBetweenRegen = ticksTillRemoval / Game._updatesPerSecond;
             MyPlayer.ApplyDebuff(new RegenerationBuff(MyPlayer, ticksTillRemoval, regenAmount, ticksBetweenRegen));
             const float speedMultiplier = 1.5f;
             MyPlayer.ApplyDebuff(new SpeedBuff(MyPlayer)

@@ -38,7 +38,11 @@
                 }
             }
             else
-                other.TakeDamage(Game.LavaDamage, MyCollider.Owner);
+            {
+                other.IsInLavaFromOtherSource = true;
+                other.TakeDamage(0, MyCollider.Owner);
+            }
+            //other.TakeDamage(Game.LavaDamage, MyCollider.Owner);
             return false;
         }
         public override bool OnCollision(Entity other)

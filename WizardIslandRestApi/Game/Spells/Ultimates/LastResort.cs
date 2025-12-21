@@ -54,6 +54,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     DeleteWhenLessThan = -10,
                 });
             }
+
+            MyPlayer.ApplyDebuff(new Debuffs.Invulnerability(MyPlayer) { TicksTillRemoval = 1 * Game._updatesPerSecond });
             GoOnCooldown();
         }
     }

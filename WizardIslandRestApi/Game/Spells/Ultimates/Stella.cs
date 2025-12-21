@@ -29,7 +29,7 @@
                 Pos = target,
             });
 
-            GetCurrentGame().Entities.Add(new WaitToDoSomethingEntity(_waitUntillPoolActivates, () =>
+            GetCurrentGame().ScheduleAction(_waitUntillPoolActivates, () =>
             {
                 GetCurrentGame().Entities.Add(new LavaPoolEntity(MyPlayer, target)
                 {
@@ -38,7 +38,7 @@
                     TicksUntilDeletion = (_duration - _waitUntillPoolActivates),
                 });
             }
-            ));
+            );
 
             GoOnCooldown();
         }

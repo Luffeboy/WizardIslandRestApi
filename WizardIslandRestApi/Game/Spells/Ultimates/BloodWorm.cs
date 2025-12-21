@@ -16,7 +16,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         private float _knockback = 1.75f;
 
         private int _shots = 0;
-        private WaitToDoSomethingEntity? _entityToCreateWorm = null;
         private BloodWormEntity? _tail = null;
 
         private enum BloodWormStates { Ready, CreatingWorm, ShootoutWorm }
@@ -40,24 +39,28 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     _shots = 0;
                     for (int i = 0; i < _minWormPartCount; i++)
                         CreateWormPart(pos, mousePos);
-                    _entityToCreateWorm = new WaitToDoSomethingEntity(0, () =>
+                    bool CreateNewWormPart ()
                     {
-                        _entityToCreateWorm.TicksToWait = _ticksBetweenWormCreation;
                         // check the player has the health required
                         if (MyPlayer.Stats.Health <= WormPartCost)
                         {
                             OnCast(pos, mousePos);
-                            return;
+                            return false;
                         }
                         MyPlayer.Stats.Health -= WormPartCost; // we don't want to scale it with damage multipliers, in this case
-                                                                // actually create the worm part
+                                                               // actually create the worm part
                         CreateWormPart(pos, mousePos);
-                    });
-                    GetCurrentGame().Entities.Add(_entityToCreateWorm);
+                        return true;
+                    }
+                    void SchedueledAction()
+                    {
+                        if (_currentState == BloodWormStates.CreatingWorm && CreateNewWormPart())
+                            GetCurrentGame().ScheduleAction(_ticksBetweenWormCreation, SchedueledAction);
+                    }
+                    GetCurrentGame().ScheduleAction(0, SchedueledAction);
                     break;
                 case BloodWormStates.CreatingWorm:
                     _currentState = BloodWormStates.ShootoutWorm;
-                    _entityToCreateWorm.ActionAfterWaiting = () => { _entityToCreateWorm = null; };
                     break;
                 case BloodWormStates.ShootoutWorm:
                     ShootWorm(mousePos);

@@ -27,8 +27,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             ShadowEntity[] spells = new ShadowEntity[(int)(spellLen + 1)];
             for (int i = 0; i < spells.Length; i++)
                 GetCurrentGame().Entities.Add(spells[i] = new ShadowEntity() { Color = "255,255,0", Size = .5f, EntityId = "RailgunPartical", Pos = startPos + spellDir * i, ForwardAngle = forwardAngle, TicksUntilDeletion = _delay + 3 });
-            
-            GetCurrentGame().Entities.Add(new WaitToDoSomethingEntity(_delay, () =>
+
+            GetCurrentGame().ScheduleAction(_delay, () =>
             {
                 for (int i = 0; i < spells.Length; i++)
                 {
@@ -48,7 +48,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                         player.ApplyKnockback(spellDir, _knockback);
                     }
                 }
-            }));
+            });
             GoOnCooldown();
         }
     }

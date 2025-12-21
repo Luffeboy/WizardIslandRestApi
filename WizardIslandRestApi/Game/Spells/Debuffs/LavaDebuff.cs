@@ -20,7 +20,7 @@
 
         public override bool Update()
         {
-            _player.IsInLava = true;
+            _player.IsInLavaFromOtherSource = true;
             return --_ticksUntilRemoval < 0;
         }
     }

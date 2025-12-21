@@ -76,7 +76,9 @@ namespace WizardIslandRestApi.Game
         /// <summary>
         /// This is set in the update, damage for beeing in lava, is calculated after debuffs update
         /// </summary>
-        public bool IsInLava { get; set; } = false;
+        public bool IsInLava { get; private set; } = false;
+        public bool IsInLavaFromOtherSource { get; set; } = false;
+        public bool ImmuneToLavaDamage { get; set; } = false;
         
         List<DebuffBase> Debuffs = new List<DebuffBase>();
         public Player(int id, Game game, int[] spells)
@@ -156,9 +158,10 @@ namespace WizardIslandRestApi.Game
             // take damage from lava
             Map map = GetMap();
             float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
-            IsInLava = distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius || distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius;
+            IsInLava = IsInLavaFromOtherSource || distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius || distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius;
+            IsInLavaFromOtherSource = false;
             UpdateDebuffs();
-            if (IsInLava)
+            if (IsInLava && !ImmuneToLavaDamage)
                 TakeDamage(Game.LavaDamage);
             
         }

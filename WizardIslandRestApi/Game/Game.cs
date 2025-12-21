@@ -19,14 +19,14 @@ namespace WizardIslandRestApi.Game
         public const float LavaDamage = 1.0f;
         public int AllowedSpellCount { get; private set; } = 5;
         public const int _updatesPerSecond = 30;
-        private const int _gameMaxLengthMs = 5 * 60 * 1000; // 5 min
+        //private const int _gameMaxLengthMs = 5 * 60 * 1000; // 5 min
         //                               ms     fps
         private const int _sleepTimeMs = 1000 / _updatesPerSecond; // does not account for update time
         public const int _gameDuration = 5 * 60 * _updatesPerSecond;
         // unused, maybe...
-        private DateTime _gameCreated;
-        private DateTime _gameStarted;
-        private DateTime _gameWillEnd;
+        //private DateTime _gameCreated;
+        //private DateTime _gameStarted;
+        //private DateTime _gameWillEnd;
         private long _lastUpdateTick;
 
         public Map GameMap { get; } = new Map();
@@ -46,10 +46,12 @@ namespace WizardIslandRestApi.Game
         public float GlobalDamageMultiplier { get; private set; } = 0.0f;
         public GameModifier GameModifiers { get; private set; } = new GameModifier();
 
+        private List<ActionAndGameTick> _scheduledActions = new List<ActionAndGameTick>();
+
         public Game(int id) 
         {
             Id = id;
-            _gameCreated = DateTime.Now;
+            //_gameCreated = DateTime.Now;
             CurrentState = GameState.Joinable;
             CurrentEvent = new NoEvent(this);
             NextEvent = new NoEvent(this);
@@ -115,6 +117,12 @@ namespace WizardIslandRestApi.Game
         }
         private void Update()
         {
+            // execute scheduled actions
+            while (_scheduledActions.Count > 0 && _scheduledActions[0].GameTickToExecute <= GameTick)
+            {
+                _scheduledActions[0].MyAction();
+                _scheduledActions.RemoveAt(0);
+            }
             // update players
             foreach (Player player in Players.Values)
                 player.Update();
@@ -165,7 +173,7 @@ namespace WizardIslandRestApi.Game
         }
         public void StartGame()
         {
-            _gameStarted = DateTime.Now;
+            //_gameStarted = DateTime.Now;
             CurrentState = GameState.Started;
             Entities.Clear();
             // reset all players
@@ -183,7 +191,8 @@ namespace WizardIslandRestApi.Game
         {
             CurrentState = GameState.Ended;
             foreach (Player p in Players.Values)
-                p.SendData("{\"ended\":\"true\"}");
+                if (p.WebSocket is not null)
+                    p.SendData(new { Ended = true });
             GameManager.Instance.DeleteGame(Id);
         }
 
@@ -193,7 +202,6 @@ namespace WizardIslandRestApi.Game
                 return null;
             return Players[id];
         }
-
 
         private void SleepBetweenUpdates()
         {
@@ -211,6 +219,32 @@ namespace WizardIslandRestApi.Game
             NextEvent = EventBase.GetRandomEvent(this);
             CurrentEvent.Start();
             TicksTillNextEvent = TicksTillNextEventMax;
+        }
+
+        public void ScheduleAction(int ticksFromNow, Action action)
+        {
+            int gt = GameTick + ticksFromNow;
+            int index = 0;
+            for (index = 0; index < _scheduledActions.Count; index++)
+            {
+                if (_scheduledActions[index].GameTickToExecute > gt)
+                    break;
+            }
+            if (index >= _scheduledActions.Count)
+                _scheduledActions.Add(new ActionAndGameTick(action, gt));
+            else
+                _scheduledActions.Insert(index, new ActionAndGameTick(action, gt));
+        }
+    }
+
+    public class ActionAndGameTick
+    {
+        public Action MyAction { get; set; }
+        public int GameTickToExecute { get; set; }
+        public ActionAndGameTick(Action action, int gameTickToExecute)
+        {
+            MyAction = action;
+            GameTickToExecute = gameTickToExecute;
         }
     }
 }

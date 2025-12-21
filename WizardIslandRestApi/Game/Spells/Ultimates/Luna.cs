@@ -47,7 +47,7 @@
                 Damage = _damage,
                 Knockback = _knockback,
             });
-            GetCurrentGame().Entities.Add(new WaitToDoSomethingEntity(ticksUntilDeletion, () => 
+            GetCurrentGame().ScheduleAction(ticksUntilDeletion, () => 
             {
                 // when the two cresent moons hit each other
                 GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, endPos, GetCurrentGame())
@@ -60,7 +60,7 @@
                     EntityId = "Moon",
                     Size = 5.0f,
                 });
-            }));
+            });
             GoOnCooldown();
         }
     }
