@@ -164,9 +164,18 @@ namespace WizardIslandRestApi.Game
                     {
                         bool deleteFirst = Entities[i].OnCollision(Entities[j]);
                         bool deleteSecond = Entities[j].OnCollision(Entities[i]);
-                        if (deleteSecond) Entities.RemoveAt(j); // j should be greater than i, so we delete it first
-                        if (deleteFirst) { Entities.RemoveAt(i); i--; }
-                        break;
+                        // j should be greater than i, so we delete it first
+                        if (deleteSecond) 
+                        {
+                            Entities.RemoveAt(j);
+                            j--;
+                        }
+                        if (deleteFirst) 
+                        {
+                            Entities.RemoveAt(i); 
+                            i--;
+                            break;
+                        }
                     }
                 }
             }
