@@ -2,6 +2,7 @@
 {
     public class BrickThrow : BrickSpell
     {
+        public override string Name => "Brick Throw";
         public BrickThrow(Player player) : base(player)
         {
         }

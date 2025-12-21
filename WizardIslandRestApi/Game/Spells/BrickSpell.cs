@@ -8,8 +8,9 @@ namespace WizardIslandRestApi.Game.Spells
     {
         protected int _currentCooldown;
         public int BricksToApplyOnRespawn { get; protected set; } = 1; 
+        public int MinBricksToCast { get; protected set; } = 1; 
         protected int BrickCount { get { return MyPlayer.GetDebuffs().Where(d => d.ToString() == BrickBuff.BrickName).Count(); } }
-        public override int CurrentCooldown { get { return (BrickCount > 0) ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
+        public override int CurrentCooldown { get { return (BrickCount >= MinBricksToCast) ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
         public BrickSpell(Player player) : base(player)
         {
         }
@@ -17,9 +18,12 @@ namespace WizardIslandRestApi.Game.Spells
         public override int CooldownMax { get; protected set; } = 30 * Game._updatesPerSecond;
         public override bool CanCast {  get { return BrickCount > 0 || base.CanCast; } }
 
+        protected void RemoveBrickBuffs(int amount) =>
+            MyPlayer.RemoveDebuff(BrickBuff.BrickName, amount);
+
         protected void GoOnCooldownBrick(int bricksToRemove)
         {
-            MyPlayer.RemoveDebuff(BrickBuff.BrickName, bricksToRemove);
+            RemoveBrickBuffs(bricksToRemove);
             GoOnCooldown();
         }
         protected void GoOnCooldownBrick()
@@ -39,13 +43,16 @@ namespace WizardIslandRestApi.Game.Spells
     {
         private int _stopedTicks = 0;
         private float _startSpeed;
+        public bool ShouldDropBrick { get; set; } = true;
+        public List<string> EntityNamesToIgnore { get; set; } = [];
+        public float SpeedMultiplierPerUpdate { get; set; } = .93f;
         public BrickEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, float startSpeed = 3) : base(owner, ticksUntilDeletion, startPos)
         {
             _startSpeed = startSpeed;
             Speed = startSpeed;
             EntityId = "Brick";
             Size = .75f;
-            Color = "188,74,60";
+            Color = BrickBuff.BrickColor;
         }
 
         public override void ReTarget(Vector2 pos)
@@ -59,9 +66,13 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool Update()
         {
-            Pos += Dir * (Speed*=.93f);
+            Pos += Dir * (Speed *= SpeedMultiplierPerUpdate);
             if (Speed < .1f)
+            {
+                if (!ShouldDropBrick)
+                    return true;
                 _stopedTicks++;
+            }
             return --_ticksUntilDeletion < 0;
         }
 
@@ -87,6 +98,8 @@ namespace WizardIslandRestApi.Game.Spells
         }
         public override bool OnCollision(Entity other)
         {
+            if (EntityNamesToIgnore.Contains(other.EntityId))
+                return false;
             if (base.OnCollision(other))
             {
                 Speed = 0;

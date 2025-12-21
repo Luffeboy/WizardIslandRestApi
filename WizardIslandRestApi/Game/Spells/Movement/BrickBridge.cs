@@ -6,6 +6,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     {
         public override SpellType Type { get; set; } = SpellType.Movement;
         public override int CooldownMax { get; protected set; } = (int)(7 * Game._updatesPerSecond);
+        public override string Name => "Brick Bridge";
         public BrickBridge(Player player) : base(player)
         {
             BricksToApplyOnRespawn = 4;
@@ -38,7 +39,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             _startSize = startSize;
             Size = startSize;
             MinSize = Size * .2f;
-            Color = "188,74,60";
+            Color = BrickBuff.BrickColor;
             Height = EntityHeight.Ground;
         }
 
