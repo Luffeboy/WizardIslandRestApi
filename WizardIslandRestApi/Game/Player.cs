@@ -54,7 +54,7 @@ namespace WizardIslandRestApi.Game
         private Vector2 _pos;
         private float _size; // don't set here
         public int Id { get; set; }
-        public Game _game { get; set; }
+        public Game _game { get; private set; }
         public WebSocket? WebSocket { get; private set; } = null;
         public string Name { get; set; }
         public string Password { get; }
@@ -152,9 +152,6 @@ namespace WizardIslandRestApi.Game
                 return;
             }
             Move();
-            // update collider
-            //MyCollider.Pos = Pos;
-            //MyCollider.Size = Size;
             // take damage from lava
             Map map = GetMap();
             float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
@@ -240,6 +237,21 @@ namespace WizardIslandRestApi.Game
                 {
                     Debuffs[i].OnRemove();
                     Debuffs.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+        public void RemoveDebuff(string name, int amount)
+        {
+            int removed = 0;
+            for (int i = 0; i < Debuffs.Count; i++)
+            {
+                if (Debuffs[i].ToString() == name)
+                {
+                    Debuffs[i].OnRemove();
+                    Debuffs.RemoveAt(i);
+                    if (++removed >= amount)
+                        return;
                     i--;
                 }
             }

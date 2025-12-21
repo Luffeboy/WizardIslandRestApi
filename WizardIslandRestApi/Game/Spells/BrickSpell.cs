@@ -17,6 +17,11 @@ namespace WizardIslandRestApi.Game.Spells
         public override int CooldownMax { get; protected set; } = 30 * Game._updatesPerSecond;
         public override bool CanCast {  get { return BrickCount > 0 || base.CanCast; } }
 
+        protected void GoOnCooldownBrick(int bricksToRemove)
+        {
+            MyPlayer.RemoveDebuff(BrickBuff.BrickName, bricksToRemove);
+            GoOnCooldown();
+        }
         protected void GoOnCooldownBrick()
         {
             MyPlayer.RemoveDebuff(BrickBuff.BrickName);
@@ -25,7 +30,8 @@ namespace WizardIslandRestApi.Game.Spells
         public override void OnPlayerReset()
         {
             base.OnPlayerReset();
-            MyPlayer.ApplyDebuff(new BrickBuff(MyPlayer));
+            for (int i = 0; i < BricksToApplyOnRespawn; i++)
+                MyPlayer.ApplyDebuff(new BrickBuff(MyPlayer));
         }
     }
 
