@@ -78,7 +78,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             Size = (_startSize - MinSize) * ((float)TicksUntilDeletion / (float)_ticksUntilDeletionMax) + MinSize;
             if (base.Update())
             {
-                MyCollider.Owner.ApplyDebuff(new BrickBuff(MyCollider.Owner));
+                MyCollider.Owner._game.ScheduleAction(Game._updatesPerSecond, () => 
+                    MyCollider.Owner.ApplyDebuff(new BrickBuff(MyCollider.Owner)));
                 return true;
             }
             return false;
