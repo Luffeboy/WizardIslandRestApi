@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Physics;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {

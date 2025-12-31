@@ -4,7 +4,7 @@
     {
         protected int _ticksUntilDeletion;
         protected int _ticksUntilDeletionMax;
-        public abstract int TicksUntillCanHitOwner { get; set; }
+        public virtual int TicksUntillCanHitOwner { get; set; }
         public CantHitOwnerAtStartSpellEntity(Player owner, int ticksUntilDeletion, Vector2 startPos) : base(owner, startPos)
         {
             SetTicksUntilDeletion(ticksUntilDeletion);
@@ -17,6 +17,11 @@
             if (_ticksUntilDeletionMax - _ticksUntilDeletion < TicksUntillCanHitOwner && other == MyCollider.Owner)
                 return false;
             return HitPlayer(other);
+        }
+
+        public override bool Update()
+        {
+            return --_ticksUntilDeletion <= 0;
         }
         protected abstract bool HitPlayer(Player other);
     }

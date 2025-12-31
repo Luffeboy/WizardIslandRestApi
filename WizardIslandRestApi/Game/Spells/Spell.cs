@@ -41,6 +41,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BrickThrow(player),
             (player) => new BigRock(player),
             (player) => new BloodSaws(player),
+            (player) => new SmallExplosion(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
