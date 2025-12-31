@@ -1,5 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
-namespace WizardIslandRestApi.Game.Spells.BasicSpells.Luck
+namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 {
     public class DeckOfCards : Spell
     {

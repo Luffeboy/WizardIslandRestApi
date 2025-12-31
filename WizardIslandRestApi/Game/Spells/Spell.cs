@@ -1,6 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
-using WizardIslandRestApi.Game.Spells.BasicSpells.Luck;
+using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
 using WizardIslandRestApi.Game.Spells.Movement;
 using WizardIslandRestApi.Game.Spells.Ultimates;
