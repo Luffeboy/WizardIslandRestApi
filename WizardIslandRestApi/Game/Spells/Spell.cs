@@ -1,8 +1,9 @@
-﻿using WizardIslandRestApi.Game.Spells.Movement;
-using WizardIslandRestApi.Game.Spells.Ultimates;
-using WizardIslandRestApi.Game.Spells.BasicSpells;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.Luck;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
+using WizardIslandRestApi.Game.Spells.Movement;
+using WizardIslandRestApi.Game.Spells.Ultimates;
 
 namespace WizardIslandRestApi.Game.Spells
 {
@@ -42,6 +43,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BigRock(player),
             (player) => new BloodSaws(player),
             (player) => new SmallExplosion(player),
+            (player) => new DeckOfCards(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
