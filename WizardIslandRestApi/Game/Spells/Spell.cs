@@ -91,11 +91,17 @@ namespace WizardIslandRestApi.Game.Spells
         {
             return Name;
         }
+        /// <summary>
+        /// Called every time the player respawns
+        /// </summary>
         public virtual void OnPlayerReset()
         {
             if (Type != SpellType.Ultimate)
                 CurrentCooldown = 0;
         }
+        /// <summary>
+        /// Called once, when the game starts
+        /// </summary>
         public virtual void FullReset()
         {
             CurrentCooldown = -9999;

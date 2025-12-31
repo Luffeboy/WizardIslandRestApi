@@ -72,6 +72,11 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
             RemoveBrickBuffs(bricksToRemove);
         }
+        public override void FullReset()
+        {
+            _wallEntities.Clear();
+            base.FullReset();
+        }
     }
 
     public class BrickWallEntity : Entity
