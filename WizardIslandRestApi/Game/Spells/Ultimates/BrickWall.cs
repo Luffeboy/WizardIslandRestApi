@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Physics;
+using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.Debuffs;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates

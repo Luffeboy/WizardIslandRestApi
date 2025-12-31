@@ -1,4 +1,5 @@
-﻿namespace WizardIslandRestApi.Game.Spells.Ultimates
+﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class FireAtWill : Spell
     {

@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class Link : Spell
     {
@@ -83,7 +85,7 @@
             {
                 // pull
                 Pos = _hitPlayer.Pos;
-                var pullDir = (_owner.Pos - Pos);
+                var pullDir = _owner.Pos - Pos;
                 var len = pullDir.Length();
                 if (len < 1)
                     len = 1;
@@ -102,7 +104,7 @@
             if (_hitAPlayer && MyCollider != null)
                 MyCollider = null; // once this has hit a player, it can no longer hit anyone/anything else
             // move links to make it look like a chain
-            var dir = (Pos - _owner.Pos);
+            var dir = Pos - _owner.Pos;
             var distBetween = dir.Length();
             dir /= distBetween;
             distBetween /= _linksVisual.Length + 1;

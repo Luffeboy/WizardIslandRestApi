@@ -1,6 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Physics;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class Meteor : Spell
     {
@@ -64,10 +64,10 @@ namespace WizardIslandRestApi.Game.Spells
             // deal damage
             other.TakeDamage(Damage, _player);
             // calculate knockback, between kbMin and kbMax
-            Vector2 dir = (other.MyCollider.PreviousPos - Pos);
+            Vector2 dir = other.MyCollider.PreviousPos - Pos;
             float dist = dir.Length();
             float knockBackMultiplier = MathF.Max(1 - dist / Size, 0);
-            float knockback = (KnockbackMax - KnockbackMin) * (knockBackMultiplier) + KnockbackMin;
+            float knockback = (KnockbackMax - KnockbackMin) * knockBackMultiplier + KnockbackMin;
             // if dist is 0, we could get a /0 error, we don't want that
             if (dist == 0)
                 dist = 0.1f;
@@ -90,7 +90,7 @@ namespace WizardIslandRestApi.Game.Spells
             }
             if (FallTime <= 0 && MyCollider == null)
             {
-                MyCollider = new Physics.Collider(Pos) { Owner = _player, Pos = Pos, Size = Size };
+                MyCollider = new Collider(Pos) { Owner = _player, Pos = Pos, Size = Size };
                 Color = "255, 0, 0";
                 Height = EntityHeight.Normal;
             }

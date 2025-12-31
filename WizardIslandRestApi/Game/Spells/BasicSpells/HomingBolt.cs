@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection.Metadata;
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class HomingBolt : Spell
     {

@@ -1,4 +1,5 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class FireBall : Spell
     {

@@ -1,4 +1,4 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿namespace WizardIslandRestApi.Game.Spells.ExtraEntities
 {
     public abstract class CantHitOwnerAtStartSpellEntity : Entity
     {

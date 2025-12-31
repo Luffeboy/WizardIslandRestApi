@@ -2,7 +2,7 @@
 using WizardIslandRestApi.Game.Spells.Debuffs;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
 {
     public abstract class BrickSpell : Spell
     {
@@ -10,7 +10,7 @@ namespace WizardIslandRestApi.Game.Spells
         public int BricksToApplyOnRespawn { get; protected set; } = 1; 
         public int MinBricksToCast { get; protected set; } = 1; 
         protected int BrickCount { get { return MyPlayer.GetDebuffs().Where(d => d.ToString() == BrickBuff.BrickName).Count(); } }
-        public override int CurrentCooldown { get { return (BrickCount >= MinBricksToCast) ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
+        public override int CurrentCooldown { get { return BrickCount >= MinBricksToCast ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
         public BrickSpell(Player player) : base(player)
         {
         }

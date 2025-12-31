@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Xml.Linq;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class Barrel : Spell
     {

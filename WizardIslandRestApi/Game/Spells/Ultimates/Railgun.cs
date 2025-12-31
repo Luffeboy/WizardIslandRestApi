@@ -1,4 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Physics;
+using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates
 {

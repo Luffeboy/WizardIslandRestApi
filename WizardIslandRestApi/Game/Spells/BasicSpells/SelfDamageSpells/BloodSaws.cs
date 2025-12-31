@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
 {
     public class BloodSaws : Spell
     {
@@ -31,7 +31,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override int CooldownMax { get; protected set; } = 999 * Game._updatesPerSecond;
         public override bool CanCast => _instancesOfDamageTaken >= _stackCost;
-        public override int CurrentCooldown { get { return (_instancesOfDamageTaken >= _stackCost) ? -1 : GetCurrentGameTick() + (int)((float)_instancesOfDamageTaken * Game._updatesPerSecond / _stackCost); } set { _currentCooldown = value; } }
+        public override int CurrentCooldown { get { return _instancesOfDamageTaken >= _stackCost ? -1 : GetCurrentGameTick() + (int)((float)_instancesOfDamageTaken * Game._updatesPerSecond / _stackCost); } set { _currentCooldown = value; } }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
@@ -117,7 +117,7 @@ namespace WizardIslandRestApi.Game.Spells
             else
                 _hitPlayers.Add(other, other.GetGame().GameTick);
             other.TakeDamage(Damage, MyCollider.Owner);
-            other.ApplyKnockback((other.MyCollider.Pos - MyCollider.PreviousPos), Knockback);
+            other.ApplyKnockback(other.MyCollider.Pos - MyCollider.PreviousPos, Knockback);
             return false;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class IceLance : Spell
     {

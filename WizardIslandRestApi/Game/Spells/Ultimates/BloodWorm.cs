@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
+using WizardIslandRestApi.Game.Spells.BasicSpells;
 using WizardIslandRestApi.Game.Spells.Debuffs;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates

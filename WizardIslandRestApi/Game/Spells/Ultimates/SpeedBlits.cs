@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates
 {

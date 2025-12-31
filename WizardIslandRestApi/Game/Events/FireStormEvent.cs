@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using WizardIslandRestApi.Game.Spells;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Events
 {

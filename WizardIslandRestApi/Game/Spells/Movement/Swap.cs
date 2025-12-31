@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game.Spells.Movement
+﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+
+namespace WizardIslandRestApi.Game.Spells.Movement
 {
     public class Swap : Spell
     {

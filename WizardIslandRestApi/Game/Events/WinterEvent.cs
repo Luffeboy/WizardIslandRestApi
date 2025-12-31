@@ -1,4 +1,4 @@
-﻿using WizardIslandRestApi.Game.Spells;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
 
 namespace WizardIslandRestApi.Game.Events
 {

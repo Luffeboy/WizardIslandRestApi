@@ -1,6 +1,6 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class BlackHole : Spell
     {

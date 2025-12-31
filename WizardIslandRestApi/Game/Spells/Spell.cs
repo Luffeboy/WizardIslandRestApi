@@ -1,5 +1,8 @@
 ﻿using WizardIslandRestApi.Game.Spells.Movement;
 using WizardIslandRestApi.Game.Spells.Ultimates;
+using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
 
 namespace WizardIslandRestApi.Game.Spells
 {

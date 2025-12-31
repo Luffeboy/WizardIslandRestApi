@@ -1,4 +1,4 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class BigRock : Spell
     {

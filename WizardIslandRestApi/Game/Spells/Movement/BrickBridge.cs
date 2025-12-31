@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
+using WizardIslandRestApi.Game.Spells.Debuffs;
 
 namespace WizardIslandRestApi.Game.Spells.Movement
 {

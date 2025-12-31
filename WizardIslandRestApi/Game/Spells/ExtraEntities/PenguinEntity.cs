@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using WizardIslandRestApi.Game.Spells.BasicSpells;
 
 namespace WizardIslandRestApi.Game.Spells.ExtraEntities
 {

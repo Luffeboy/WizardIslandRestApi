@@ -1,7 +1,8 @@
 ﻿using System.Xml.Linq;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class CirclingSnake : Spell
     {
@@ -59,7 +60,7 @@ namespace WizardIslandRestApi.Game.Spells
             _snakePartsToCreate = snakePartsToCreate;
             _ticksUntilDeletionMax = ticksUntilDeletion;
             _game = game;
-            _hitPlayers = (hitPlayers == null) ? new List<PlayerAndHitTime>() : hitPlayers;
+            _hitPlayers = hitPlayers == null ? new List<PlayerAndHitTime>() : hitPlayers;
             GetAndSetEntityId();
             ForwardAngle = MathF.Atan2(-_dir.y, -_dir.x);
         }

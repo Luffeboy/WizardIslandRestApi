@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace WizardIslandRestApi.Game.Spells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class CrescentMoon : Spell
     {
@@ -97,7 +97,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public override bool Update()
         {
-            Pos = Vector2.CalculatePointOnSpline(StartPos, EndPos, ControlPoint, (float)(TicksUntilDeletionMax - _ticksUntilDeletion) / (float)TicksUntilDeletionMax);
+            Pos = Vector2.CalculatePointOnSpline(StartPos, EndPos, ControlPoint, (TicksUntilDeletionMax - _ticksUntilDeletion) / (float)TicksUntilDeletionMax);
             _ticksUntilDeletion--;
             MyCollider.Pos = Pos;
             return _ticksUntilDeletion < DeleteWhenLessThan;

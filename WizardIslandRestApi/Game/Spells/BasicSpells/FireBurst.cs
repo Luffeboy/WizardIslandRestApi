@@ -1,4 +1,5 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class FireBurst : Spell
     {
@@ -20,7 +21,7 @@
             for (int i = 0; i < fireballs; i++)
             {
                 float half = i - fireballs / 2 + .5f;
-                Vector2 fireballStartPos = normal * distanceBetweenFireballs * (half) + MyPlayer.Pos;
+                Vector2 fireballStartPos = normal * distanceBetweenFireballs * half + MyPlayer.Pos;
                 // move it back a little
                 fireballStartPos -= fwd * (MathF.Abs(half) * distanceBetweenFireballs / 4);
                 fireballStartPos += fwd * (MyPlayer.Size + size + .6f);

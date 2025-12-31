@@ -1,4 +1,4 @@
-﻿namespace WizardIslandRestApi.Game.Spells
+﻿namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class LavaPoolEntity : Entity
     {
@@ -57,9 +57,9 @@
         public override bool Update()
         {
             // from 0 to 1
-            float amountDone = ((float)(_ticksUntilDeletionMax - _ticksUntilDeletion)) / _ticksUntilDeletionMax;
+            float amountDone = (float)(_ticksUntilDeletionMax - _ticksUntilDeletion) / _ticksUntilDeletionMax;
             // from 0 to 1 to 0
-            amountDone = amountDone * 2 - ((int)(amountDone * 2) * (amountDone * 2 % 1 * 2.0f));
+            amountDone = amountDone * 2 - (int)(amountDone * 2) * (amountDone * 2 % 1 * 2.0f);
             Size = (MaxSize - MinSize) * amountDone + MinSize;
             return _ticksUntilDeletion-- <= 0;
         }
