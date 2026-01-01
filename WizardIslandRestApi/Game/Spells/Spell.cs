@@ -63,6 +63,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Railgun(player),
             (player) => new LastResort(player),
             (player) => new BrickWall(player),
+            (player) => new Klepto(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
@@ -86,7 +87,7 @@ namespace WizardIslandRestApi.Game.Spells
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
-#if !DEBUG
+#if !NoCooldown
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
 #endif
         }

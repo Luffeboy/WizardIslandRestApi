@@ -75,7 +75,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         }
         private void GoOnCooldownSameDeck()
         {
-#if !DEBUG
+#if !NoCooldown
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownBetweenCardsInSameDeck * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
 #endif
         }
