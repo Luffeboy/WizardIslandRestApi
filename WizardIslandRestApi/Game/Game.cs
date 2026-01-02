@@ -192,6 +192,7 @@ namespace WizardIslandRestApi.Game
                 for (int j = 0; j < Players[i].GetSpells().Length; j++)
                     Players[i].GetSpells()[j].FullReset();
             }
+            _scheduledActions.Clear();
             GameModifiers.DamageMultiplier = 1;
             SelectNewEvent();
         }

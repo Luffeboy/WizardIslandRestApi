@@ -23,7 +23,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 TicksUntilDeletion = 90,
                 Damage = _damage,
                 Knockback = _knockback,
-                EntityId = GetType().Name,
+                EntityId = "FireBall",
+                EntityIdsToIgnore = ["FireBall"]
             });
             GoOnCooldown();
         }

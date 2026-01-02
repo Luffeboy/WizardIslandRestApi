@@ -111,5 +111,11 @@
                 CheckStolenSpellsAreOnCooldown();
             }
         }
+
+        public override void FullReset()
+        {
+            _stolenSpells = [];
+            base.FullReset();
+        }
     }
 }

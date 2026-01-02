@@ -13,6 +13,7 @@
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public int TimeUntilCanHitOwner { get; set; } = 5;
+        public List<string> EntityIdsToIgnore { get; set; } = [];
         public int TicksUntilDeletion
         {
             get { return _ticksUntilDeletion; }
@@ -22,10 +23,14 @@
                 _ticksUntilDeletion = _ticksUntilDeletionMax - 1;
             }
         }
-        //public override bool OnCollision(Entity other)
-        //{
-        //    return true;
-        //}
+
+        public override bool OnCollision(Entity other)
+        {
+            if (EntityIdsToIgnore.Contains(other.EntityId))
+                return false;
+            return base.OnCollision(other);
+        }
+
         public override void ReTarget(Vector2 pos)
         {
             _ticksUntilDeletion = _ticksUntilDeletionMax;
