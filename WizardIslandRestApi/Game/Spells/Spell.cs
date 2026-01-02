@@ -87,7 +87,7 @@ namespace WizardIslandRestApi.Game.Spells
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
-#if !NoCooldown
+#if !NO_COOLDOWN
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
 #endif
         }

@@ -37,7 +37,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
         {
             int sawCount = _instancesOfDamageTaken / _stackCost;
             if (sawCount == 0) return; // this should not happen, but just in case :)
-#if !NoCooldown
+#if !NO_COOLDOWN
             _instancesOfDamageTaken -= sawCount * _stackCost;
 #endif
             // entity attibutes
