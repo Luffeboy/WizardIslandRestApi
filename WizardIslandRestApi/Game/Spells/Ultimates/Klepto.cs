@@ -6,7 +6,7 @@
 
         public override string Name => _stolenSpells.Count == 0 ? 
                                        base.Name : 
-                                       base.Name + " Stolen:\n" + string.Join("\n", _stolenSpells.Select(x =>x.Name));
+                                       base.Name + " Looted:\n" + string.Join("\n", _stolenSpells.Select(x =>x.Name));
         public Klepto(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
