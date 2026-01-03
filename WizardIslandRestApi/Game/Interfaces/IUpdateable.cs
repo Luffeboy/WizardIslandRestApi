@@ -1,4 +1,4 @@
-﻿namespace WizardIslandRestApi.Game
+﻿namespace WizardIslandRestApi.Game.Interfaces
 {
     public interface IUpdateable
     {

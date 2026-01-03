@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Physics;
+﻿using WizardIslandRestApi.Game.Interfaces;
+using WizardIslandRestApi.Game.Physics;
 namespace WizardIslandRestApi.Game
 {
     public enum EntityHeight

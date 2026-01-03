@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game.Spells.Ultimates
+﻿using WizardIslandRestApi.Game.Interfaces;
+
+namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class Ignis : Spell
     {
@@ -16,6 +18,8 @@
             for (int i = 1; i < _fireSpells.Length - 1; i++)
                 _fireSpells[i] = new BasicSpells.FireBall(player);
             _fireSpells[_fireSpells.Length - 1] = this;
+            for (int i = 1; i < _fireSpells.Length - 1; i++)
+                (_fireSpells[i] as ISetCooldownMax)?.SetCooldownMax((int)(2.5f * _fireSpells[i].CooldownMax));
         }
 
         public override int CooldownMax { get; protected set; } = 1 * Game._updatesPerSecond;

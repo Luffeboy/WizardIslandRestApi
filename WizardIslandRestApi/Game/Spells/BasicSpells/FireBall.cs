@@ -1,7 +1,8 @@
-﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+﻿using WizardIslandRestApi.Game.Interfaces;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
-    public class FireBall : Spell
+    public class FireBall : Spell, ISetCooldownMax
     {
         public override string Name { get { return "Fire-ball"; } }
         private float _damage = 5;
@@ -23,10 +24,14 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 TicksUntilDeletion = 90,
                 Damage = _damage,
                 Knockback = _knockback,
-                EntityId = "FireBall",
-                EntityIdsToIgnore = ["FireBall"]
+                EntityId = "FireBall"
             });
             GoOnCooldown();
+        }
+
+        public void SetCooldownMax(int cooldownMax)
+        {
+            CooldownMax = cooldownMax;
         }
     }
 }

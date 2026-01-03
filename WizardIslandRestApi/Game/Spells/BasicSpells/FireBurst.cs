@@ -1,7 +1,8 @@
-﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+﻿using WizardIslandRestApi.Game.Interfaces;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
-    public class FireBurst : Spell
+    public class FireBurst : Spell, ISetCooldownMax
     {
         public override string Name { get { return "Fire burst"; } }
         private float _damage = 1;
@@ -40,6 +41,11 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             }
 
             GoOnCooldown();
+        }
+
+        public void SetCooldownMax(int cooldownMax)
+        {
+            CooldownMax = cooldownMax;
         }
     }
 }
