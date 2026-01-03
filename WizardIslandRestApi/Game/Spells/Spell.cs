@@ -65,6 +65,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BrickWall(player),
             (player) => new Klepto(player),
             (player) => new Ignis(player),
+            (player) => new ReloadSpells(player),
         };
         public static Spell GetSpell(Player player, int index)
         {
