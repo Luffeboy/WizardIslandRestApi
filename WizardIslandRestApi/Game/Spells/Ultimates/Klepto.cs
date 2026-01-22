@@ -101,7 +101,10 @@
                 {
                     for (int i = 0; i < _stolenSpells.Count; i++)
                         if (!_stolenSpells[i].CanCast)
+                        {
+                            _stolenSpells[i].RemovedFromPlayer();
                             _stolenSpells.RemoveAt(i--);
+                        }
                     
                     if (_stolenSpells.Any())
                         GetCurrentGame().ScheduleAction(10, CheckStolenSpellsAreOnCooldown);

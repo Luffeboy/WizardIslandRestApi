@@ -25,11 +25,17 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public override void OnPlayerReset()
         {
             base.OnPlayerReset();
-            if (_teleportToLocation != null) 
-                _teleportToLocation.ShouldBeDestroyed = true;
-            
+            RemovedFromPlayer();
+
             _teleportToLocation = new KeyOfDestinyEntity(MyPlayer, GetCurrentGame(), MyPlayer.Pos);
+            _teleportToLocation.Update();
             GetCurrentGame().Entities.Add(_teleportToLocation);
+        }
+        public override void RemovedFromPlayer()
+        {
+            base.RemovedFromPlayer();
+            if (_teleportToLocation is not null)
+                _teleportToLocation.ShouldBeDestroyed = true;
         }
     }
     public class KeyOfDestinyEntity : Entity

@@ -30,7 +30,11 @@
             var spells = MyPlayer.GetSpells();
             if (_lastUsedSpellIndex < 0 || _lastUsedSpellIndex >= spells.Length || spells[_lastUsedSpellIndex] is CopySpell)
                 return;
+
             _spell = Spell.GetSpell(MyPlayer, spells[_lastUsedSpellIndex].SpellIndex);
+            _spell.FullReset();
+            _spell.OnPlayerReset();
+
             _spell.OnCast(startPos, mousePos);
             if (!_spell.CanCast)
             {
@@ -61,6 +65,8 @@
         private void CopyGoOnCooldown()
         {
             GoOnCooldown();
+            if (_spell is not null)
+                _spell.RemovedFromPlayer();
             _spell = null;
         }
     }

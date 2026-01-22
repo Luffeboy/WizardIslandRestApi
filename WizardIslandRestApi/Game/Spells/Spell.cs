@@ -112,6 +112,11 @@ namespace WizardIslandRestApi.Game.Spells
         {
             CurrentCooldown = -9999;
         }
+        /// <summary>
+        /// Called when removing this spell from a player (such as the "copy" spell)
+        /// </summary>
+        public virtual void RemovedFromPlayer()
+        { }
 
         /// <summary>
         /// This is called in, when creating instance of spell, do not call
