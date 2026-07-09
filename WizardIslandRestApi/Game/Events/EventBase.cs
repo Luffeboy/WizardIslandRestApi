@@ -35,8 +35,9 @@ namespace WizardIslandRestApi.Game.Events
     //private static int ___temp = 0;
     public static EventBase GetRandomEvent(Game game)
         {
-            //return _gameFunc[(++___temp) % _gameFunc.Length](game);
-            //return _gameFunc[_random.Next(_gameFunc.Length)](game);
+#if DEBUG
+            return _gameEventsAndWeights[0].MyEvent(game);
+#endif
             int randomNumber = _random.Next(MaxWeights);
             int weight = 0;
             for (int i = 0; i < _gameEventsAndWeights.Length; i++)
