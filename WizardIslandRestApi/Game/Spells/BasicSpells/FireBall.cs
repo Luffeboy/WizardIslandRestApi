@@ -11,6 +11,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Damage = 5;
             StandardStats.Knockback = 1.5f;
             StandardStats.Size = .5f;
+            StandardStats.Speed = 2;
+            StandardStats.Range = 3 * StandardStats.Speed;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
@@ -18,10 +20,10 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, pos + dir * (MyPlayer.Size + StandardStats.Size + .1f))
             {
                 Dir = dir,
-                Speed = 2f,
+                Speed = StandardStats.Speed,
                 Color = "255, 0, 0",
                 Size = StandardStats.Size,
-                TicksUntilDeletion = 90,
+                TicksUntilDeletion = StandardStats.GetLifetime(),
                 Damage = StandardStats.Damage,
                 Knockback = StandardStats.Knockback,
                 EntityId = "FireBall"

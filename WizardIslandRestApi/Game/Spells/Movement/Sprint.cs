@@ -7,13 +7,13 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         private float _speedMultiplier = 4.0f;
         public override SpellType Type { get; set; } = SpellType.Movement;
         public override int CooldownMax { get; protected set; } = (int)(10 * Game._updatesPerSecond);
-        public int Duration { get; protected set; } = 3 * Game._updatesPerSecond;
         public Sprint(Player player) : base(player)
         {
+            StandardStats.BuffAndDebuffTime = 3 * Game._updatesPerSecond;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            MyPlayer.ApplyDebuff(new SpeedBuff(MyPlayer) { SpeedMultiplier = _speedMultiplier, TicksTillRemoval = Duration });
+            MyPlayer.ApplyDebuff(new SpeedBuff(MyPlayer) { SpeedMultiplier = _speedMultiplier, TicksTillRemoval = StandardStats.BuffAndDebuffTime });
             GoOnCooldown();
         }
     }

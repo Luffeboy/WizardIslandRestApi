@@ -7,6 +7,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         public FireAtWill(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.3f;
+            StandardStats.Size = 0.5f;
         }
 
         public override int CooldownMax { get; protected set; } = 18 * Game._updatesPerSecond;
@@ -15,11 +18,11 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             GetCurrentGame().Entities.Add(new FireAtWillEntity(MyPlayer, GetCurrentGame(), mousePos)
             {
-                Damage = 5,
-                Knockback = 1.3f,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
                 ShotsBeforeDeleing = 50,
                 TicksBeforeShootingMax = (int)((float)Game._updatesPerSecond / 15),
-                Size = .5f,
+                Size = StandardStats.Size,
             });
             GoOnCooldown();
         }

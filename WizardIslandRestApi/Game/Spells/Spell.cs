@@ -44,7 +44,7 @@ namespace WizardIslandRestApi.Game.Spells
         public float Speed { get; set; } = -1;
         public float Range { get; set; } = -1;
         public float Size { get; set; } = -1;
-        public float BuffAndDebuffTime { get; set; } = -1;
+        public int BuffAndDebuffTime { get; set; } = -1;
         public int SummonLifetime { get; set; } = -1;
 
         public int GetLifetime()

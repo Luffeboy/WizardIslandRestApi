@@ -6,19 +6,19 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     {
         public override string Name { get { return "Bull-charge"; } }
         public override SpellType Type { get; set; } = SpellType.Movement;
-        private float _damage = 5;
-        private float _knockback = 1.5f;
-        private float _range = 30.0f;
         public override int CooldownMax { get; protected set; } = (int)(13 * Game._updatesPerSecond);
         public BullCharge(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Range = 30;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos);
-            if (dir.LengthSqr() > _range * _range)
+            if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
             {
-                dir = dir.Normalized() * _range;
+                dir = dir.Normalized() * StandardStats.Range;
             }
             int ticksUntillDeletion = Math.Max((int)(dir.Length() * .3f), 1);
             MyPlayer.Vel = new Vector2(0, 0);
@@ -27,8 +27,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             GetCurrentGame().Entities.Add(new BullChargeEntity(MyPlayer, ticksUntillDeletion, pos) 
             {
                 EndPos = pos + dir,
-                Knockback = _knockback,
-                Damage = _damage,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
                 Color = "0,0,0"
             });
             GoOnCooldown();
@@ -42,8 +42,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         private int _ticksUntilDeletion;
         public Vector2 StartPos { get; set; }
         public Vector2 EndPos { get; set; }
-        public float Knockback { get; set; }
         public float Damage { get; set; }
+        public float Knockback { get; set; }
         public BullChargeEntity(Player owner, int ticksUntilDeletion, Vector2 startPos) : base(owner, startPos)
         {
             StartPos = startPos;

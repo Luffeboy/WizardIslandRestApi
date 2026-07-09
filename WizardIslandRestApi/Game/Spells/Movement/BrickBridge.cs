@@ -11,19 +11,21 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public BrickBridge(Player player) : base(player)
         {
             BricksToApplyOnRespawn = 4;
+            StandardStats.Size = 5;
+            StandardStats.SummonLifetime = 10 * Game._updatesPerSecond;
         }
+
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             int brickCount = BrickCount;
             if (brickCount > BricksToApplyOnRespawn)
                 brickCount = BricksToApplyOnRespawn;
-            float bridgePartSize = 5.0f;
-            int bridgePartDuration = 10 * Game._updatesPerSecond;
+            float bridgePartSize = StandardStats.Size;
 
             GetCurrentGame().Entities.Add(new BrickBridgeEntity(MyPlayer, pos + (mousePos - pos).Normalized() * bridgePartSize * .25f, bridgePartSize)
             {
                 MoreBridgesToCreate = brickCount - 1,
-                TicksUntilDeletion = bridgePartDuration,
+                TicksUntilDeletion = StandardStats.SummonLifetime,
             });
             GoOnCooldownBrick(brickCount);
         }

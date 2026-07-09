@@ -6,15 +6,14 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class Railgun : Spell
     {
-        private float _range = 30;
-        private float _size = .5f;
         private int _delay = Game._updatesPerSecond / 4;
 
-        private float _damage = 15;
-        private float _knockback = 4.0f;
         public Railgun(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
+            StandardStats.Damage = 15;
+            StandardStats.Knockback = 4.0f;
+            StandardStats.Range = 30;
         }
 
         public override int CooldownMax { get; protected set; } = (int)(25 * Game._updatesPerSecond);
@@ -22,7 +21,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             Vector2 spellDir = mousePos - startPos;
-            float spellLen = _range;
+            float spellLen = StandardStats.Range;
             //float spellLen = spellDir.Length();
             spellDir.Normalize();
             float forwardAngle = HomingBoltEntity.GetAngleFromDirection(spellDir);
@@ -37,7 +36,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     spells[i].Color = "255,255,255";
                     spells[i].EntityId = "RailgunParticalExplosion";
                 }
-                    var collider = new Collider(startPos);
+                var collider = new Collider(startPos);
                 collider.Pos = startPos + spellDir * spellLen;
                 // check player hits
                 foreach (Player player in GetCurrentGame().Players.Values)
@@ -46,8 +45,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                         continue;
                     if (collider.CheckCollision(player.MyCollider))
                     {
-                        player.TakeDamage(_damage, MyPlayer);
-                        player.ApplyKnockback(spellDir, _knockback);
+                        player.TakeDamage(StandardStats.Damage, MyPlayer);
+                        player.ApplyKnockback(spellDir, StandardStats.Knockback);
                     }
                 }
             });

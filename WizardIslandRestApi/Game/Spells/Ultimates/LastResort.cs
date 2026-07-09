@@ -5,10 +5,13 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
     public class LastResort : Spell
     {
         private int _cooldown;
-        private int _maxRange = 30;
         public LastResort(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
+            StandardStats.Range = 30;
+            StandardStats.Damage = 3;
+            StandardStats.Knockback = 1.3f;
+            StandardStats.Size = .35f;
         }
         public override string Name => "Last Resort";
 
@@ -25,10 +28,10 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             Vector2 endPos = mousePos - startPos;
             var len = endPos.Length();
-            if (len > _maxRange)
+            if (len > StandardStats.Range)
             {
-                endPos = endPos / len * _maxRange;
-                len = _maxRange;
+                endPos = endPos / len * StandardStats.Range;
+                len = StandardStats.Range;
             }
             endPos += startPos;
             const int healthCost = 2;
@@ -36,8 +39,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             if (boltCount < 5) boltCount = 5; // min bolts
             const float maxToSide = 1;
             const float maxDeviation = 3;
-            const float damage = 3;
-            const float knockback = 1.3f;
             int ticksUntilDeletion = (int)len + 1;
             Random r = new Random();
             Vector2 GetRandomPosInRange(float maxAmount) { return new Vector2((float)(r.NextDouble() * 2 - 1) * maxAmount, (float)(r.NextDouble() * 2 - 1) * maxAmount); }
@@ -47,10 +48,10 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     MyPlayer.Stats.Health -= healthCost;
                 GetCurrentGame().Entities.Add(new ChaosBolt(MyPlayer, ticksUntilDeletion, startPos, endPos + GetRandomPosInRange(maxDeviation), healthCost, (float)(r.NextDouble() * 2 - 1) * maxToSide, (float)r.NextDouble() * .6f + .2f)
                 {
-                    Size = .35f,
+                    Size = StandardStats.Size,
                     Color = $"{r.Next(256)},{r.Next(256)},{r.Next(256)}",
-                    Damage = damage,
-                    Knockback = knockback,
+                    Damage = StandardStats.Damage,
+                    Knockback = StandardStats.Knockback,
                     DeleteWhenLessThan = -10,
                 });
             }

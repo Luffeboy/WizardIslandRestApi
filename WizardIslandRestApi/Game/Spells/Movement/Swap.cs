@@ -4,22 +4,23 @@ namespace WizardIslandRestApi.Game.Spells.Movement
 {
     public class Swap : Spell
     {
-        private float _range = 50.0f;
         public override SpellType Type { get; set; } = SpellType.Movement;
         public override int CooldownMax { get; protected set; } = (int)(12.0 * Game._updatesPerSecond);
         public Swap(Player player) : base(player)
         {
+            StandardStats.Speed = 4;
+            StandardStats.Range = 1 / 3 * StandardStats.Speed;
+            StandardStats.Size = 1;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos).Normalized();
-            int ticksUntillDeletion = 10; 
-            GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, ticksUntillDeletion, pos)
+            GetCurrentGame().Entities.Add(new SwapEntity(MyPlayer, StandardStats.GetLifetime(), pos)
             {
                 Dir = dir,
-                Speed = 4,
+                Speed = StandardStats.Speed,
                 Color = "0, 0, 0",
-                Size = 1.0f
+                Size = StandardStats.Size
             });
             GoOnCooldown();
         }

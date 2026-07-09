@@ -5,16 +5,16 @@
         private int _lastUsedSpellIndex = -1;
         private int _justUsedSpellIndex = -1;
         private Spell? _spell = null;
+        public override int CooldownMax { get; protected set; } = 8 * Game._updatesPerSecond;
+        public override string Name => "Copy";
+        public override bool CanBeReplaced { get { return _spell == null || _spell.CanBeReplaced; } protected set { } }
+
         public CopySpell(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
             if (player != null)
                 player.OverridesAndObservers.OnSpellCast += Observe;
         }
-
-        public override int CooldownMax { get; protected set; } = 8 * Game._updatesPerSecond;
-        public override string Name => "Copy";
-        public override bool CanBeReplaced { get { return _spell == null || _spell.CanBeReplaced; } protected set { } }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {

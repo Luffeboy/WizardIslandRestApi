@@ -9,6 +9,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public override string Name => "Grapple hook";
         public GrappleHook(Player player) : base(player)
         {
+            StandardStats.Speed = 4;
+            StandardStats.Range = 1.5f * StandardStats.Speed;
+            StandardStats.Size = .5f;
         }
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
@@ -24,11 +27,11 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             }
             else
             {
-                GetCurrentGame().Entities.Add(_hook = new GrappleHookEntity(MyPlayer, (int)(1.5f * Game._updatesPerSecond), startPos, this)
+                GetCurrentGame().Entities.Add(_hook = new GrappleHookEntity(MyPlayer, StandardStats.GetLifetime(), startPos, this)
                 {
-                    Speed = 4,
+                    Speed = StandardStats.Speed,
                     Dir = (mousePos - startPos).Normalized(),
-                    Size = .5f
+                    Size = StandardStats.Size
                 });
             }
         }

@@ -8,8 +8,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
     {
         private float _distToWall = 3;
 
-        private float _damage = 5;
-        private float _knockback = 1.15f;
         private int _wallEntitiesThatGivesABrickRemaining = 0;
         private List<BrickWallEntity> _wallEntities = [];
         public override int CooldownMax { get; protected set; } = (int)(25 * Game._updatesPerSecond);
@@ -19,6 +17,10 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Type = SpellType.Ultimate;
             BricksToApplyOnRespawn = 5;
             MinBricksToCast = 4;
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.15f;
+            StandardStats.Speed = 4;
+            StandardStats.Size = 1;
         }
 
 
@@ -33,13 +35,12 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 wallPart.ShouldBeRemoved = true;
                 bool shouldDropBrick = _wallEntitiesThatGivesABrickRemaining-- > 0;
                 var wallPos = wallPart.Pos;
-                var brickSpeed = 4;
-                GetCurrentGame().Entities.Add(new BrickEntity(MyPlayer, CooldownMax, wallPos, brickSpeed)
+                GetCurrentGame().Entities.Add(new BrickEntity(MyPlayer, CooldownMax, wallPos, StandardStats.Speed)
                 {
                     Dir = (mousePos - wallPos).Normalized(),
                     ShouldDropBrick = shouldDropBrick,
-                    Damage = _damage,
-                    Knockback = _knockback,
+                    Damage = StandardStats.Damage,
+                    Knockback = StandardStats.Knockback,
                     EntityNamesToIgnore = ["Brick", "BrickWall"]
                 });
                 if (_wallEntities.Count == 0)
@@ -54,17 +55,16 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             _wallEntitiesThatGivesABrickRemaining--;// you loose 1 brick when casting this spell :)
             Vector2 spellDir = (mousePos - startPos).Normalized();
             Vector2 spellDirNormal = spellDir.Normal();
-            float brickWallPartSize = 1.0f;
 
             for (int i = 0; i < brickWallParts; i++)
             {
                 Vector2 brickPos = startPos + 
                     spellDir * _distToWall +
-                    spellDirNormal * brickWallPartSize * i -
-                    spellDirNormal * brickWallPartSize * brickWallParts * .5f;
+                    spellDirNormal * StandardStats.Size * i -
+                    spellDirNormal * StandardStats.Size * brickWallParts * .5f;
                 var wallPart = new BrickWallEntity(MyPlayer, brickPos)
                 {
-                    Size = brickWallPartSize,
+                    Size = StandardStats.Size,
                 };
                 GetCurrentGame().Entities.Add(wallPart);
                 _wallEntities.Add(wallPart);

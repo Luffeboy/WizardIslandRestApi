@@ -10,15 +10,16 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public Phoenix(Player player) : base(player)
         {
             Type = SpellType.Movement;
+            StandardStats.BuffAndDebuffTime = 3 * Game._updatesPerSecond;
         }
 
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            const int ticksTillRemoval = 3 * Game._updatesPerSecond;
+            int ticksTillRemoval = StandardStats.BuffAndDebuffTime;
             MyPlayer.ApplyDebuff(new Invulnerability(MyPlayer) { TicksTillRemoval = ticksTillRemoval });
             const int regenAmount = 1;
-            const int ticksBetweenRegen = ticksTillRemoval / Game._updatesPerSecond;
+            int ticksBetweenRegen = ticksTillRemoval / Game._updatesPerSecond;
             MyPlayer.ApplyDebuff(new RegenerationBuff(MyPlayer, ticksTillRemoval, regenAmount, ticksBetweenRegen));
             const float speedMultiplier = 1.5f;
             MyPlayer.ApplyDebuff(new SpeedBuff(MyPlayer)

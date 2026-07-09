@@ -18,7 +18,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             var dir = _teleportToLocation.Pos - startPos;
             MyPlayer.TeleportTo(_teleportToLocation.Pos);
             MyPlayer.Vel = new Vector2();
-            MyPlayer.ApplyKnockback(dir.Normalized(), 1.25f); 
+            MyPlayer.ApplyKnockback(dir.Normalized(), 1.25f);
 
             GoOnCooldown();
         }

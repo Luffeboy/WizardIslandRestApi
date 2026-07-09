@@ -5,13 +5,17 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class SpeedBlits : MultiUseSpell
     {
-        private float _maxRange = 10;
         public override string Name => "Speed blitz";
         public SpeedBlits(Player player) : base(player)
         {
             UsesMax = 5;
             CooldownBetweenUses = 3;
             Type = SpellType.Ultimate;
+            StandardStats.Damage = 10;
+            StandardStats.Knockback = 1.2f;
+            StandardStats.Speed = 2;
+            StandardStats.Size = .5f;
+            StandardStats.Range = 10;
         }
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
@@ -20,39 +24,36 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             Vector2 endPos = (mousePos - startPos);
             float len = endPos.Length();
-            if (len > _maxRange)
+            if (len > StandardStats.Range)
             {
-                endPos = endPos / len * _maxRange;
-                len = _maxRange;
+                endPos = endPos / len * StandardStats.Range;
+                len = StandardStats.Range;
             }
             endPos = endPos + startPos;
 
-            float speed = 2;
-            float size = .5f;
-            float damage = 10;
-            float knockback = 1.2f;
             string color = "255,255,0";
             Vector2 pos = startPos;
             Vector2 normal = (endPos - startPos).Normal() / len;
+            int boltLifetime = 100;
             GetCurrentGame().Entities.Add(new SpeedBlitsEntity(MyPlayer, pos + normal * len, pos, GetCurrentGame())
             {
-                Speed = speed,
-                Damage = damage,
-                Knockback = knockback,
-                Size = size,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
+                Speed = StandardStats.Speed,
+                Size = StandardStats.Size,
                 Color = color,
                 Dir = normal * -1,
-                TicksUntilDeletion = 100,
+                TicksUntilDeletion = boltLifetime,
             });
             GetCurrentGame().Entities.Add(new SpeedBlitsEntity(MyPlayer, pos + normal * -len, pos, GetCurrentGame())
             {
-                Speed = speed,
-                Damage = damage,
-                Knockback = knockback,
-                Size = size,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
+                Speed = StandardStats.Speed,
+                Size = StandardStats.Size,
                 Color = color,
                 Dir = normal * 1,
-                TicksUntilDeletion = 100,
+                TicksUntilDeletion = boltLifetime,
             });
 
             MyPlayer.TeleportTo(endPos);

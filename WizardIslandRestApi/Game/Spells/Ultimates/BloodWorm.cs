@@ -8,28 +8,27 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
     {
         public override string Name { get { return "Blood worm"; } }
         public const int WormPartCost = 10;
-        private const int _minWormPartCount = 3; // shoots, you get for free
+        private const int _minWormPartCount = 3; // shots, you get for free
         private const int _ticksBetweenWormCreation = 1 * Game._updatesPerSecond;
-        private const int _wormLifetime = (int)(30 * Game._updatesPerSecond);
         private const float _circlingRadius = 7.5f;
-
-        private float _damage = 5;
-        private float _knockback = 1.75f;
 
         private int _shots = 0;
         private BloodWormEntity? _tail = null;
 
         private enum BloodWormStates { Ready, CreatingWorm, ShootoutWorm }
         public override bool CanBeReplaced { get { return _currentState == BloodWormStates.Ready; } protected set { } }
-        public BloodWorm(Player player) : base(player)
-        {
-            Type = SpellType.Ultimate;
-        }
-
         public override int CooldownMax { get; protected set; } = 45 * Game._updatesPerSecond;
 
         BloodWormStates _currentState = BloodWormStates.Ready;
 
+        public BloodWorm(Player player) : base(player)
+        {
+            Type = SpellType.Ultimate;
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.75f;
+            StandardStats.Size = 2;
+            StandardStats.Speed = 33.3f;
+        }
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
@@ -77,13 +76,12 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             //var dir = (target - pos).Normalized();
             BloodWormEntity temp = new BloodWormEntity(MyPlayer, pos + (target - pos).Normalized() * _circlingRadius * .5f, _tail, this)
             {
-                TicksUntillDeletingMax = _wormLifetime,
-                Damage = _damage,
-                Knockback = _knockback,
-                Size = 2,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
+                Size = StandardStats.Size,
                 Color = "130, 0, 200",
                 CirclingRadius = _circlingRadius * (1 + (float)_shots * .15f),
-                Speed = (100.0f / Game._updatesPerSecond),
+                Speed = StandardStats.Speed,
             };
             if (_tail != null)
             {
@@ -127,8 +125,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         private float _circlingAngle = 0;
         private float _circlingRadius;
         public float CirclingRadius { get { return _circlingRadius; } set { _circlingRadius = value; if (Parent != null) Parent.CirclingRadius = value; } }
-
-        public int TicksUntillDeletingMax { get { return _ticksUntillDeletingMax; } set { _ticksUntillDeletingMax = value; _ticksUntillDeleting = value; } }
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public float Speed { get; set; }
