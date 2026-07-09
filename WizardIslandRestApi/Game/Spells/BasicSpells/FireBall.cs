@@ -5,25 +5,25 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
     public class FireBall : Spell, ISetCooldownMax
     {
         public override string Name { get { return "Fire-ball"; } }
-        private float _damage = 5;
-        private float _knockback = 1.5f;
         public override int CooldownMax { get; protected set; } = (int)(2.25f * Game._updatesPerSecond);
         public FireBall(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Size = .5f;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos).Normalized();
-            float size = .5f;
-            GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, pos + dir * (MyPlayer.Size + size + .1f))
+            GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, pos + dir * (MyPlayer.Size + StandardStats.Size + .1f))
             {
                 Dir = dir,
                 Speed = 2f,
                 Color = "255, 0, 0",
-                Size = size,
+                Size = StandardStats.Size,
                 TicksUntilDeletion = 90,
-                Damage = _damage,
-                Knockback = _knockback,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
                 EntityId = "FireBall"
             });
             GoOnCooldown();

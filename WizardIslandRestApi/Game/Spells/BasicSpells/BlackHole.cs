@@ -8,19 +8,21 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
         public BlackHole(Player player) : base(player)
         {
+            StandardStats.Size = 1.5f;
+            StandardStats.Speed = 1.0f;
+            StandardStats.Range = 3;
         }
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             Vector2 dir = (mousePos - pos).Normalized();
-            float size = 1.5f;
-            GetCurrentGame().Entities.Add(new BlackHoleEntity(MyPlayer, GetCurrentGame(), pos + dir * (size + MyPlayer.Size + 1.0f))
+            GetCurrentGame().Entities.Add(new BlackHoleEntity(MyPlayer, GetCurrentGame(), pos + dir * (StandardStats.Size + MyPlayer.Size + 1.0f))
             {
                 Color = "0, 0, 0",
-                TicksUntilDeletion = (int)(3.0f * Game._updatesPerSecond),
-                Size = size,
+                TicksUntilDeletion = StandardStats.GetLifetime(),
+                Size = StandardStats.Size,
                 Dir = dir,
-                Speed = 1.0f
+                Speed = StandardStats.Speed
             });
             GoOnCooldown();
         }
@@ -61,13 +63,16 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             // move all players and entities towards it self
             // F = (G * m1 * m2) / d^2
             float minAmount = 1.0f;
+            float playerKnockBackMultiplier = .35f;
             foreach (Player p in _game.Players.Values)
             {
                 Vector2 dir = Pos - p.Pos;
                 float amount = dir.LengthSqr();
                 if (amount < minAmount)
                     amount = minAmount;
-                p.ApplyKnockback(dir.Normalized(), _gravitationalConstant / amount * .35f);
+                if (p == MyCollider.Owner)
+                    amount *= 2;
+                p.ApplyKnockback(dir.Normalized(), _gravitationalConstant / amount * playerKnockBackMultiplier);
             }
             //
             foreach (Entity e in _game.Entities)

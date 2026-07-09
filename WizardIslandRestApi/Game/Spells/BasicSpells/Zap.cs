@@ -5,18 +5,18 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class Zap : Spell
     {
-        private float _range = 15;
-        private float _knockback = 1.5f;
         public Zap(Player player) : base(player)
         {
+            StandardStats.Range = 15;
+            StandardStats.Knockback = 1.5f;
         }
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            if ((mousePos - startPos).LengthSqr() > _range * _range)
-                mousePos = startPos + (mousePos - startPos).Normalized() * _range;
+            if ((mousePos - startPos).LengthSqr() > StandardStats.Range * StandardStats.Range)
+                mousePos = startPos + (mousePos - startPos).Normalized() * StandardStats.Range;
 
             Vector2 spellDir = mousePos - startPos;
             float spellLen = spellDir.Length();
@@ -38,7 +38,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                         dir = startPos - mousePos;
                     dir.Normalize();
                     player.TakeDamage(0, MyPlayer);
-                    player.ApplyKnockback(dir, _knockback);
+                    player.ApplyKnockback(dir, StandardStats.Knockback);
                 }
             }
             // visual

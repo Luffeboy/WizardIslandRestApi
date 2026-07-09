@@ -4,11 +4,17 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class FrostField : Spell
     {
-        private float _range = 30;
         public override string Name => "Frost field";
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
         public FrostField(Player player) : base(player)
         {
+            Tags.Add(SpellTags.Debuff);
+            Tags.Add(SpellTags.Static);
+            Tags.Add(SpellTags.Zone);
+            Tags.Add(SpellTags.LongRange);
+            Tags.Add(SpellTags.ShortCooldown);
+            StandardStats.Size = 7;
+            StandardStats.Range = 30;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
@@ -19,13 +25,13 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 dir.x /= len;
                 dir.y /= len;
             }
-            if (len > _range)
-                len = _range;
+            if (len > StandardStats.Range)
+                len = StandardStats.Range;
             pos = pos + dir * len;
             GetCurrentGame().Entities.Add(new FrostFieldEntity(MyPlayer, pos)
             {
                 Color = "100, 255, 100",
-                Size = 7,
+                Size = StandardStats.Size,
                 TicksUntilDeletion = 4 * Game._updatesPerSecond
             });
             GoOnCooldown();

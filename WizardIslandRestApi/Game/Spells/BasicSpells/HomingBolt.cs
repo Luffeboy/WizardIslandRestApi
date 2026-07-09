@@ -1,27 +1,27 @@
-﻿using System;
-using System.Reflection.Metadata;
-namespace WizardIslandRestApi.Game.Spells.BasicSpells
+﻿namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class HomingBolt : Spell
     {
         public override string Name { get { return "Homing bolt"; } }
-        private float _damage = 5;
-        private float _knockback = 1.5f;
         public override int CooldownMax { get; protected set; } = (int)(7.5f * Game._updatesPerSecond);
         public HomingBolt(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Size = .5f;
+            StandardStats.Speed = 1f;
+            StandardStats.Range = 3 * StandardStats.Speed;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            float size = .5f;
             GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, pos, mousePos, GetCurrentGame())
             {
-                Speed = 1.0f,
+                Speed = StandardStats.Speed,
                 Color = "255, 255, 255",
-                Size = size,
-                TicksUntilDeletion = 90,
-                Damage = _damage,
-                Knockback = _knockback,
+                Size = StandardStats.Size,
+                TicksUntilDeletion = StandardStats.GetLifetime(),
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
             });
             GoOnCooldown();
         }

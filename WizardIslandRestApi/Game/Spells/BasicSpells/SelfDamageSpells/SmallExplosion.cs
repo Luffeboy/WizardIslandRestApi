@@ -4,35 +4,33 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
 {
     public class SmallExplosion : Spell
     {
-        private float _damage = 8f;
-        private float _knockback = 1.5f;
-        private float _selfDamage { get => _damage / 2; }
-        private float _selfKnockback { get => _knockback; }
+        private float _selfDamage { get => StandardStats.Damage / 2; }
+        private float _selfKnockback { get => StandardStats.Knockback; }
         public override string Name => "Small Explosion";
         public override int CooldownMax { get; protected set; } = (int)(2.5f * Game._updatesPerSecond);
 
         public SmallExplosion(Player player) : base(player)
         {
+            StandardStats.Damage = 8;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Size = .75f;
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             var dir = (mousePos - startPos).Normalized();
-            float radius = .75f;
-            GetCurrentGame().Entities.Add(new ExplosionEntity(MyPlayer, startPos + dir * (radius/2 + MyPlayer.Size))
+            GetCurrentGame().Entities.Add(new ExplosionEntity(MyPlayer, startPos + dir * (StandardStats.Size / 2 + MyPlayer.Size))
             {
-                Damage = _damage,
-                Knockback = _knockback,
-                Size = radius
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
+                Size = StandardStats.Size
             });
             // apply self knockback
             MyPlayer.ApplyKnockback(dir * -1, _selfKnockback);
             MyPlayer.TakeDamage(_selfDamage);
             // move target position
-            //var playerDir = (MyPlayer.TargetPos - MyPlayer.Pos).Normalized();
-            //if (playerDir.LengthSqr() < .1f || playerDir.Dot(dir * -1) < .7f)
             {
-                float targetDist = 20;// MyPlayer.Vel.LengthSqr() * 20;
+                float targetDist = 20;
                 MyPlayer.TargetPos = MyPlayer.Pos + (dir * -targetDist);
             }
             GoOnCooldown();

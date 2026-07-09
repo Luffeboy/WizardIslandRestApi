@@ -7,32 +7,30 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
     {
         public override string Name { get { return "Meteor"; } }
         public override int CooldownMax { get; protected set; } = (int)(15.0f * Game._updatesPerSecond);
-        private float _damage = 15;
-        private float _knockbackMin = 2.5f;
-        private float _knockbackMax = 3.5f;
         private int _fallTime = (int)(.5f * Game._updatesPerSecond);
         public Meteor(Player player) : base(player)
         {
+            StandardStats.Damage = 15;
+            StandardStats.Knockback = 3;
+            StandardStats.Size = 4.3f;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos).Normalized();
-            float size = 4.37f;
             GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos, GetCurrentGame())
             {
                 Color = "50, 50, 50",
-                Size = size,
+                Size = StandardStats.Size,
                 FallTime = _fallTime,
-                Damage = _damage,
-                KnockbackMin = _knockbackMin,
-                KnockbackMax = _knockbackMax,
+                Damage = StandardStats.Damage,
+                KnockbackMin = StandardStats.Knockback * 0.8f,
+                KnockbackMax = StandardStats.Knockback * 1.2f,
             });
             GoOnCooldown();
         }
     }
     public class MeteorEntity : Entity
     {
-        private Vector2 _pos;
         public float Damage { get; set; }
         public float KnockbackMin { get; set; }
         public float KnockbackMax { get; set; }
@@ -44,7 +42,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         {
             _player = owner;
             MyCollider = null;
-            _pos = pos;
             Pos = pos;
             Height = EntityHeight.Ground;
             _game = game;

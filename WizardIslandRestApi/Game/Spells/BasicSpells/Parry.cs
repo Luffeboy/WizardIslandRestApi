@@ -2,20 +2,20 @@
 {
     public class Parry : Spell
     {
+        public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;
+
         public Parry(Player player) : base(player)
         {
+            StandardStats.Size = 2;
         }
-
-        public override int CooldownMax { get; protected set; } = 6 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             Vector2 dir = (mousePos - pos).Normalized();
-            float size = 2;
             GetCurrentGame().Entities.Add(new ParryEntity(MyPlayer)
             {
-                Pos = pos + dir * (size*.5f + MyPlayer.Size),
-                Size = size,
+                Pos = pos + dir * (StandardStats.Size * .5f + MyPlayer.Size),
+                Size = StandardStats.Size,
                 Color = "255,255,255",
                 EntityId = "Parry",
             });

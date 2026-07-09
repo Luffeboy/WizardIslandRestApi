@@ -6,27 +6,31 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class CirclingSnake : Spell
     {
+        private float SnakeCirclingDistance = 10f;
+        private int SnakeParts = 10;
         public override string Name { get { return "Circling snake"; } }
-        private float _damage = 5;
-        private float _knockback = 1.75f;
         public override int CooldownMax { get; protected set; } = (int)(12.0f * Game._updatesPerSecond);
+
         public CirclingSnake(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Size = .5f;
+            StandardStats.Speed = 2.0f;
+            StandardStats.Range = 5 * StandardStats.Speed;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos).Normalized();
-            float size = .5f;
-            int snakeParts = 10;
-            GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, 5 * Game._updatesPerSecond, GetCurrentGame(), pos, snakeParts)
+            GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, StandardStats.GetLifetime(), GetCurrentGame(), pos, SnakeParts)
             {
                 Target = mousePos,
-                Speed = 2,
-                CirclingDistance = 10,
+                Speed = StandardStats.Speed,
+                CirclingDistance = SnakeCirclingDistance,
                 Color = "100, 255, 100",
-                Size = size,
-                Damage = 5,
-                Knockback = 1.5f,
+                Size = StandardStats.Size,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
             });
             GoOnCooldown();
         }

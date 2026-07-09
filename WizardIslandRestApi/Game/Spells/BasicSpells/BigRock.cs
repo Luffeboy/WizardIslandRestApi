@@ -2,11 +2,14 @@
 {
     public class BigRock : Spell
     {
-        private float _range = 20;
-        private int _rockLifetime = 5 * Game._updatesPerSecond;
         public override string Name => "Big rock";
         public BigRock(Player player) : base(player)
         {
+            Tags.Add(SpellTags.Static);
+            Tags.Add(SpellTags.Summon);
+            StandardStats.Range = 20;
+            StandardStats.SummonLifetime = 5 * Game._updatesPerSecond;
+            StandardStats.Size = 3;
         }
 
         public override int CooldownMax { get; protected set; } = (int)(6.5f * Game._updatesPerSecond);
@@ -14,11 +17,11 @@
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             Vector2 dir = mousePos - startPos;
-            if (dir.LengthSqr() > _range * _range)
-                dir = dir.Normalized() * _range;
-            GetCurrentGame().Entities.Add(new BigRockEntity(_rockLifetime, startPos + dir)
+            if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
+                dir = dir.Normalized() * StandardStats.Range;
+            GetCurrentGame().Entities.Add(new BigRockEntity(StandardStats.SummonLifetime, startPos + dir)
             {
-                Size = 3
+                Size = StandardStats.Size
             });
             GoOnCooldown();
         }

@@ -7,12 +7,14 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
     public class Barrel : Spell
     {
         public override string Name { get { return "Barrel"; } }
-        private float _damage = 5;
-        private float _knockback = 2.0f;
         public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
-        private float _range = 30;
         public Barrel(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 2.0f;
+            StandardStats.Range = 30;
+            StandardStats.Size = 1.5f;
+            StandardStats.SummonLifetime = 30 * Game._updatesPerSecond;
         }
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
@@ -23,16 +25,16 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 dir.x /= len;
                 dir.y /= len;
             }
-            if (len > _range)
-                len = _range;
+            if (len > StandardStats.Range)
+                len = StandardStats.Range;
             Vector2 pos = startPos + dir * len;
             GetCurrentGame().Entities.Add(new BarrelEntity(MyPlayer, GetCurrentGame(), pos)
             {
                 Color = "255, 0, 0",
-                Size = 1.5f,
-                TicksUntilDeletion = 30 * Game._updatesPerSecond,
-                Damage = _damage,
-                Knockback = _knockback
+                Size = StandardStats.Size,
+                TicksUntilDeletion = StandardStats.SummonLifetime,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback
             });
             GoOnCooldown();
         }

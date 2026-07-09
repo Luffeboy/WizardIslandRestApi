@@ -5,36 +5,36 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
     public class CrescentMoon : Spell
     {
         public override string Name { get { return "Crescent Moon"; } }
-        private float _damage = 5;
-        private float _knockback = 1.5f;
-        private float _rangeMax = 40;
         public override int CooldownMax { get; protected set; } = (int)(2.5f * Game._updatesPerSecond);
         public CrescentMoon(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Range = 40;
+            StandardStats.Size = 1.0f;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            float size = 1.0f;
             Vector2 endPos = mousePos;
             Vector2 dir = mousePos - pos;
-            if (dir.LengthSqr() > _rangeMax * _rangeMax)
+            if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
             {
-                dir = dir.Normalized() * _rangeMax;
+                dir = dir.Normalized() * StandardStats.Range;
                 endPos = pos + dir;
             }
             var ticksUntilDeletion = Math.Max((int)(dir.Length() * .75f), 1);
             dir.Normalize();
             Vector2 dirNormal = dir.Normal();
             Vector2 startPos = pos + 
-                               dir * (MyPlayer.Size + size + .1f) + 
-                               dirNormal * (MyPlayer.Size + size + .1f);
+                               dir * (MyPlayer.Size + StandardStats.Size + .1f) + 
+                               dirNormal * (MyPlayer.Size + StandardStats.Size + .1f);
             GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, startPos, endPos)
             {
                 Color = "100, 100, 255",
-                Size = size,
+                Size = StandardStats.Size,
                 TicksUntilDeletionMax = ticksUntilDeletion,
-                Damage = _damage,
-                Knockback = _knockback,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
             });
             GoOnCooldown();
         }

@@ -3,8 +3,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 {
     public class DeckOfCards : Spell
     {
-        float Damage { get; set; } = 5.0f;
-        float knockback { get; set; } = 1.5f;
         private int _numberOfCards = 10;
         private int _nextCardNumber = 0;
         private CardEntity _nextCard = null;
@@ -17,6 +15,11 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             if (player is null)
                 return;
             GetNewCard();
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Speed = 50.0f / Game._updatesPerSecond;
+            StandardStats.Range = StandardStats.Speed * 2;
+            StandardStats.Size = .25f;
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
@@ -60,17 +63,14 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
                         cardNum = "Joker";
                         break;
                 }
-            float cardSpeed = 50.0f / Game._updatesPerSecond;
-            float cardSize = .25f;
-            int lifetime = (int)(2.0f * Game._updatesPerSecond);
-            _nextCard = new CardEntity(MyPlayer, lifetime, new Vector2(), cardNum, Damage, knockback, cardSpeed, null,
+            _nextCard = new CardEntity(MyPlayer, StandardStats.GetLifetime(), new Vector2(), cardNum, StandardStats.Damage, StandardStats.Knockback, StandardStats.Speed, null,
                 _nextCardNumber == 0 ? () =>
             {
                 GoOnCooldown();
                 GetNewCard();
             } : null)
             {
-                Size = cardSize,
+                Size = StandardStats.Size,
             };
         }
         private void GoOnCooldownSameDeck()

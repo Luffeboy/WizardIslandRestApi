@@ -23,6 +23,12 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
                 }
             };
             CurrentCooldown = CooldownMax; // we don't need this here
+
+            StandardStats.Size = 1.5f;
+            StandardStats.Damage = 7.5f;
+            StandardStats.Knockback = 1.3f;
+            StandardStats.Speed = 7.5f;
+            StandardStats.Range = 1.5f * StandardStats.Speed;
         }
         public override void OnPlayerReset()
         {
@@ -41,11 +47,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
             _instancesOfDamageTaken -= sawCount * _stackCost;
 #endif
             // entity attibutes
-            const int ticksUntillDeletion = (int)(1.5f * Game._updatesPerSecond);
-            const float size = 1.5f;
-            const float damage = 7.5f;
-            const float knockback = 1.3f;
-            const float speed = 7.5f / ticksUntillDeletion; // It will go 3 units away from the player
+            int lifetime = StandardStats.GetLifetime();
+            float speed = StandardStats.Speed / lifetime;
             const float rotationsPerSecond = .75f; // how many times each saw should go around the player, each second
             const float rotSpeed = MathF.PI * 2 / Game._updatesPerSecond * rotationsPerSecond;
 
@@ -56,11 +59,11 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
             for (int i = 0; i < sawCount; i++)
             {
                 float activeAngle = angle + i * deltaAngle;
-                GetCurrentGame().Entities.Add(new BloodSawEntity(MyPlayer, ticksUntillDeletion, startPos + new Vector2(MathF.Cos(activeAngle), MathF.Sin(activeAngle)), activeAngle, hitPlayersSharedDictionay)
+                GetCurrentGame().Entities.Add(new BloodSawEntity(MyPlayer, lifetime, startPos + new Vector2(MathF.Cos(activeAngle), MathF.Sin(activeAngle)), activeAngle, hitPlayersSharedDictionay)
                 {
-                    Size = size,
-                    Damage = damage,
-                    Knockback = knockback,
+                    Size = StandardStats.Size,
+                    Damage = StandardStats.Damage,
+                    Knockback = StandardStats.Knockback,
                     Speed = speed,
                     RotationSpeed = rotSpeed,
                     ForwardAngle = activeAngle

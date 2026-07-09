@@ -4,20 +4,23 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class Link : Spell
     {
+        public override int CooldownMax { get; protected set; } = 15 * Game._updatesPerSecond;
+
         public Link(Player player) : base(player)
         {
+            StandardStats.Speed = 1;
+            StandardStats.Range = 3 * StandardStats.Speed;
+            StandardStats.Size = .5f;
         }
-
-        public override int CooldownMax { get; protected set; } = 15 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             GetCurrentGame().Entities.Add(new LinkEntity(MyPlayer, startPos, GetCurrentGame()) 
             {
                 Dir = (mousePos - startPos).Normalized(),
-                Speed = (float)30 / Game._updatesPerSecond,
-                TicksUntilDeletion = Game._updatesPerSecond * 3,
-                Size = .5f,
+                Speed = StandardStats.Speed,
+                TicksUntilDeletion = StandardStats.GetLifetime(),
+                Size = StandardStats.Size,
                 PullDuration = 3 * Game._updatesPerSecond,
             });
             GoOnCooldown();

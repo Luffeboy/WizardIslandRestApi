@@ -10,25 +10,28 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public override string Name => "Ice lance";
         public IceLance(Player player) : base(player)
         {
-            
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.3f;
+            StandardStats.Speed = 2f;
+            StandardStats.Size = .35f;
+            StandardStats.Range = .5f * StandardStats.Speed;
         }
 
         public override int CooldownMax { get; protected set; } = 12 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            int ticksUntillDeletion = (int)(.5f * Game._updatesPerSecond);
             if (_entity == null)
             {
                 _usedSpellTick = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
-                GetCurrentGame().Entities.Add(_entity = new IceLanceEntity(MyPlayer, startPos, ticksUntillDeletion, this)
+                GetCurrentGame().Entities.Add(_entity = new IceLanceEntity(MyPlayer, startPos, StandardStats.GetLifetime(), this)
                 {
-                    Damage = 5,
-                    Knockback = 1.3f,
+                    Damage = StandardStats.Damage,
+                    Knockback = StandardStats.Knockback,
                     Dir = (mousePos - startPos).Normalized(),
                     IceTarget = mousePos,
-                    Speed = 2.0f,
-                    Size = .35f
+                    Speed = StandardStats.Speed,
+                    Size = StandardStats.Size
                 });
             }
             else

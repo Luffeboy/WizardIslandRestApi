@@ -5,14 +5,17 @@
         public override string Name => "Brick Throw";
         public BrickThrow(Player player) : base(player)
         {
+            StandardStats.Damage = 5;
+            StandardStats.Knockback = 1.5f;
+            StandardStats.Speed = 3;
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            GetCurrentGame().Entities.Add(new BrickEntity(MyPlayer, CooldownMax, startPos)
+            GetCurrentGame().Entities.Add(new BrickEntity(MyPlayer, CooldownMax, startPos, StandardStats.Speed)
             {
-                Damage = 5,
-                Knockback = 1.5f,
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
                 Dir = (mousePos - startPos).Normalized()
             });
             GoOnCooldownBrick();

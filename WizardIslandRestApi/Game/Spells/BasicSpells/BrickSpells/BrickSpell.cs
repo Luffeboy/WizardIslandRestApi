@@ -13,6 +13,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
         public override int CurrentCooldown { get { return BrickCount >= MinBricksToCast ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
         public BrickSpell(Player player) : base(player)
         {
+            Tags.Add(SpellTags.Brick);
         }
 
         public override int CooldownMax { get; protected set; } = 30 * Game._updatesPerSecond;

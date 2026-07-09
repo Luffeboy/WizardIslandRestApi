@@ -13,6 +13,50 @@ namespace WizardIslandRestApi.Game.Spells
         Movement,
         Ultimate,
     }
+    public static class SpellTags
+    {
+        public const string Luck = "Luck";
+        public const string SelfDamage = "Self Damage";
+        public const string Brick = "Brick";
+
+        public const string ShortRange = "Short Range";
+        public const string LongRange = "Long Range";
+        public const string LongCooldown = "Long Cooldown";
+        public const string ShortCooldown = "Short Cooldown";
+        public const string CreateEnvironment = "Create Environment";
+        public const string Buff = "Buff";
+        public const string Debuff = "Debuff";
+        public const string Static = "Static";
+        public const string Projectile = "Projectile";
+        public const string UseOtherAbility = "Use Other Ability";
+        public const string Zone = "Zone";
+        public const string Summon = "Summon";
+    }
+
+    /// <summary>
+    /// A collection of common properties and methods for all spells in the game.
+    /// </summary>
+    public class StandardSpellStats
+    {
+        public float CooldownMultiplier { get; set; } = 1f;
+        public float Damage { get; set; } = -1;
+        public float Knockback { get; set; } = -1;
+        public float Speed { get; set; } = -1;
+        public float Range { get; set; } = -1;
+        public float Size { get; set; } = -1;
+        public float BuffAndDebuffTime { get; set; } = -1;
+        public int SummonLifetime { get; set; } = -1;
+
+        public int GetLifetime()
+        {
+#if DEBUG
+            if (Speed == 0 || Range == 0)
+                Console.WriteLine($"Warning from GetLifetime: Speed ({Speed}) or Range ({Range}) is 0... Remember to set these values!");
+#endif
+            return Speed != 0 ? (int)(Range / Speed) * Game._updatesPerSecond : 1;
+        }
+    }
+
     public abstract class Spell
     {
         public int SpellIndex { get; private set; }
@@ -22,6 +66,8 @@ namespace WizardIslandRestApi.Game.Spells
         public virtual bool CanCast { get { return CurrentCooldown < GetCurrentGameTick(); } }
         public Player MyPlayer { get; private set; }
         public virtual SpellType Type { get; set; } = SpellType.Attack;
+        public List<string> Tags { get; } = new List<string>();
+        public StandardSpellStats StandardStats { get; } = new StandardSpellStats();
         public virtual bool CanBeReplaced { get; protected set; } = true; // set this to false, if it could "dangerous" to replace this spell currently
         // static stuff
         private static Func<Player, Spell>[] _availableSpells = new Func<Player, Spell>[]
@@ -67,6 +113,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Ignis(player),
             (player) => new ReloadSpells(player),
         };
+
         public static Spell GetSpell(Player player, int index)
         {
             return _availableSpells[index](player);
@@ -90,7 +137,12 @@ namespace WizardIslandRestApi.Game.Spells
         public void GoOnCooldown()
         {
 #if !NO_COOLDOWN
-            CurrentCooldown = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
+            CurrentCooldown = GetCurrentGameTick() + (int)(
+                CooldownMax * 
+                GetCurrentGame().GameModifiers.CooldownMultiplier * 
+                MyPlayer.Stats.CooldownMultiplier * 
+                StandardStats.CooldownMultiplier
+                );
 #endif
         }
         public override string ToString()
@@ -122,7 +174,7 @@ namespace WizardIslandRestApi.Game.Spells
         /// This is called in, when creating instance of spell, do not call
         /// </summary>
         /// <param name="index"></param>
-        public void SetSpellIndex (int index)
+        public void SetSpellIndex(int index)
         {
             SpellIndex = index;
         }
