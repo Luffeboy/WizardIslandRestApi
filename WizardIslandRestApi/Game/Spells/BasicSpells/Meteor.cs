@@ -13,6 +13,9 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Damage = 15;
             StandardStats.Knockback = 3;
             StandardStats.Size = 4.3f;
+
+            Tags.Add(SpellTags.Static);
+            Tags.Add(SpellTags.Zone);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {

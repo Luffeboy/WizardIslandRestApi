@@ -29,6 +29,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Speed = statsToCopy.Speed;
             StandardStats.Range = statsToCopy.Range;
             SetSpellStats();
+
+            Tags.Add(SpellTags.Projectile);
         }
         private void SetSpellStats()
         {

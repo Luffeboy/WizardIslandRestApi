@@ -12,6 +12,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Damage = 3;
             StandardStats.Knockback = 1.3f;
             StandardStats.Size = .35f;
+
+            Tags.Add(SpellTags.Projectile);
+            Tags.Add(SpellTags.SelfDamage);
         }
         public override string Name => "Last Resort";
 

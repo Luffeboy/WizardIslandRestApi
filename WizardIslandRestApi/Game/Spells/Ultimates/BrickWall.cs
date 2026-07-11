@@ -21,6 +21,10 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Knockback = 1.15f;
             StandardStats.Speed = 4;
             StandardStats.Size = 1;
+
+            Tags.Add(SpellTags.Projectile);
+            Tags.Add(SpellTags.Static);
+            Tags.Add(SpellTags.Summon);
         }
 
 

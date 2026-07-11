@@ -7,6 +7,7 @@
         public Parry(Player player) : base(player)
         {
             StandardStats.Size = 2;
+            StandardStats.Range = 1;
         }
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)

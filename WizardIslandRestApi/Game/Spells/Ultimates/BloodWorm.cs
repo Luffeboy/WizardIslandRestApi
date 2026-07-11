@@ -28,6 +28,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Knockback = 1.75f;
             StandardStats.Size = 2;
             StandardStats.Speed = 33.3f;
+
+            Tags.Add(SpellTags.Projectile);
+            Tags.Add(SpellTags.SelfDamage);
         }
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)

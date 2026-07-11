@@ -10,6 +10,11 @@
             StandardStats.Range = 20;
             StandardStats.SummonLifetime = 5 * Game._updatesPerSecond;
             StandardStats.Size = 3;
+
+            Tags.Add(SpellTags.CreateEnvironment);
+            Tags.Add(SpellTags.Summon);
+            Tags.Add(SpellTags.Zone);
+            Tags.Add(SpellTags.Static);
         }
 
         public override int CooldownMax { get; protected set; } = (int)(6.5f * Game._updatesPerSecond);

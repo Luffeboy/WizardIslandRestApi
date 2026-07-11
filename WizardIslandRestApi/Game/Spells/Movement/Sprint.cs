@@ -10,6 +10,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public Sprint(Player player) : base(player)
         {
             StandardStats.BuffAndDebuffTime = 3 * Game._updatesPerSecond;
+
+            Tags.Add(SpellTags.Buff);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {

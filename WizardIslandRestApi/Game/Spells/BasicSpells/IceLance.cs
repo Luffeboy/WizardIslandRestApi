@@ -15,6 +15,9 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Speed = 2f;
             StandardStats.Size = .35f;
             StandardStats.Range = .5f * StandardStats.Speed;
+
+            Tags.Add(SpellTags.Projectile);
+            Tags.Add(SpellTags.Debuff);
         }
 
         public override int CooldownMax { get; protected set; } = 12 * Game._updatesPerSecond;

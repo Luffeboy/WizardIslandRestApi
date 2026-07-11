@@ -11,6 +11,8 @@
             StandardStats.Size = .5f;
             StandardStats.Speed = 1f;
             StandardStats.Range = 3 * StandardStats.Speed;
+
+            Tags.Add(SpellTags.Projectile);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {

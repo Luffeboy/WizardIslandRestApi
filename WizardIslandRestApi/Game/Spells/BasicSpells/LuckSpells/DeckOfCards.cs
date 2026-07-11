@@ -20,6 +20,9 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             StandardStats.Speed = 50.0f / Game._updatesPerSecond;
             StandardStats.Range = StandardStats.Speed * 2;
             StandardStats.Size = .25f;
+
+            Tags.Add(SpellTags.Luck);
+            Tags.Add(SpellTags.Projectile);
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)

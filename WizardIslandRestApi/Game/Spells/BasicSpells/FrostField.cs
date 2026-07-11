@@ -8,13 +8,12 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
         public FrostField(Player player) : base(player)
         {
+            StandardStats.Size = 7;
+            StandardStats.Range = 30;
+
             Tags.Add(SpellTags.Debuff);
             Tags.Add(SpellTags.Static);
             Tags.Add(SpellTags.Zone);
-            Tags.Add(SpellTags.LongRange);
-            Tags.Add(SpellTags.ShortCooldown);
-            StandardStats.Size = 7;
-            StandardStats.Range = 30;
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {

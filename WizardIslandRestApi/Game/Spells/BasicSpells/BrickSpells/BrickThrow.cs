@@ -8,6 +8,8 @@
             StandardStats.Damage = 5;
             StandardStats.Knockback = 1.5f;
             StandardStats.Speed = 3;
+
+            Tags.Add(SpellTags.Projectile);
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)

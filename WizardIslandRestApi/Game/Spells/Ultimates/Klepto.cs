@@ -10,6 +10,8 @@
         public Klepto(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
+
+            Tags.Add(SpellTags.UseOtherSpell);
         }
 
         public override int CooldownMax { get; protected set; } = 20 * Game._updatesPerSecond;

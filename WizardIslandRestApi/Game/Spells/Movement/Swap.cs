@@ -11,6 +11,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             StandardStats.Speed = 4;
             StandardStats.Range = 1 / 3 * StandardStats.Speed;
             StandardStats.Size = 1;
+
+            Tags.Add(SpellTags.Projectile);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {

@@ -19,18 +19,20 @@ namespace WizardIslandRestApi.Game.Spells
         public const string SelfDamage = "Self Damage";
         public const string Brick = "Brick";
 
-        public const string ShortRange = "Short Range";
-        public const string LongRange = "Long Range";
-        public const string LongCooldown = "Long Cooldown";
-        public const string ShortCooldown = "Short Cooldown";
         public const string CreateEnvironment = "Create Environment";
         public const string Buff = "Buff";
         public const string Debuff = "Debuff";
         public const string Static = "Static";
         public const string Projectile = "Projectile";
-        public const string UseOtherAbility = "Use Other Ability";
+        public const string UseOtherSpell = "Use Other Spell";
         public const string Zone = "Zone";
         public const string Summon = "Summon";
+
+        // auto added tags based on spell stats
+        public const string ShortRange = "Short Range";
+        public const string LongRange = "Long Range";
+        public const string LongCooldown = "Long Cooldown";
+        public const string ShortCooldown = "Short Cooldown";
     }
 
     /// <summary>
@@ -116,21 +118,38 @@ namespace WizardIslandRestApi.Game.Spells
 
         public static Spell GetSpell(Player player, int index)
         {
-            return _availableSpells[index](player);
+            var spell = _availableSpells[index](player);
+            spell.PostSpellConstructor();
+            return spell;
         }
+
         public static Spell[] GetSpells()
         {
             Spell[] spells = new Spell[_availableSpells.Length];
             for (int i = 0; i < spells.Length; i++)
             {
                 spells[i] = _availableSpells[i](null);
+                spells[i].PostSpellConstructor();
             }
             return spells;
         }
+
         public Spell(Player player)
         {
             MyPlayer = player;
         }
+
+        public virtual void PostSpellConstructor()
+        {
+            const float longRangeThreshold = 7f;
+            if (StandardStats.Range < 0)
+                Tags.Add(StandardStats.Range > longRangeThreshold ? SpellTags.LongRange : SpellTags.ShortRange);
+            const float longCooldownThreshold = 7f;
+            if (CooldownMax < 0)
+                Tags.Add(CooldownMax > longCooldownThreshold ? SpellTags.LongCooldown : SpellTags.ShortCooldown);
+
+        }
+
         public Game GetCurrentGame() { return MyPlayer.GetGame(); }
         protected int GetCurrentGameTick() { return GetCurrentGame().GameTick; }
         public abstract void OnCast(Vector2 startPos, Vector2 mousePos);

@@ -12,6 +12,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Range = 50;
             StandardStats.Size = 15;
             StandardStats.SummonLifetime = (int)(20 * Game._updatesPerSecond);
+
+            Tags.Add(SpellTags.Zone);
         }
 
 

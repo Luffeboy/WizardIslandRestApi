@@ -13,6 +13,9 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             BricksToApplyOnRespawn = 4;
             StandardStats.Size = 5;
             StandardStats.SummonLifetime = 10 * Game._updatesPerSecond;
+
+            Tags.Add(SpellTags.Summon);
+            Tags.Add(SpellTags.Static);
         }
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)

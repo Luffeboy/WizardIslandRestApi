@@ -15,6 +15,11 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Range = 30;
             StandardStats.Size = 1.5f;
             StandardStats.SummonLifetime = 30 * Game._updatesPerSecond;
+
+            Tags.Add(SpellTags.CreateEnvironment);
+            Tags.Add(SpellTags.Summon);
+            Tags.Add(SpellTags.Zone);
+            Tags.Add(SpellTags.Static);
         }
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {

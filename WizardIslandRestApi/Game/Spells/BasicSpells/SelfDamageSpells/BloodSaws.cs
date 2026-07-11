@@ -29,6 +29,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
             StandardStats.Knockback = 1.3f;
             StandardStats.Speed = 7.5f;
             StandardStats.Range = 1.5f * StandardStats.Speed;
+
+            Tags.Add(SpellTags.SelfDamage);
         }
         public override void OnPlayerReset()
         {

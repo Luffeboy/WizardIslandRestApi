@@ -11,6 +11,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         {
             Type = SpellType.Movement;
             StandardStats.BuffAndDebuffTime = 3 * Game._updatesPerSecond;
+
+            Tags.Add(SpellTags.Buff);
         }
 
 

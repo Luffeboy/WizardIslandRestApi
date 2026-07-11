@@ -14,6 +14,8 @@
             Type = SpellType.Ultimate;
             if (player != null)
                 player.OverridesAndObservers.OnSpellCast += Observe;
+
+            Tags.Add(SpellTags.UseOtherSpell);
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)

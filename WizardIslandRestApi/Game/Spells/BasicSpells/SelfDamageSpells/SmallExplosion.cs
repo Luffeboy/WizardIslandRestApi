@@ -14,6 +14,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
             StandardStats.Damage = 8;
             StandardStats.Knockback = 1.5f;
             StandardStats.Size = .75f;
+
+            Tags.Add(SpellTags.SelfDamage);
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)

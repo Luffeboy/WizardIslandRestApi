@@ -10,6 +10,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Knockback = 1.75f;
             StandardStats.Range = 35;
             StandardStats.Size = 1;
+
+            Tags.Add(SpellTags.Projectile);
+            Tags.Add(SpellTags.Static);
         }
 
         public override int CooldownMax { get; protected set; } = 20 * Game._updatesPerSecond;
