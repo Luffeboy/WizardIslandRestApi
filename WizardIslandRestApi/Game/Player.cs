@@ -71,6 +71,7 @@ namespace WizardIslandRestApi.Game
         public Player? LastHitByPlayer { get; set; } = null; // the player that last hit this player
         public Collider MyCollider { get; }
         private Spell[] MySpells { get; set; }
+        private Queue<SpellData> SpellCastQueue { get; } = new();
         public int TicksTillAlive { get; private set; }
         public bool IsDead { get { return TicksTillAlive > 0; } }
         /// <summary>
@@ -150,6 +151,11 @@ namespace WizardIslandRestApi.Game
                 if (!IsDead)
                     Reset();
                 return;
+            }
+            while(SpellCastQueue.Any())
+            {
+                var spell = SpellCastQueue.Dequeue();
+                CastSpell(spell.spellIndex, spell.mousePos);
             }
             Move();
             // take damage from lava
@@ -336,7 +342,7 @@ namespace WizardIslandRestApi.Game
         {
             WebSocket = socket;
         }
-        internal async Task readSocketDataAsync()
+        internal async Task ReadSocketDataAsync()
         {
 
             while (_game.CurrentState != GameState.Ended &&
@@ -372,7 +378,7 @@ namespace WizardIslandRestApi.Game
                                 break;
                             case (int)ActionPacketType.Spell:
                                 SpellData spellData = JsonSerializer.Deserialize<SpellData>(extraData);
-                                CastSpell(spellData.spellIndex, spellData.mousePos);
+                                SpellCastQueue.Enqueue(spellData);
                                 break;
                         }
                     }
