@@ -71,6 +71,7 @@ namespace WizardIslandRestApi.Game
         public Player? LastHitByPlayer { get; set; } = null; // the player that last hit this player
         public Collider MyCollider { get; }
         private Spell[] MySpells { get; set; }
+        private Spell[] MyOriginalSpells { get; set; }
         private Queue<SpellData> SpellCastQueue { get; } = new();
         public int TicksTillAlive { get; private set; }
         public bool IsDead { get { return TicksTillAlive > 0; } }
@@ -91,10 +92,12 @@ namespace WizardIslandRestApi.Game
             MyCollider.Owner = this;
             // spells
             MySpells = new Spell[spells.Length];
+            MyOriginalSpells = new Spell[spells.Length];
             for (int i = 0; i < spells.Length; i++)
             {
                 MySpells[i] = Spell.GetSpell(this, spells[i]);
                 MySpells[i].SetSpellIndex(spells[i]);
+                MyOriginalSpells[i] = MySpells[i];
             }
 
             Password = "";
@@ -132,7 +135,6 @@ namespace WizardIslandRestApi.Game
             TeleportTo(map.GroundMiddle + new Vector2(MathF.Cos(angle) * distance, MathF.Sin(angle) * distance));
             TargetPos = Pos;
         }
-#pragma warning disable
         private Map GetMap()
         {
             return GetGame().GameMap;
@@ -141,7 +143,6 @@ namespace WizardIslandRestApi.Game
         {
             return _game;
         }
-#pragma warning enable
 
         public void Update()
         {
@@ -325,7 +326,20 @@ namespace WizardIslandRestApi.Game
             return spells;
         }
 
-        public Spell[] GetSpells() { return MySpells; }
+        /// <summary>
+        /// Gets the spells the player is currently using.
+        /// </summary>
+        /// <returns></returns>
+        public Spell[] GetSpells() 
+            => MySpells;
+
+        /// <summary>
+        /// Gets the spells this player started with.
+        /// </summary>
+        /// <returns></returns>
+        public Spell[] GetOriginalSpells()
+            => MyOriginalSpells;
+
         public void SetSpells(Spell[] spells) 
         {
             var oldSpells = MySpells;
@@ -351,7 +365,12 @@ namespace WizardIslandRestApi.Game
                 try
                 {
                     var segment = new ArraySegment<byte>(new byte[1024]);
-                    await WebSocket.ReceiveAsync(segment, System.Threading.CancellationToken.None);
+                    var receiveResult = await WebSocket.ReceiveAsync(segment, System.Threading.CancellationToken.None);
+                    if (receiveResult.MessageType == WebSocketMessageType.Close)
+                    {
+                        await WebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", System.Threading.CancellationToken.None);
+                        break;
+                    }
                     var message = System.Text.Encoding.UTF8.GetString(segment.Array, 0, segment.Count).Trim('\0');
                     var data = System.Text.Json.JsonSerializer.Deserialize<PlayerSendDataPacket>(message);
 
@@ -380,6 +399,11 @@ namespace WizardIslandRestApi.Game
                                 SpellData spellData = JsonSerializer.Deserialize<SpellData>(extraData);
                                 SpellCastQueue.Enqueue(spellData);
                                 break;
+                            case (int)ActionPacketType.SelectAugment:
+                                int augmentIndex = JsonSerializer.Deserialize<int>(extraData);
+                                Console.WriteLine("abc: " + augmentIndex);
+                                _game.GameAugmentSystem.PlayerSelectAugment(this, augmentIndex);
+                                break;
                         }
                     }
                 }
@@ -398,7 +422,7 @@ namespace WizardIslandRestApi.Game
         {
             if (WebSocket is null)
                 return;
-            SendData(new
+            SendData(PacketToClientType.Standard, new
             {
                 GameTick = _game.GameTick,
                 Players = PlayerMinimum.Copy(_game.Players.Values),
@@ -409,14 +433,23 @@ namespace WizardIslandRestApi.Game
                 NextEvent = _game.NextEvent,
             });
         }
+        public void SendData<T>(PacketToClientType dataType, T data)
+        {
+            SendData(JsonSerializer.Serialize(new { DataType = (int)dataType, Data = data }, new JsonSerializerOptions
+            { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+        }
+
 
         public void SendData<T>(T data)
         {
             SendData(JsonSerializer.Serialize(data, new JsonSerializerOptions
             {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}));
         }
+
         public void SendData(string data)
         {
+            if (WebSocket == null)
+                return;
             try
             {
                 var buffer = System.Text.Encoding.UTF8.GetBytes(data);

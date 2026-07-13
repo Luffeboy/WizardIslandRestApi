@@ -71,7 +71,7 @@ namespace WizardIslandRestApi.Game
                 var player = PlayerJoinGame(id, playerCusomizationData);
                 // send starting data
                 player.SetWebSocket(socket);
-                player.SendData(new
+                player.SendData(PacketToClientType.JoinedGame, new
                 {
                     Id = player.Id,
                     Password = player.Password,
@@ -81,7 +81,7 @@ namespace WizardIslandRestApi.Game
                     EventDuration = player._game.TicksTillNextEventMax,
                 });
                 // read data, until game closes
-                await player.readSocketDataAsync();
+                await player.ReadSocketDataAsync();
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
+﻿using System.Collections;
+using WizardIslandRestApi.Game.Spells.BasicSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
@@ -48,6 +49,17 @@ namespace WizardIslandRestApi.Game.Spells
         public float Size { get; set; } = -1;
         public int BuffAndDebuffTime { get; set; } = -1;
         public int SummonLifetime { get; set; } = -1;
+
+        public Dictionary<string, int> OtherStatsInt = new();
+        public Dictionary<string, float> OtherStatsFloats = new();
+
+        public IEnumerable<string> OtherStatNames()
+        {
+            List<string> statNames = [];
+            statNames.AddRange(OtherStatsInt.Keys);
+            statNames.AddRange(OtherStatsFloats.Keys);
+            return statNames;
+        }
 
         public int GetLifetime()
         {

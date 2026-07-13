@@ -91,6 +91,15 @@ namespace WizardIslandRestApi.Controllers
         {
             Move = 0,
             Spell = 1,
+            SelectAugment = 2,
+        }
+
+        public enum PacketToClientType
+        {
+            Standard = 1,
+            JoinedGame = 2,
+            GetAugment = 3,
+            GameEnded = 4,
         }
     }
 }
