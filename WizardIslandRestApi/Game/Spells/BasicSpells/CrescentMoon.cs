@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using WizardIslandRestApi.Game.Spells.SpellHelpers;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
@@ -12,31 +12,40 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Knockback = 1.5f;
             StandardStats.Range = 40;
             StandardStats.Size = 1.0f;
+            StandardStats.Speed = 1.35f;
 
             Tags.Add(SpellTags.Projectile);
+            ProjectileHelper.SetProjectileStats(this, angle: MathF.PI / 16);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            Vector2 endPos = mousePos;
+            //Vector2 endPos = mousePos;
             Vector2 dir = mousePos - pos;
-            if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
+            float range = dir.Length();
+            float minRange = 3f;
+            if (range < minRange)
+                range = minRange;
+            var ticksUntilDeletion = Math.Max((int)(range / StandardStats.Speed), 1);
+            var projectileDirections = ProjectileHelper.GetProjectileDirections(this, dir);
+
+            ProjectileHelper.CastSpellWithBurst(this, pos, (spawnPos, iteration) =>
             {
-                dir = dir.Normalized() * StandardStats.Range;
-                endPos = pos + dir;
-            }
-            var ticksUntilDeletion = Math.Max((int)(dir.Length() * .75f), 1);
-            dir.Normalize();
-            Vector2 dirNormal = dir.Normal();
-            Vector2 startPos = pos + 
-                               dir * (MyPlayer.Size + StandardStats.Size + .1f) + 
-                               dirNormal * (MyPlayer.Size + StandardStats.Size + .1f);
-            GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, startPos, endPos)
-            {
-                Color = "100, 100, 255",
-                Size = StandardStats.Size,
-                TicksUntilDeletionMax = ticksUntilDeletion,
-                Damage = StandardStats.Damage,
-                Knockback = StandardStats.Knockback,
+                for (int i = 0; i < projectileDirections.Length; i++)
+                {
+                    var dir = projectileDirections[i];
+
+                    Vector2 dirNormal = dir.Normal();
+                    Vector2 startPos = spawnPos;
+                    Vector2 endPos = spawnPos + dir * range;
+                    GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, startPos, endPos)
+                    {
+                        Color = "100, 100, 255",
+                        Size = StandardStats.Size,
+                        TicksUntilDeletionMax = ticksUntilDeletion,
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                    });
+                }
             });
             GoOnCooldown();
         }
@@ -68,7 +77,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         }
         private int _ticksUntilDeletion;
         private int _ticksUntilDeletionMax;
-        public int DeleteWhenLessThan = -3;
+        public int DeleteWhenLessThan = -1;
         public int TicksUntillCanHitPlayer = 5;
         public Vector2 StartPos { get; set; }
         public Vector2 EndPos { get; set; }
@@ -100,9 +109,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public override bool Update()
         {
             Pos = Vector2.CalculatePointOnSpline(StartPos, EndPos, ControlPoint, (TicksUntilDeletionMax - _ticksUntilDeletion) / (float)TicksUntilDeletionMax);
-            _ticksUntilDeletion--;
-            MyCollider.Pos = Pos;
-            return _ticksUntilDeletion < DeleteWhenLessThan;
+            return --_ticksUntilDeletion < DeleteWhenLessThan;
         }
     }
 }

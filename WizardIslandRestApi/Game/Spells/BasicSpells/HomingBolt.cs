@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game.Spells.BasicSpells
+﻿using WizardIslandRestApi.Game.Spells.SpellHelpers;
+
+namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class HomingBolt : Spell
     {
@@ -13,17 +15,23 @@
             StandardStats.Range = 3f * StandardStats.Speed;
 
             Tags.Add(SpellTags.Projectile);
+            ProjectileHelper.SetProjectileStats(this);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, pos, mousePos, GetCurrentGame())
+            var dirs = ProjectileHelper.GetProjectileDirections(this, pos - mousePos);
+            ProjectileHelper.CastSpellWithBurst(this, pos, (startPos, iteration) =>
             {
-                Speed = StandardStats.Speed,
-                Color = "255, 255, 255",
-                Size = StandardStats.Size,
-                TicksUntilDeletion = StandardStats.GetLifetime(),
-                Damage = StandardStats.Damage,
-                Knockback = StandardStats.Knockback,
+                for(int i = 0; i < dirs.Length; i++)
+                    GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, startPos, startPos - dirs[i], GetCurrentGame())
+                    {
+                        Speed = StandardStats.Speed,
+                        Color = "255, 255, 255",
+                        Size = StandardStats.Size,
+                        TicksUntilDeletion = StandardStats.GetLifetime(),
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                    });
             });
             GoOnCooldown();
         }

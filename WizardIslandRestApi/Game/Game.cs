@@ -28,8 +28,8 @@ namespace WizardIslandRestApi.Game
         /// <summary>
         /// In ticks
         /// </summary>
-        public const int _gameDuration = 5 * 60 * _updatesPerSecond;
-        //public const int _gameDuration = 1 * 30 * _updatesPerSecond;
+        //public const int _gameDuration = 5 * 60 * _updatesPerSecond;
+        public const int _gameDuration = 1 * 30 * _updatesPerSecond;
         // unused, maybe...
         //private DateTime _gameCreated;
         //private DateTime _gameStarted;

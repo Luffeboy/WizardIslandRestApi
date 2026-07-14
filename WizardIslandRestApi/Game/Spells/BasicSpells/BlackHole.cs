@@ -12,6 +12,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Speed = 1.0f;
             StandardStats.Range = 3;
 
+            StandardStats.OtherStatsFloat.Add(SpellSpecificStats.GravityPull, 10.0f);
+
             Tags.Add(SpellTags.Projectile);
         }
 
@@ -24,20 +26,21 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 TicksUntilDeletion = StandardStats.GetLifetime(),
                 Size = StandardStats.Size,
                 Dir = dir,
-                Speed = StandardStats.Speed
+                Speed = StandardStats.Speed,
+                GravityPull = StandardStats.OtherStatsFloat[SpellSpecificStats.GravityPull],
             });
             GoOnCooldown();
         }
     }
     public class BlackHoleEntity : Entity
     {
-        private const float _gravitationalConstant = 10.0f;
         private Game _game;
         private int _TicksUntilDeletionMax;
         private int _TicksUntilDeletion;
         public int TicksUntilDeletion { get { return _TicksUntilDeletion; } set { _TicksUntilDeletion = value; _TicksUntilDeletionMax = value; } }
         public Vector2 Dir {  get; set; }
         public float Speed {  get; set; }
+        public float GravityPull { get; set; } = 10.0f;
         public BlackHoleEntity(Player owner, Game game, Vector2 startPos) : base(owner, startPos)
         {
             _game = game;
@@ -74,7 +77,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                     amount = minAmount;
                 if (p == MyCollider.Owner)
                     amount *= 2;
-                p.ApplyKnockback(dir.Normalized(), _gravitationalConstant / amount * playerKnockBackMultiplier);
+                p.ApplyKnockback(dir.Normalized(), GravityPull / amount * playerKnockBackMultiplier);
             }
             //
             foreach (Entity e in _game.Entities)
@@ -85,7 +88,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 float amount = dir.LengthSqr();
                 if (amount < minAmount)
                     amount = minAmount;
-                e.Pos += dir * (_gravitationalConstant / amount);
+                e.Pos += dir * (GravityPull / amount);
             }
             Pos += Dir * Speed;
             _TicksUntilDeletion--;

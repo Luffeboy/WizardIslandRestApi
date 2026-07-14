@@ -16,41 +16,29 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Range = 3f * StandardStats.Speed;
 
             Tags.Add(SpellTags.Projectile);
-            ProjectileHelper.SetProjectileStats(this, quantity: 1, angle: MathF.PI / 8, burstCount: 1);
+            ProjectileHelper.SetProjectileStats(this, quantity: 1, angle: MathF.PI / 8, burstCount: 1, burstDelay: Game._updatesPerSecond / 4);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var burst = StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileBurst];
-            int delayAdd = Game._updatesPerSecond / 4;
-            int delay = -delayAdd;
-            Vector2 startPos = pos;
-            Vector2 playerLastPos = MyPlayer.Pos;
             var projectileDirections = ProjectileHelper.GetProjectileDirections(this, mousePos - pos);
-            //MyPlayer
-            for (int j = 0; j < burst; j++)
+            ProjectileHelper.CastSpellWithBurst(this, pos, (spawnPos, iteration) =>
             {
-                GetCurrentGame().ScheduleAction(delay += delayAdd, () =>
+                for (int i = 0; i < projectileDirections.Length; i++)
                 {
-                    startPos += MyPlayer.Pos - playerLastPos;
-                    playerLastPos = MyPlayer.Pos;
-                    var position = startPos;
-                    for (int i = 0; i < projectileDirections.Length; i++)
+                    var dir = projectileDirections[i];
+                    GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, spawnPos + dir * (MyPlayer.Size + StandardStats.Size + .1f))
                     {
-                        var dir = projectileDirections[i];
-                        GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, position + dir * (MyPlayer.Size + StandardStats.Size + .1f))
-                        {
-                            Dir = dir,
-                            Speed = StandardStats.Speed,
-                            Color = "255, 0, 0",
-                            Size = StandardStats.Size,
-                            TicksUntilDeletion = StandardStats.GetLifetime(),
-                            Damage = StandardStats.Damage,
-                            Knockback = StandardStats.Knockback,
-                            EntityId = "FireBall"
-                        });
-                    }
-                });
-            }
+                        Dir = dir,
+                        Speed = StandardStats.Speed,
+                        Color = "255, 0, 0",
+                        Size = StandardStats.Size,
+                        TicksUntilDeletion = StandardStats.GetLifetime(),
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                        EntityId = "FireBall"
+                    });
+                }
+            });
             GoOnCooldown();
         }
 

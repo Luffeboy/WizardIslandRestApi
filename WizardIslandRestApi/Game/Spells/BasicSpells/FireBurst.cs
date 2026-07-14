@@ -1,5 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Interfaces;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
+using WizardIslandRestApi.Game.Spells.SpellHelpers;
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class FireBurst : Spell, ISetCooldownMax
@@ -15,34 +16,39 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Range = 3 * StandardStats.Speed;
 
             Tags.Add(SpellTags.Projectile);
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.ProjectileQuantity, 8);
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.ProjectileBurst, 1);
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.BurstDelay, Game._updatesPerSecond / 4);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             float distanceBetweenFireballs = 8;
-            int fireballs = 8;
+            int fireballs = StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileQuantity];
             Vector2 fwd = (mousePos - MyPlayer.Pos).Normalized();
             Vector2 normal = (mousePos - MyPlayer.Pos).Normal().Normalized();
-
-            for (int i = 0; i < fireballs; i++)
+            ProjectileHelper.CastSpellWithBurst(this, pos, (spawnPos, iteration) =>
             {
-                float half = i - fireballs / 2 + .5f;
-                Vector2 fireballStartPos = normal * distanceBetweenFireballs * half + MyPlayer.Pos;
-                // move it back a little
-                fireballStartPos -= fwd * (MathF.Abs(half) * distanceBetweenFireballs / 4);
-                fireballStartPos += fwd * (MyPlayer.Size + StandardStats.Size + .6f);
-                var dir = (mousePos - fireballStartPos).Normalized();
-                GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, fireballStartPos)
+                for (int i = 0; i < fireballs; i++)
                 {
-                    Dir = dir,
-                    Speed = StandardStats.Speed,
-                    Color = "255, 0, 0",
-                    Size = StandardStats.Size,
-                    TicksUntilDeletion = StandardStats.GetLifetime(),
-                    Damage = StandardStats.Damage,
-                    Knockback = StandardStats.Knockback,
-                    EntityId = "FireBall",
-                });
-            }
+                    float half = i - fireballs / 2 + .5f;
+                    Vector2 fireballStartPos = normal * distanceBetweenFireballs * half + spawnPos;
+                    // move it back a little
+                    fireballStartPos -= fwd * (MathF.Abs(half) * distanceBetweenFireballs / 4);
+                    fireballStartPos += fwd * (MyPlayer.Size + StandardStats.Size + .6f);
+                    var dir = (mousePos - fireballStartPos).Normalized();
+                    GetCurrentGame().Entities.Add(new SimpleSpellEntity(MyPlayer, fireballStartPos)
+                    {
+                        Dir = dir,
+                        Speed = StandardStats.Speed,
+                        Color = "255, 0, 0",
+                        Size = StandardStats.Size,
+                        TicksUntilDeletion = StandardStats.GetLifetime(),
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                        EntityId = "FireBall",
+                    });
+                }
+            });
 
             GoOnCooldown();
         }

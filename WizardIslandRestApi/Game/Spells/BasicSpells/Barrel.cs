@@ -15,6 +15,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Range = 30;
             StandardStats.Size = 1.5f;
             StandardStats.SummonLifetime = 30 * Game._updatesPerSecond;
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.SummonQuantity, 1);
 
             Tags.Add(SpellTags.CreateEnvironment);
             Tags.Add(SpellTags.Summon);
@@ -33,14 +34,21 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             if (len > StandardStats.Range)
                 len = StandardStats.Range;
             Vector2 pos = startPos + dir * len;
-            GetCurrentGame().Entities.Add(new BarrelEntity(MyPlayer, GetCurrentGame(), pos)
+            int quantity = StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity];
+            Random r = new Random();
+            Vector2 firstPos = pos;
+            for (int i = 0; i < quantity; i++)
             {
-                Color = "255, 0, 0",
-                Size = StandardStats.Size,
-                TicksUntilDeletion = StandardStats.SummonLifetime,
-                Damage = StandardStats.Damage,
-                Knockback = StandardStats.Knockback
-            });
+                GetCurrentGame().Entities.Add(new BarrelEntity(MyPlayer, GetCurrentGame(), pos)
+                {
+                    Color = "255, 0, 0",
+                    Size = StandardStats.Size,
+                    TicksUntilDeletion = StandardStats.SummonLifetime,
+                    Damage = StandardStats.Damage,
+                    Knockback = StandardStats.Knockback
+                });
+                pos = firstPos + new Vector2((float)(r.NextDouble() * 2 - 1), (float)(r.NextDouble() * 2 - 1)) * StandardStats.Size / 4;
+            }
             GoOnCooldown();
         }
     }

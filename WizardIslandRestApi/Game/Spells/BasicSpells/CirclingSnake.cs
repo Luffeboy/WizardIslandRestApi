@@ -59,7 +59,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public float Speed { get; set; }
         public float CirclingDistance { get; set; }
         public float CirclingSpeed { get { return Speed / CirclingDistance; } }
-        //public override int TicksUntillCanHitOwner { get; set; } = 20;
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, Vector2 startPos, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<PlayerAndHitTime> hitPlayers = null) : base(owner, ticksUntilDeletion, startPos)

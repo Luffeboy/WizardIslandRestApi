@@ -1,11 +1,12 @@
 ﻿using WizardIslandRestApi.Game.Spells.Debuffs;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
+using WizardIslandRestApi.Game.Spells.SpellHelpers;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class IceLance : Spell
     {
-        private IceLanceEntity? _entity = null;
+        private List<IceLanceEntity> _entities = [];
         private int _usedSpellTick = -1;
         public override string Name => "Ice lance";
         public IceLance(Player player) : base(player)
@@ -18,39 +19,53 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
             Tags.Add(SpellTags.Projectile);
             Tags.Add(SpellTags.Debuff);
+
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.ProjectileQuantity, 1);
+            StandardStats.OtherStatsFloat.Add(SpellSpecificStats.ProjectileAngle, MathF.PI / 4f);
         }
 
         public override int CooldownMax { get; protected set; } = 12 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            if (_entity == null)
+            if (_entities.Count == 0)
             {
                 _usedSpellTick = GetCurrentGameTick() + (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
-                GetCurrentGame().Entities.Add(_entity = new IceLanceEntity(MyPlayer, startPos, StandardStats.GetLifetime(), this)
+
+                var dirs = ProjectileHelper.GetProjectileDirections(this, mousePos - startPos);
+                for (int i = 0; i < dirs.Length; i++)
                 {
-                    Damage = StandardStats.Damage,
-                    Knockback = StandardStats.Knockback,
-                    Dir = (mousePos - startPos).Normalized(),
-                    IceTarget = mousePos,
-                    Speed = StandardStats.Speed,
-                    Size = StandardStats.Size
-                });
+                    var newEntity = new IceLanceEntity(MyPlayer, startPos, StandardStats.GetLifetime(), this)
+                    {
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                        Dir = dirs[i],
+                        IceTarget = mousePos,
+                        Speed = StandardStats.Speed,
+                        Size = StandardStats.Size
+                    };
+                    _entities.Add(newEntity);
+                    GetCurrentGame().Entities.Add(newEntity);
+                }
             }
             else
             {
-                _entity.IceTarget = mousePos;
+                foreach (var entity in _entities)
+                    entity.IceTarget = mousePos;
             }
         }
         public override void FullReset()
         {
-            EntityExpired();
+            while (_entities.Count > 0)
+                EntityExpired(_entities[_entities.Count - 1]);
             base.FullReset();
         }
-        public void EntityExpired()
+        public void EntityExpired(IceLanceEntity entity)
         {
-            _entity = null;
+            _entities.Remove(entity);
+#if !NO_COOLDOWN
             CurrentCooldown = _usedSpellTick;
+#endif
         }
     }
     public class IceLanceEntity : CantHitOwnerAtStartSpellEntity
@@ -117,7 +132,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                     SlowAmount = SlowAmount,
                 });
             }
-            _spell.EntityExpired();
+            _spell.EntityExpired(this);
         }
 
         protected override bool HitPlayer(Player other)

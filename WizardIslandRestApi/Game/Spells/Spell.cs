@@ -41,6 +41,11 @@ namespace WizardIslandRestApi.Game.Spells
         public const string ProjectileQuantity = "ProjectileQuantity";
         public const string ProjectileAngle = "ProjectileAngle";
         public const string ProjectileBurst = "ProjectileBurst";
+        public const string BurstDelay = "BurstDelay";
+
+        public const string SummonQuantity = "SummonQuantity";
+
+        public const string GravityPull = "GravityPull";
     }
 
     /// <summary>

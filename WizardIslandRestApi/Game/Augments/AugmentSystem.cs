@@ -7,8 +7,8 @@ namespace WizardIslandRestApi.Game.Augments
     public class AugmentSystem
     {
         private Game _game;
+        public int MaxAugmentsPerPlayer { get; set; } = 5;
         public int AugmentsToChooseFromCount { get; set; } = 3;
-        public int MaxAugmentsPerPlayer { get; set; } = 3;
         private int _ticksBetweenAugments = -1;
         public int AugmentsGivenSoFar { get; set; } = 0;
 
@@ -86,6 +86,9 @@ namespace WizardIslandRestApi.Game.Augments
 
         public List<AugmentBase> GetAugmentsForPlayer(Player player)
         {
+#if DEBUG
+            return new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
+#endif
             Random r = new Random();
             var allAvailableAugmentsToPlayer = new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
             var augmentsToChooseFrom = new List<AugmentBase>();
@@ -156,18 +159,19 @@ namespace WizardIslandRestApi.Game.Augments
             for (int i = 0; i < PlayersAndAugmentsTheyCanChoose.Count; i++)
             {
                 var playerAndAugments = PlayersAndAugmentsTheyCanChoose[i];
-                if (playerAndAugments.Player == player)
-                {
-                    if (augmentIndex >= playerAndAugments.AugmentsToChooseFrom.Count)
-                        return;
-                    var augment = playerAndAugments.AugmentsToChooseFrom[augmentIndex];
-                    foreach (var spell in player.GetOriginalSpells())
-                        augment.AttemptAugmentSpell(spell);
-                    augment.AugmentPlayer(player);
+                if (playerAndAugments.Player != player)
+                    continue;
+                if (augmentIndex >= playerAndAugments.AugmentsToChooseFrom.Count)
+                    return;
 
-                    PlayersAndAugmentsTheyCanChoose.RemoveAt(i);
-                    break;
-                }
+                var augment = playerAndAugments.AugmentsToChooseFrom[augmentIndex];
+                foreach (var spell in player.GetOriginalSpells())
+                    augment.AttemptAugmentSpell(spell);
+                augment.AugmentPlayer(player);
+
+                PlayersAndAugmentsTheyCanChoose.RemoveAt(i);
+                // maybe also remove the augment from _playersAndAugmentsTheyCanUse, if we don't want repeat-augments
+                break;
             }
         }
 

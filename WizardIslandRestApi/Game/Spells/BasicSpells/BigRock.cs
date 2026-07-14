@@ -24,10 +24,18 @@
             Vector2 dir = mousePos - startPos;
             if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
                 dir = dir.Normalized() * StandardStats.Range;
-            GetCurrentGame().Entities.Add(new BigRockEntity(StandardStats.SummonLifetime, startPos + dir)
+            int quantity = StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity];
+            Random r = new Random();
+            Vector2 firstPos = startPos + dir;
+            Vector2 pos = firstPos;
+            for (int i = 0; i < quantity; i++)
             {
-                Size = StandardStats.Size
-            });
+                GetCurrentGame().Entities.Add(new BigRockEntity(StandardStats.SummonLifetime, pos)
+                {
+                    Size = StandardStats.Size
+                });
+                pos = firstPos + new Vector2((float)(r.NextDouble() * 2 - 1), (float)(r.NextDouble() * 2 - 1)) * StandardStats.Size / 2;
+            }
             GoOnCooldown();
         }
     }
