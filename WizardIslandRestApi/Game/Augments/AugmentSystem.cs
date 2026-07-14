@@ -1,7 +1,4 @@
-﻿using System.Net.WebSockets;
-using System.Numerics;
-using WizardIslandRestApi.Game.Augments.GenericAugments;
-using WizardIslandRestApi.Game.Augments.SpellSpecific;
+﻿using WizardIslandRestApi.Game.Augments.GenericAugments;
 using WizardIslandRestApi.Game.Spells;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
@@ -16,6 +13,7 @@ namespace WizardIslandRestApi.Game.Augments
         public int AugmentsGivenSoFar { get; set; } = 0;
 
         public List<PlayerAugmentConnector> PlayersAndAugmentsTheyCanChoose { get; } = [];
+        private Dictionary<Player, List<AugmentBase>> _playersAndAugmentsTheyCanUse { get; } = [];
 
         private int _playersAndAugmentsTheyCanChooseStartCount = -1;
         private float _timeUntilAugmentPhaseEnds = -1f;
@@ -26,6 +24,7 @@ namespace WizardIslandRestApi.Game.Augments
         public AugmentSystem(Game game)
         {
             _game = game;
+            GetAllAugmentsPlayersCanUse();
             _ticksBetweenAugments = Game._gameDuration / (MaxAugmentsPerPlayer + 1);
             ScheduleAugmentPhase();
         }
@@ -74,9 +73,30 @@ namespace WizardIslandRestApi.Game.Augments
 #endif
         }
 
+        private void GetAllAugmentsPlayersCanUse()
+        {
+            foreach (var player in _game.Players.Values)
+            {
+                var playerSpells = player.GetOriginalSpells();
+                var augments = AllAugments.Where(aug => playerSpells.Any(spell => aug.CanAugmentSpell(spell))).ToList();
+                if (augments.Any())
+                    _playersAndAugmentsTheyCanUse.Add(player, augments);
+            }
+        }
+
         public List<AugmentBase> GetAugmentsForPlayer(Player player)
         {
-            return new List<AugmentBase>(AllAugments);
+            Random r = new Random();
+            var allAvailableAugmentsToPlayer = new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
+            var augmentsToChooseFrom = new List<AugmentBase>();
+            for (int i = 0; i < AugmentsToChooseFromCount && allAvailableAugmentsToPlayer.Any(); i++)
+            {
+                var augIndex = r.Next(allAvailableAugmentsToPlayer.Count);
+                AugmentBase randomAugment = allAvailableAugmentsToPlayer[augIndex];
+                allAvailableAugmentsToPlayer.RemoveAt(augIndex);
+                augmentsToChooseFrom.Add(randomAugment);
+            }
+            return augmentsToChooseFrom;
         }
 
         public void AugmentUpdate()

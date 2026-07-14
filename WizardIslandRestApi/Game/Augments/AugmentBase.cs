@@ -27,7 +27,6 @@ namespace WizardIslandRestApi.Game.Augments
 
         public bool CanAugmentSpell(Spell spell)
         {
-            Console.WriteLine(RequiredOneOfStandardStats.Count + "<  >");
             if (RequiredOneOfStandardStats.Count > 0)
             {
                 var allPropertiesOnSpellAboveZero =
@@ -39,13 +38,6 @@ namespace WizardIslandRestApi.Game.Augments
                         return (float)p.GetValue(spell.StandardStats) >= 0f;
                     return false;
                 }).Select(p => p.Name).ToList();
-                Console.WriteLine("Test aug - base");
-                foreach (var stat in RequiredOneOfStandardStats)
-                    Console.WriteLine($"Required stat: {stat}");
-                Console.WriteLine(" < - >");
-                foreach (var stat in allPropertiesOnSpellAboveZero)
-                    Console.WriteLine($"above 0: {stat}");
-                Console.WriteLine(" - ");
 
                 if (RequiredOneOfStandardStats.Any(requiredStat => !allPropertiesOnSpellAboveZero.Contains(requiredStat)))
                     return false;
