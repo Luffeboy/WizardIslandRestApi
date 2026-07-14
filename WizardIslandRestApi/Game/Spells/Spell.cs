@@ -36,6 +36,13 @@ namespace WizardIslandRestApi.Game.Spells
         public const string ShortCooldown = "Short Cooldown";
     }
 
+    public static class SpellSpecificStats
+    {
+        public const string ProjectileQuantity = "ProjectileQuantity";
+        public const string ProjectileAngle = "ProjectileAngle";
+        public const string ProjectileBurst = "ProjectileBurst";
+    }
+
     /// <summary>
     /// A collection of common properties and methods for all spells in the game.
     /// </summary>
@@ -51,13 +58,13 @@ namespace WizardIslandRestApi.Game.Spells
         public int SummonLifetime { get; set; } = -1;
 
         public Dictionary<string, int> OtherStatsInt = new();
-        public Dictionary<string, float> OtherStatsFloats = new();
+        public Dictionary<string, float> OtherStatsFloat = new();
 
         public IEnumerable<string> OtherStatNames()
         {
             List<string> statNames = [];
             statNames.AddRange(OtherStatsInt.Keys);
-            statNames.AddRange(OtherStatsFloats.Keys);
+            statNames.AddRange(OtherStatsFloat.Keys);
             return statNames;
         }
 
@@ -67,7 +74,7 @@ namespace WizardIslandRestApi.Game.Spells
             if (Speed == 0 || Range == 0)
                 Console.WriteLine($"Warning from GetLifetime: Speed ({Speed}) or Range ({Range}) is 0... Remember to set these values!");
 #endif
-            return Speed != 0 ? (int)(Range / Speed) * Game._updatesPerSecond : 1;
+            return Speed != 0 ? (int)(Range / Speed * Game._updatesPerSecond) : 1;
         }
     }
 

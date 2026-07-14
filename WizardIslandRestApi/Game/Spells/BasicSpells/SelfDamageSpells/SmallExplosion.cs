@@ -48,7 +48,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
         {
             Color = "255, 0, 0";
             EntityId = "Meteor";
-            TicksUntillCanHitOwner = ticksUntilDeletion + 1;
+            //TicksUntillCanHitOwner = ticksUntilDeletion + 1;
         }
 
         public override void ReTarget(Vector2 pos)

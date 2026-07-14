@@ -12,8 +12,14 @@
         public float Speed { get; set; }
         public float Damage { get; set; }
         public float Knockback { get; set; }
-        public int TimeUntilCanHitOwner { get; set; } = 5;
         public List<string> EntityIdsToIgnore { get; set; } = [];
+
+        /// <summary>
+        /// Gets set to false, when the spell has moved out of the owners hitbox once.
+        /// Can be set to false, if this entity should be able to hit the owner directly after being created.
+        /// </summary>
+        public bool IgnoreHitOnOwnerOnSpawn = true;
+        private bool _hitOwnerLastUpdate = true;
         public int TicksUntilDeletion
         {
             get { return _ticksUntilDeletion; }
@@ -39,8 +45,11 @@
 
         public override bool OnCollision(Player other)
         {
-            if (_ticksUntilDeletionMax - _ticksUntilDeletion < TimeUntilCanHitOwner && other == MyCollider.Owner)
+            if (IgnoreHitOnOwnerOnSpawn && other == MyCollider.Owner)
+            {
+                _hitOwnerLastUpdate = true;
                 return false;
+            }
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback((other.MyCollider.Pos - (Pos - Dir * Speed * 5)).Normalized(), Knockback);
             //other.ApplyKnockback((other.MyCollider.Pos - MyCollider.PreviousPos).Normalized(), Knockback);
@@ -53,6 +62,8 @@
             Pos += Dir * Speed;
             _ticksUntilDeletion--;
             MyCollider.Pos = Pos;
+            IgnoreHitOnOwnerOnSpawn = IgnoreHitOnOwnerOnSpawn && _hitOwnerLastUpdate;
+            _hitOwnerLastUpdate = false;
             return _ticksUntilDeletion <= 0;
         }
     }

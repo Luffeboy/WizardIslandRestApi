@@ -65,7 +65,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public int AmountOfIceSpaces { get; set; } = 10;
         public float SizeOfIce { get; set; } = 1.5f;
         public int IceTimeUntillDeletion { get; set; } = 5 * Game._updatesPerSecond;
-        public override int TicksUntillCanHitOwner { get; set; } = 5;
 
         public IceLanceEntity(Player owner, Vector2 startPos, int ticksUntillDeltion, IceLance spell) : base(owner, ticksUntillDeltion, startPos)
         {
@@ -75,7 +74,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         }
         public override bool OnCollision(Entity other)
         {
-            if ( base.OnCollision(other))
+            if (base.OnCollision(other))
             {
                 Die();
                 return true; 
@@ -93,7 +92,9 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         {
             Pos += Dir * Speed;
 
-            if (--_ticksUntilDeletion < 0)
+            bool ended = base.Update();
+
+            if (ended)
             {
                 Die();
                 return true;

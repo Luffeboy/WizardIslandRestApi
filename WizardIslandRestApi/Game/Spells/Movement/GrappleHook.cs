@@ -65,7 +65,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public GrappleHookEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, GrappleHook spell) : base(owner, ticksUntilDeletion, startPos)
         {
             Height = EntityHeight.Ground;
-            TicksUntillCanHitOwner = ticksUntilDeletion; // doesn't make sense, to hook yourself
+            //TicksUntillCanHitOwner = ticksUntilDeletion; // doesn't make sense, to hook yourself
             _spell = spell;
             Color = "100,100,100";
             EntityId = "GrappleHook";

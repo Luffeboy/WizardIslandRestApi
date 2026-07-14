@@ -7,7 +7,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
     public class CirclingSnake : Spell
     {
         private float SnakeCirclingDistance = 10f;
-        private int SnakeParts = 10;
         public override string Name { get { return "Circling snake"; } }
         public override int CooldownMax { get; protected set; } = (int)(12.0f * Game._updatesPerSecond);
 
@@ -18,14 +17,16 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Size = .5f;
             StandardStats.Speed = 2.0f;
             StandardStats.Range = 5 * StandardStats.Speed;
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.ProjectileQuantity, 10);
 
             Tags.Add(SpellTags.Projectile);
             Tags.Add(SpellTags.Zone);
+
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos).Normalized();
-            GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, StandardStats.GetLifetime(), GetCurrentGame(), pos, SnakeParts)
+            GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, StandardStats.GetLifetime(), GetCurrentGame(), pos, StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileQuantity])
             {
                 Target = mousePos,
                 Speed = StandardStats.Speed,
@@ -58,7 +59,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public float Speed { get; set; }
         public float CirclingDistance { get; set; }
         public float CirclingSpeed { get { return Speed / CirclingDistance; } }
-        public override int TicksUntillCanHitOwner { get; set; } = 20;
+        //public override int TicksUntillCanHitOwner { get; set; } = 20;
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public CirclingSnakePart(Player owner, int ticksUntilDeletion, Game game, Vector2 startPos, int snakePartsToCreate = 5, CirclingSnakePart? parent = null, List<PlayerAndHitTime> hitPlayers = null) : base(owner, ticksUntilDeletion, startPos)

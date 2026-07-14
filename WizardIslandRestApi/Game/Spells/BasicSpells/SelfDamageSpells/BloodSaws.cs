@@ -86,7 +86,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
         private Dictionary<Player, int> _hitPlayers;
         public BloodSawEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, float startAngle, Dictionary<Player, int>? hitPlayersDictionary = null) : base(owner, ticksUntilDeletion, startPos)
         {
-            TicksUntillCanHitOwner = ticksUntilDeletion + 1;
+            //TicksUntillCanHitOwner = ticksUntilDeletion + 1;
             EntityId = "BloodSaw";
             Color = "175,0,0";
             _angle = startAngle;

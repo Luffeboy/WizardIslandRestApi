@@ -2,7 +2,7 @@
 {
     public abstract class EntityPlus : CantHitOwnerAtStartSpellEntity
     {
-        public override int TicksUntillCanHitOwner { get; set; } = 5;
+        //public override int TicksUntillCanHitOwner { get; set; } = 5;
         public float Speed { get; set; }
         public float Damage { get; set; }
         public float Knockback { get; set; }

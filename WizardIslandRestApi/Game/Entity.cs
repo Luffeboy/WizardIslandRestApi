@@ -16,6 +16,7 @@ namespace WizardIslandRestApi.Game
         public string Color { get; set; } = "0, 0, 0";
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
         public Collider MyCollider { get; protected set; } // may be null :)
+        public bool CantHitSameTypeOfEntityFromSamePlayer { get; set; } = true;
         /// <summary>
         /// VisableTo -1 is everyone, else it is their id. Any other number makes it invisable to everyone
         /// </summary>
@@ -49,7 +50,9 @@ namespace WizardIslandRestApi.Game
         /// <returns></returns>
         public virtual bool OnCollision(Entity other)
         {
-            return other.Height != EntityHeight.Ground;
+            return other.Height != EntityHeight.Ground && 
+                (CantHitSameTypeOfEntityFromSamePlayer && 
+                (other.MyCollider.Owner != MyCollider.Owner || other.EntityId != EntityId));
         }
         /// <summary>
         /// returns true, if this entity should be deleted

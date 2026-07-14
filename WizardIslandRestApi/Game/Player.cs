@@ -401,7 +401,6 @@ namespace WizardIslandRestApi.Game
                                 break;
                             case (int)ActionPacketType.SelectAugment:
                                 int augmentIndex = JsonSerializer.Deserialize<int>(extraData);
-                                Console.WriteLine("abc: " + augmentIndex);
                                 _game.GameAugmentSystem.PlayerSelectAugment(this, augmentIndex);
                                 break;
                         }

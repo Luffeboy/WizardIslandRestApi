@@ -18,7 +18,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             StandardStats.Damage = 5;
             StandardStats.Knockback = 1.5f;
             StandardStats.Speed = 50.0f / Game._updatesPerSecond;
-            StandardStats.Range = StandardStats.Speed * 2;
+            StandardStats.Range = 2f * StandardStats.Speed;
             StandardStats.Size = .25f;
 
             Tags.Add(SpellTags.Luck);
@@ -96,7 +96,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public float Speed { get; set; }
-        public override int TicksUntillCanHitOwner { get; set; } = (int)(.5f * Game._updatesPerSecond);
+        //public override int TicksUntillCanHitOwner { get; set; } = (int)(.5f * Game._updatesPerSecond);
         public CardEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, string cardNum, float damage, float knockback, float speed, Vector2? dir = null, Action? goOnCooldown = null) : base(owner, ticksUntilDeletion, startPos)
         {
             _goOnCooldown = goOnCooldown;

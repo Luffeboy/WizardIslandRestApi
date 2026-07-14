@@ -20,7 +20,6 @@ namespace WizardIslandRestApi.Game
 
         public IEnumerable<int> GetAvailableGames()
         {
-            //Console.WriteLine("All games: " + _games.Values.Count + "Available games: " + _games.Values.Where(g => g.CanJoin).Select(g => g.Id).Count());
             return _games.Values.Where(g => g.CanJoin).Select(g => g.Id);
         }
         public Game? GetGame(int gameId)

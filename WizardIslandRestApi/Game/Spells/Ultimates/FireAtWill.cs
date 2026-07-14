@@ -89,7 +89,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     Speed = CirclingRadius/(8),
                     TicksUntilDeletion = 10,
                     Dir = dir,
-                    TimeUntilCanHitOwner = 0,
+                    IgnoreHitOnOwnerOnSpawn = false,
                 });
                 return --ShotsBeforeDeleing < 0;
             }

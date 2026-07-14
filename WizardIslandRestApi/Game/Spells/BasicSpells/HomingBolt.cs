@@ -10,7 +10,7 @@
             StandardStats.Knockback = 1.5f;
             StandardStats.Size = .5f;
             StandardStats.Speed = 1f;
-            StandardStats.Range = 3 * StandardStats.Speed;
+            StandardStats.Range = 3f * StandardStats.Speed;
 
             Tags.Add(SpellTags.Projectile);
         }
@@ -40,15 +40,15 @@
         private int _ticksUntilDeletionMax;
         private Game _game;
         private float _angle = 0;
+
+        private bool _hitOwnerLastUpdate = true;
+        private bool _ignoreHitOnOwner = true;
+
         public HomingBoltEntity(Player owner, Vector2 startPos, Vector2 mousePos, Game game) : base(owner, startPos)
         {
             _game = game;
             Pos = startPos;
             ReTarget(mousePos);
-            //_angle = MathF.Atan2(mousePos.y - startPos.y, mousePos.x - startPos.x);
-            //CurrentTarget = FindClosestPlayer(mousePos);
-            //Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
-            //Pos += dir * Speed * 2;
             EntityId = "HomingBolt";
         }
         public override void ReTarget(Vector2 pos)
@@ -57,13 +57,15 @@
             CurrentTarget = FindClosestPlayer(pos);
             Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
             Pos += dir * Speed * 2;
-            _ticksUntilDeletion = _ticksUntilDeletionMax;
         }
 
         public override bool OnCollision(Player other)
         {
-            if (_ticksUntilDeletionMax - _ticksUntilDeletion < 5 && other == MyCollider.Owner)
+            if (_ignoreHitOnOwner && other == MyCollider.Owner)
+            {
+                _hitOwnerLastUpdate = true;
                 return false;
+            }
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback((other.MyCollider.PreviousPos - MyCollider.PreviousPos).Normalized(), Knockback);
             return true;
@@ -86,8 +88,9 @@
             Vector2 dir = new Vector2(MathF.Cos(_angle), MathF.Sin(_angle));
             Pos += dir * Speed;
 
-            _ticksUntilDeletion--;
-            return _ticksUntilDeletion < 0;
+            _ignoreHitOnOwner = _ignoreHitOnOwner && _hitOwnerLastUpdate;
+            _hitOwnerLastUpdate = false;
+            return --_ticksUntilDeletion < 0;
         }
 
         private Player FindClosestPlayer(Vector2 pos)
@@ -112,9 +115,6 @@
         private float GetAngleToTarget()
         {
             return GetAngleFromDirection(CurrentTarget.Pos - Pos);
-            //Vector2 dir = CurrentTarget.Pos - Pos;
-            //float angle = MathF.Atan2(dir.y, dir.x);
-            //return angle;
         }
         public static float GetAngleFromDirection(Vector2 dir)
         {

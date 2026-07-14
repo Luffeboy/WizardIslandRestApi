@@ -9,7 +9,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public Link(Player player) : base(player)
         {
             StandardStats.Speed = 1;
-            StandardStats.Range = 3 * StandardStats.Speed;
+            StandardStats.Range = 3f * StandardStats.Speed;
             StandardStats.Size = .5f;
 
             Tags.Add(SpellTags.Projectile);

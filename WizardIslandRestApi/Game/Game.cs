@@ -24,11 +24,12 @@ namespace WizardIslandRestApi.Game
         //private const int _gameMaxLengthMs = 5 * 60 * 1000; // 5 min
         //                               ms     fps
         private const int _sleepTimeMs = 1000 / _updatesPerSecond; // does not account for update time
-        public const float DeltaTime = 1 / _updatesPerSecond;
+        public const float DeltaTime = 1f / _updatesPerSecond;
         /// <summary>
         /// In ticks
         /// </summary>
-        public const int _gameDuration = 1 * 30 * _updatesPerSecond; // 5 * 60 * _updatesPerSecond;
+        public const int _gameDuration = 5 * 60 * _updatesPerSecond;
+        //public const int _gameDuration = 1 * 30 * _updatesPerSecond;
         // unused, maybe...
         //private DateTime _gameCreated;
         //private DateTime _gameStarted;
@@ -268,7 +269,6 @@ namespace WizardIslandRestApi.Game
         public void ScheduleAction(int ticksFromNow, Action action)
         {
             int gt = GameTick + ticksFromNow;
-            Console.WriteLine($"sch: {GameTick} : {ticksFromNow} -> {gt}");
             int index = 0;
             for (index = 0; index < _scheduledActions.Count; index++)
             {

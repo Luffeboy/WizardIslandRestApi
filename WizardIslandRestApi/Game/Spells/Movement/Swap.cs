@@ -9,7 +9,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public Swap(Player player) : base(player)
         {
             StandardStats.Speed = 4;
-            StandardStats.Range = 1 / 3 * StandardStats.Speed;
+            StandardStats.Range = 1f / 3f * StandardStats.Speed;
             StandardStats.Size = 1;
 
             Tags.Add(SpellTags.Projectile);
@@ -29,7 +29,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     }
     public class SwapEntity : CantHitOwnerAtStartSpellEntity
     {
-        public override int TicksUntillCanHitOwner { get; set; } = 30;
+        //public override int TicksUntillCanHitOwner { get; set; } = 30;
         public Vector2 Dir {  get; set; }
         public float Speed { get; set; }
 
@@ -43,8 +43,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public override bool Update()
         {
             Pos += Dir * Speed;
-            _ticksUntilDeletion--;
-            if (_ticksUntilDeletion < 0)
+            bool eneded = base.Update();
+            if (eneded)
             {
                 MyCollider.Owner.Pos = Pos;
                 return true;
