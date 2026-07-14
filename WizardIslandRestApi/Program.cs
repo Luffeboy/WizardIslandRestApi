@@ -1,4 +1,8 @@
 using WizardIslandRestApi.Game;
+using WizardIslandRestApi.Game.Augments;
+
+AugmentSystem.LoadAugments();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

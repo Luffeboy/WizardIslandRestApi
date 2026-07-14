@@ -1,5 +1,6 @@
 ﻿using System.Net.WebSockets;
 using System.Numerics;
+using WizardIslandRestApi.Game.Augments.SpellSpecific;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
 namespace WizardIslandRestApi.Game.Augments
@@ -18,6 +19,8 @@ namespace WizardIslandRestApi.Game.Augments
         private float _timeUntilAugmentPhaseEnds = -1f;
         private const float _timeUntilAugmentPhaseEndsMax = 30;
 
+        public static List<AugmentBase> AllAugments { get; } = [];
+
         public AugmentSystem(Game game)
         {
             _game = game;
@@ -30,9 +33,31 @@ namespace WizardIslandRestApi.Game.Augments
             _game.ScheduleAction(_ticksBetweenAugments, StartAugmentPhase);
         }
 
+        public static void LoadAugments()
+        {
+            // use reflection to find all classes that inherit from AugmentBase and add them to the list of available augments
+            var augmentTypes = typeof(AugmentBase).Assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(AugmentBase)) && !t.IsAbstract);
+#if DEBUG
+            Console.WriteLine("All available augments:");
+#endif
+            foreach (var augmentType in augmentTypes)
+            {
+                var augment = (AugmentBase)Activator.CreateInstance(augmentType);
+                if (augment != null)
+                    AllAugments.Add(augment);
+#if DEBUG
+                Console.WriteLine(augment);
+#endif
+            }
+#if DEBUG
+            Console.WriteLine("Augments end");
+#endif
+        }
+
         public List<AugmentBase> GetAugmentsForPlayer(Player player)
         {
-            return [new TestAugment()];
+            return new List<AugmentBase>(AllAugments);
         }
 
         public void AugmentUpdate()
@@ -41,22 +66,18 @@ namespace WizardIslandRestApi.Game.Augments
 
             SendAugmentDataToPlayers();
             // check if all players have chosen an augment, or time has run out
-            if (PlayersAndAugmentsTheyCanChoose.Count != _playersAndAugmentsTheyCanChooseStartCount &&
-                    ((_timeUntilAugmentPhaseEnds -= Game.DeltaTime) < 0
-                        || !PlayersAndAugmentsTheyCanChoose.Any()))
+            if (PlayersAndAugmentsTheyCanChoose.Count != _playersAndAugmentsTheyCanChooseStartCount)
             {
-                EndAugmentPhase();
+                _timeUntilAugmentPhaseEnds -= Game.DeltaTime;
+                if (_timeUntilAugmentPhaseEnds < 0 ||
+                    !PlayersAndAugmentsTheyCanChoose.Any())
+                    EndAugmentPhase();
             }
-
-            //EndAugmentPhase();
         }
 
         // start augment selection process
         public void StartAugmentPhase()
         {
-#if DEBUG
-            Console.WriteLine($"Augmenting... ");
-#endif
             _timeUntilAugmentPhaseEnds = _timeUntilAugmentPhaseEndsMax;
             PlayersAndAugmentsTheyCanChoose.Clear();
 
@@ -102,6 +123,7 @@ namespace WizardIslandRestApi.Game.Augments
                     var augment = playerAndAugments.AugmentsToChooseFrom[augmentIndex];
                     foreach (var spell in player.GetOriginalSpells())
                         augment.AttemptAugmentSpell(spell);
+                    augment.AugmentPlayer(player);
 
                     PlayersAndAugmentsTheyCanChoose.RemoveAt(i);
                     break;
