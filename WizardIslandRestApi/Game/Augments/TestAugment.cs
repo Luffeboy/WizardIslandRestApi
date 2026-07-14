@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells;
+﻿#if DEBUG && false
+using WizardIslandRestApi.Game.Spells;
 
 namespace WizardIslandRestApi.Game.Augments
 {
@@ -15,3 +16,4 @@ namespace WizardIslandRestApi.Game.Augments
         }
     }
 }
+#endif

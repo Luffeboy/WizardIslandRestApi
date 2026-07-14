@@ -16,11 +16,40 @@ namespace WizardIslandRestApi.Game.Augments
         /// </summary>
         public List<string> RequiredOneOfStats { get; } = new List<string>();
 
+        /// <summary>
+        /// The name of stat, where at least one of them must be present on the spell for this augment to be valid.
+        /// if this list is empty, then no stats are required.
+        /// </summary>
+        public List<string> RequiredOneOfStandardStats { get; } = new List<string>();
+
         public string AugmentName { get; set; } = "This augment doesn't have a name...";
         public string AugmentDescription { get; set; } = "This augment doesn't have a description...";
 
         public bool CanAugmentSpell(Spell spell)
         {
+            Console.WriteLine(RequiredOneOfStandardStats.Count + "<  >");
+            if (RequiredOneOfStandardStats.Count > 0)
+            {
+                var allPropertiesOnSpellAboveZero =
+                spell.StandardStats.GetType().GetProperties().Where(p =>
+                {
+                    if (p.PropertyType == typeof(int))
+                        return (int)p.GetValue(spell.StandardStats) >= 0;
+                    if (p.PropertyType == typeof(float))
+                        return (float)p.GetValue(spell.StandardStats) >= 0f;
+                    return false;
+                }).Select(p => p.Name).ToList();
+                Console.WriteLine("Test aug - base");
+                foreach (var stat in RequiredOneOfStandardStats)
+                    Console.WriteLine($"Required stat: {stat}");
+                Console.WriteLine(" < - >");
+                foreach (var stat in allPropertiesOnSpellAboveZero)
+                    Console.WriteLine($"above 0: {stat}");
+                Console.WriteLine(" - ");
+
+                if (RequiredOneOfStandardStats.Any(requiredStat => !allPropertiesOnSpellAboveZero.Contains(requiredStat)))
+                    return false;
+            }
             if (RequiredOneOfStats.Count > 0)
             {
                 var spellStatNames = spell.StandardStats.OtherStatNames();
@@ -36,6 +65,7 @@ namespace WizardIslandRestApi.Game.Augments
                 AugmentSpell(spell);
         }
 
-        public abstract void AugmentSpell(Spell spell);
+        public virtual void AugmentSpell(Spell spell) { }
+        public virtual void AugmentPlayer(Player player) { }
     }
 }
