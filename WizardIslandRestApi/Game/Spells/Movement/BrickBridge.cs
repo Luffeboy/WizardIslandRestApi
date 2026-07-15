@@ -57,7 +57,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         {
             if (other == MyCollider.Owner)
             {
-                other.ApplyDebuff(new ImmuneToLave(other, 5));
+                other.ApplyDebuff(new ImmuneToLava(other, 5));
                 _isUnderPlayer = true;
             }
             return false;

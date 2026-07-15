@@ -1,9 +1,9 @@
 ﻿namespace WizardIslandRestApi.Game.Spells.Debuffs
 {
-    public class ImmuneToLave : DebuffBase
+    public class ImmuneToLava : DebuffBase
     {
         private int _ticksUntilRemoval;
-        public ImmuneToLave(Player player, int ticksUntilRemoval) : base(player)
+        public ImmuneToLava(Player player, int ticksUntilRemoval) : base(player)
         {
             _ticksUntilRemoval = ticksUntilRemoval;
         }
