@@ -28,15 +28,15 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 spell.CurrentCooldown = -999;
             }
 
-            if (_cooldownMultiplier < 1f)
-                MyPlayer.ApplyDebuff(new CooldownMultiplierBuff(MyPlayer) 
-                {
-                    CooldownMultiplier = _cooldownMultiplier, 
-                    TicksTillRemoval = StandardStats.BuffAndDebuffTime, 
-                });
-
             CooldownMax = Math.Max(cooldownsSummed, Game._updatesPerSecond); // min 1 sec cooldown
             GoOnCooldown();
+
+            if (_cooldownMultiplier < 1f)
+                MyPlayer.ApplyDebuff(new CooldownMultiplierBuff(MyPlayer)
+                {
+                    CooldownMultiplier = _cooldownMultiplier,
+                    TicksTillRemoval = StandardStats.BuffAndDebuffTime,
+                });
         }
 
         public void Activate(float cooldownMultiplier, int buffDuration)
