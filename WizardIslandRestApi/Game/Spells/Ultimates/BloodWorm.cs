@@ -27,7 +27,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Damage = 5;
             StandardStats.Knockback = 1.75f;
             StandardStats.Size = 2;
-            StandardStats.Speed = 33.3f;
+            StandardStats.Speed = 3.3f;
+            StandardStats.Range = 30 * StandardStats.Speed;
 
             Tags.Add(SpellTags.Projectile);
             Tags.Add(SpellTags.SelfDamage);
@@ -79,6 +80,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             //var dir = (target - pos).Normalized();
             BloodWormEntity temp = new BloodWormEntity(MyPlayer, pos + (target - pos).Normalized() * _circlingRadius * .5f, _tail, this)
             {
+                TicksUntillDeletingMax = StandardStats.GetLifetime(),
                 Damage = StandardStats.Damage,
                 Knockback = StandardStats.Knockback,
                 Size = StandardStats.Size,
@@ -128,6 +130,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         private float _circlingAngle = 0;
         private float _circlingRadius;
         public float CirclingRadius { get { return _circlingRadius; } set { _circlingRadius = value; if (Parent != null) Parent.CirclingRadius = value; } }
+        public int TicksUntillDeletingMax { get { return _ticksUntillDeletingMax; } set { _ticksUntillDeletingMax = value; _ticksUntillDeleting = value; } }
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public float Speed { get; set; }
