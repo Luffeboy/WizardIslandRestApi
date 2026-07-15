@@ -86,7 +86,7 @@ namespace WizardIslandRestApi.Game.Augments
 
         public List<AugmentBase> GetAugmentsForPlayer(Player player)
         {
-#if DEBUG && false
+#if DEBUG
             return new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
 #endif
             Random r = new Random();

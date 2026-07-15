@@ -59,12 +59,13 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     {
         private Game _game;
         public bool ShouldBeDestroyed { get; set; } = false;
-        public float Speed { get; set; } = .75f;
+        public float Speed { get; set; } = 2f;
         private Player _player;
 
         public bool IsWandering { get; set; } = false;
         private Vector2 _wanderTarget = new Vector2();
         private Vector2 _wanderDir = new Vector2();
+        private float _wanderAngle = 0;
         private int _wanderTicksUntilTargetChange = -1;
         private int _wanderTicksUntilTargetChangeMax = 5 * Game._updatesPerSecond;
 
@@ -94,12 +95,18 @@ namespace WizardIslandRestApi.Game.Spells.Movement
                     _wanderTicksUntilTargetChange = _wanderTicksUntilTargetChangeMax;
                     // new wander target
                     Random r = new();
-                    float angle = (float)(r.NextDouble() * Math.PI * 2);
-                    float distance = (float)(r.NextDouble() * (map.CircleRadius - map.CircleInnerRadius) + map.CircleInnerRadius);
-                    _wanderTarget = map.GroundMiddle + new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * distance;
+                    // can only change the angle a little in each direction, to minimise overlap with lava.
+                    _wanderAngle = _wanderAngle + (float)((r.NextDouble() - .5d) * Math.PI * 1.5);
+                    float minDist = map.CircleInnerRadius + (map.CircleRadius - map.CircleInnerRadius) * .2f;
+                    float distance = (float)(r.NextDouble() * (map.CircleRadius - minDist) + minDist);
+                    _wanderTarget = map.GroundMiddle + new Vector2((float)Math.Cos(_wanderAngle), (float)Math.Sin(_wanderAngle)) * distance;
                     _wanderDir = (_wanderTarget - Pos).Normalized();
                 }
                 dir = _wanderDir;
+                Pos += dir * Speed;
+                float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
+                if (distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius)
+                    Pos = map.GroundMiddle + (Pos - map.GroundMiddle).Normalized() * map.CircleInnerRadius;
             }
             else
             {
@@ -109,19 +116,20 @@ namespace WizardIslandRestApi.Game.Spells.Movement
                         dir += (_game.Players[i].Pos - _player.Pos) * .75f;
                 pos += dir / ((playerCount == 1 ? 2 : playerCount) - 1);
                 dir = (pos - Pos).Normalized();
+
+                Pos += dir * Speed;
+                // check if we are in the lava
+                float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
+                // in middle
+                if (distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius)
+                    Pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * map.CircleInnerRadius;
+                // outside
+                else if (distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius)
+                    Pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * (map.CircleRadius - .1f);
+                if (dir.Dot(pos - Pos) < 0)
+                    Pos = pos;
             }
 
-            Pos += dir * Speed;
-            // check if we are in the lava
-            float distanceToMapCenterSqr = (map.GroundMiddle - Pos).LengthSqr();
-            // in middle
-            if (distanceToMapCenterSqr < map.CircleInnerRadius * map.CircleInnerRadius)
-                Pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * map.CircleInnerRadius;
-            // outside
-            else if (distanceToMapCenterSqr > map.CircleRadius * map.CircleRadius)
-                Pos = map.GroundMiddle + (pos - map.GroundMiddle).Normalized() * (map.CircleRadius - .1f);
-            if (dir.Dot(pos - Pos) < 0)
-                Pos = pos;
             return ShouldBeDestroyed;
         }
 

@@ -16,7 +16,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         private BloodWormEntity? _tail = null;
 
         private enum BloodWormStates { Ready, CreatingWorm, ShootoutWorm }
-        public override bool CanBeReplaced { get { return _currentState == BloodWormStates.Ready; } protected set { } }
+        //public override bool CanBeReplaced { get { return _currentState == BloodWormStates.Ready; } protected set { } }
         public override int CooldownMax { get; protected set; } = 45 * Game._updatesPerSecond;
 
         BloodWormStates _currentState = BloodWormStates.Ready;
