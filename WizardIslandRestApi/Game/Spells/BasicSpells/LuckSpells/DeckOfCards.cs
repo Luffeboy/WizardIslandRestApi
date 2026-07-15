@@ -10,7 +10,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
         public override string Name => _nextCard == null ? "Deck Of Cards" : $"Card: {_nextCard.Number}";
 
-        public DeckOfCards(Player player) : base(player)
+        public DeckOfCards(Player player) : base(player) // todo fix ace of spades?
         {
             if (player is null)
                 return;
@@ -47,7 +47,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         {
             _nextCardNumber = (_nextCardNumber + 1) % _numberOfCards;
             string cardNum = _nextCardNumber.ToString();
-            if (_nextCardNumber == 0)
+            bool isAce = _nextCardNumber == 0;
+            if (isAce)
                 switch (new Random().Next(5))
                 {
                     case 0:
@@ -67,7 +68,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
                         break;
                 }
             _nextCard = new CardEntity(MyPlayer, StandardStats.GetLifetime(), new Vector2(), cardNum, StandardStats.Damage, StandardStats.Knockback, StandardStats.Speed, null,
-                _nextCardNumber == 0 ? () =>
+                isAce ? () =>
             {
                 GoOnCooldown();
                 GetNewCard();
@@ -209,6 +210,17 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         {
             Pos += Dir * Speed;
             if (base.Update())
+            {
+                _onDestroy();
+                _goOnCooldown?.Invoke();
+                return true;
+            }
+            return false;
+        }
+
+        public override bool OnCollision(Entity other)
+        {
+            if (base.OnCollision(other))
             {
                 _onDestroy();
                 _goOnCooldown?.Invoke();
