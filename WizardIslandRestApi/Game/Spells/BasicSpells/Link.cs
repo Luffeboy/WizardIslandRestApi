@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+using WizardIslandRestApi.Game.Spells.SpellHelpers;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
@@ -11,20 +12,31 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Speed = 1;
             StandardStats.Range = 3f * StandardStats.Speed;
             StandardStats.Size = .5f;
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.LinkPullDuration, 3 * Game._updatesPerSecond);
+            ProjectileHelper.SetProjectileStats(this);
 
             Tags.Add(SpellTags.Projectile);
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            GetCurrentGame().Entities.Add(new LinkEntity(MyPlayer, startPos, GetCurrentGame()) 
+            var projectileDirections = ProjectileHelper.GetProjectileDirections(this, mousePos - startPos);
+            ProjectileHelper.CastSpellWithBurst(this, startPos, (spawnPos, iteration) =>
             {
-                Dir = (mousePos - startPos).Normalized(),
-                Speed = StandardStats.Speed,
-                TicksUntilDeletion = StandardStats.GetLifetime(),
-                Size = StandardStats.Size,
-                PullDuration = 3 * Game._updatesPerSecond,
+                for (int i  = 0; i  < projectileDirections.Length; i ++)
+                {
+                    var dir = projectileDirections[i];
+                    GetCurrentGame().Entities.Add(new LinkEntity(MyPlayer, startPos, GetCurrentGame())
+                    {
+                        Dir = dir,
+                        Speed = StandardStats.Speed,
+                        TicksUntilDeletion = StandardStats.GetLifetime(),
+                        Size = StandardStats.Size,
+                        PullDuration = StandardStats.OtherStatsInt[SpellSpecificStats.LinkPullDuration],
+                    });
+                }
             });
+
             GoOnCooldown();
         }
     }

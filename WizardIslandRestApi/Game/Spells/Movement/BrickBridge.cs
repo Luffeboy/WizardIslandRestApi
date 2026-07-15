@@ -8,9 +8,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public override SpellType Type { get; set; } = SpellType.Movement;
         public override int CooldownMax { get; protected set; } = (int)(7 * Game._updatesPerSecond);
         public override string Name => "Brick Bridge";
-        public BrickBridge(Player player) : base(player)
+        public BrickBridge(Player player) : base(player, 4)
         {
-            BricksToApplyOnRespawn = 4;
             StandardStats.Size = 5;
             StandardStats.SummonLifetime = 10 * Game._updatesPerSecond;
 
@@ -21,8 +20,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             int brickCount = BrickCount;
-            if (brickCount > BricksToApplyOnRespawn)
-                brickCount = BricksToApplyOnRespawn;
+            if (brickCount > StandardStats.OtherStatsInt[SpellSpecificStats.BricksToApplyOnRespawn])
+                brickCount = StandardStats.OtherStatsInt[SpellSpecificStats.BricksToApplyOnRespawn];
             float bridgePartSize = StandardStats.Size;
 
             GetCurrentGame().Entities.Add(new BrickBridgeEntity(MyPlayer, pos + (mousePos - pos).Normalized() * bridgePartSize * .25f, bridgePartSize)

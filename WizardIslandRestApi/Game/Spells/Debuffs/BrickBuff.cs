@@ -5,13 +5,14 @@
         public const string BrickName = "Brick";
         public const string BrickColor = "188,74,60";
 
+
         public BrickBuff(Player player) : base(player)
         {
-            Stackable = true;
         }
 
         public override void OnApply()
         {
+            Stacks++;
         }
 
         public override void OnRemove()
@@ -22,6 +23,7 @@
         {
             return false;
         }
+
         public override string ToString()
         {
             return BrickName;

@@ -20,7 +20,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             _fireSpells[_fireSpells.Length - 1] = this;
             for (int i = 1; i < _fireSpells.Length - 1; i++)
                 (_fireSpells[i] as ISetCooldownMax)?.SetCooldownMax((int)(2.5f * _fireSpells[i].CooldownMax));
-
             
             var statsToCopy = _fireSpells.Length == 1 ? _fireSpells[0].StandardStats : _fireSpells[1].StandardStats;
             StandardStats.Damage = statsToCopy.Damage;

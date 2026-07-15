@@ -14,6 +14,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             StandardStats.Size = .5f;
 
             Tags.Add(SpellTags.Projectile);
+            Tags.Add(SpellTags.GrappleHook);
         }
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
@@ -65,7 +66,6 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         public GrappleHookEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, GrappleHook spell) : base(owner, ticksUntilDeletion, startPos)
         {
             Height = EntityHeight.Ground;
-            //TicksUntillCanHitOwner = ticksUntilDeletion; // doesn't make sense, to hook yourself
             _spell = spell;
             Color = "100,100,100";
             EntityId = "GrappleHook";

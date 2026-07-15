@@ -218,6 +218,7 @@ namespace WizardIslandRestApi.Game
                 {
                     if (debuff.GetType().Name == Debuffs[i].GetType().Name)
                     {
+                        debuff.OnApplyWhereDebuffOfSameNameWasRemoved(Debuffs[i]);
                         Debuffs[i].OnRemove();
                         Debuffs.RemoveAt(i);
                         break;

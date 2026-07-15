@@ -1,11 +1,19 @@
-﻿namespace WizardIslandRestApi.Game.Spells.Ultimates
+﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+
+namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
-    public class ReloadSpells : Spell
+    interface IGiveCooldownReductionOnCast
     {
+        public void Activate(float cooldownMultiplier, int buffDuration);
+    }
+    public class ReloadSpells : Spell, IGiveCooldownReductionOnCast
+    {
+        private float _cooldownMultiplier = 1f;
         public override string Name => "Reloaded";
         public ReloadSpells(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
+            Tags.Add(SpellTags.CanGiveCooldownReductionOnCast);
         }
         public override int CooldownMax { get; protected set; } = 999 * Game._updatesPerSecond;
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
@@ -19,8 +27,23 @@
                 cooldownsSummed += spell.CurrentCooldown - GetCurrentGameTick();
                 spell.CurrentCooldown = -999;
             }
+
+            if (_cooldownMultiplier < 1f)
+                MyPlayer.ApplyDebuff(new CooldownMultiplierBuff(MyPlayer) 
+                {
+                    CooldownMultiplier = _cooldownMultiplier, 
+                    TicksTillRemoval = StandardStats.BuffAndDebuffTime, 
+                });
+
             CooldownMax = Math.Max(cooldownsSummed, Game._updatesPerSecond); // min 1 sec cooldown
             GoOnCooldown();
+        }
+
+        public void Activate(float cooldownMultiplier, int buffDuration)
+        {
+            StandardStats.BuffAndDebuffTime = Math.Max(StandardStats.BuffAndDebuffTime, buffDuration);
+            _cooldownMultiplier *= cooldownMultiplier;
+
         }
     }
 }

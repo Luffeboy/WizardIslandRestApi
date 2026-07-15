@@ -6,7 +6,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class Railgun : Spell
     {
-        private int _delay = Game._updatesPerSecond / 4;
 
         public Railgun(Player player) : base(player)
         {
@@ -14,6 +13,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Damage = 15;
             StandardStats.Knockback = 4.0f;
             StandardStats.Range = 30;
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.ActivationDelay, Game._updatesPerSecond / 4);
+            
 
             Tags.Add(SpellTags.Projectile);
         }
@@ -24,14 +25,20 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             Vector2 spellDir = mousePos - startPos;
             float spellLen = StandardStats.Range;
+            int delay = StandardStats.OtherStatsInt[SpellSpecificStats.ActivationDelay];
             //float spellLen = spellDir.Length();
             spellDir.Normalize();
             float forwardAngle = HomingBoltEntity.GetAngleFromDirection(spellDir);
             ShadowEntity[] spells = new ShadowEntity[(int)(spellLen + 1)];
             for (int i = 0; i < spells.Length; i++)
-                GetCurrentGame().Entities.Add(spells[i] = new ShadowEntity() { Color = "255,255,0", Size = .5f, EntityId = "RailgunPartical", Pos = startPos + spellDir * i, ForwardAngle = forwardAngle, TicksUntilDeletion = _delay + 3 });
+                GetCurrentGame().Entities.Add(spells[i] = new ShadowEntity() 
+                { 
+                    Color = "255,255,0", Size = .5f, EntityId = "RailgunPartical", 
+                    Pos = startPos + spellDir * i, ForwardAngle = forwardAngle, 
+                    TicksUntilDeletion = delay + 3,
+                });
 
-            GetCurrentGame().ScheduleAction(_delay, () =>
+            GetCurrentGame().ScheduleAction(delay, () =>
             {
                 for (int i = 0; i < spells.Length; i++)
                 {

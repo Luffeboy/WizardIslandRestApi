@@ -34,6 +34,10 @@ namespace WizardIslandRestApi.Game.Spells
         public const string LongRange = "Long Range";
         public const string LongCooldown = "Long Cooldown";
         public const string ShortCooldown = "Short Cooldown";
+
+        public const string GrappleHook = "Grapple Hook";
+        public const string CanWander = "Can Wander";
+        public const string CanGiveCooldownReductionOnCast = "Can Give Cooldown Reduction On Cast";
     }
 
     public static class SpellSpecificStats
@@ -46,6 +50,15 @@ namespace WizardIslandRestApi.Game.Spells
         public const string SummonQuantity = "SummonQuantity";
 
         public const string GravityPull = "GravityPull";
+        public const string LinkPullDuration = "LinkPullDuration";
+        public const string ShotsUntilDepletion = "ShotsUntilDepletion";
+        public const string CircleRadius = "CircleRadius";
+        public const string ProjectileEmitterCount = "ProjectileEmitterCount";
+        public const string UltimateSpellsToCopy = "UltimateSpellsToCopy";
+        public const string BasicSpellsToCopy = "BasicSpellsToCopy";
+        public const string ActivationDelay = "ActivationDelay";
+
+        public const string BricksToApplyOnRespawn = "BricksToApplyOnRespawn";
     }
 
     /// <summary>

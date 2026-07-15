@@ -10,7 +10,7 @@ namespace WizardIslandRestApi.Game.Augments.GenericAugments
         public GenericSpellStatMultiplier(string statName, float statMultiplier)
         {
             AugmentName = $"Spell Stat Up: {statName}";
-            AugmentDescription = $"Increases the spell stat {statName} by {(statMultiplier-1f) * 100}%";
+            AugmentDescription = $"Increases the spell stat {statName} by {MathF.Round((statMultiplier-1f) * 100)}%";
             RequiredOneOfStandardStats.Add(statName);
             _statName = statName;
             _statMultiplier = statMultiplier;

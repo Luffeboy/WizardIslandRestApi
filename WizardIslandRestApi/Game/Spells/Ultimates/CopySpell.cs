@@ -14,7 +14,6 @@
             Type = SpellType.Ultimate;
             if (player != null)
                 player.OverridesAndObservers.OnSpellCast += Observe;
-
             Tags.Add(SpellTags.UseOtherSpell);
         }
 

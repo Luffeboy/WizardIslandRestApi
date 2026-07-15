@@ -10,7 +10,8 @@
         public Klepto(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
-
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.UltimateSpellsToCopy, 1);
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.BasicSpellsToCopy, 1);
             Tags.Add(SpellTags.UseOtherSpell);
         }
 
@@ -50,8 +51,8 @@
             {
                 // steal their spells
                 // amount of spells to steal
-                int ultsToSteal = 1;
-                int normalsToSteal = 1;
+                int ultsToSteal = StandardStats.OtherStatsInt[SpellSpecificStats.UltimateSpellsToCopy];
+                int normalsToSteal = StandardStats.OtherStatsInt[SpellSpecificStats.BasicSpellsToCopy];
                 var spells = targetPlayer.GetSpells();
                 Dictionary<SpellType, List<int>> spellsByType = new();
                 // spells that connot be stolen

@@ -12,10 +12,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         private List<BrickWallEntity> _wallEntities = [];
         public override int CooldownMax { get; protected set; } = (int)(25 * Game._updatesPerSecond);
         public override string Name => _wallEntities.Count == 0 ? "Brick Wall" : "Shoot Brick";
-        public BrickWall(Player player) : base(player)
+        public BrickWall(Player player) : base(player, 5)
         {
             Type = SpellType.Ultimate;
-            BricksToApplyOnRespawn = 5;
             MinBricksToCast = 4;
             StandardStats.Damage = 5;
             StandardStats.Knockback = 1.15f;

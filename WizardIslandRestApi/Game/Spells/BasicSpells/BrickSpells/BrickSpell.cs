@@ -7,35 +7,44 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
     public abstract class BrickSpell : Spell
     {
         protected int _currentCooldown;
-        public int BricksToApplyOnRespawn { get; protected set; } = 1; 
-        public int MinBricksToCast { get; protected set; } = 1; 
-        protected int BrickCount { get { return MyPlayer.GetDebuffs().Where(d => d.ToString() == BrickBuff.BrickName).Count(); } }
-        public override int CurrentCooldown { get { return BrickCount >= MinBricksToCast ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
-        public BrickSpell(Player player) : base(player)
-        {
-            Tags.Add(SpellTags.Brick);
-        }
+        public int MinBricksToCast { get; protected set; } = 1;
 
+        protected BrickBuff? MyPlayersBrickBuff => 
+            MyPlayer.GetDebuffs().FirstOrDefault(d => d.ToString() == BrickBuff.BrickName) as BrickBuff;
+
+        protected int BrickCount
+            => MyPlayersBrickBuff?.Stacks ?? 0;
+        
+        public override int CurrentCooldown { get { return BrickCount >= MinBricksToCast ? -1 : _currentCooldown; } set { _currentCooldown = value; } }
         public override int CooldownMax { get; protected set; } = 30 * Game._updatesPerSecond;
         public override bool CanCast {  get { return BrickCount > 0 || base.CanCast; } }
 
-        protected void RemoveBrickBuffs(int amount) =>
-            MyPlayer.RemoveDebuff(BrickBuff.BrickName, amount);
+        public BrickSpell(Player player, int bricksToApplyOnRespawn = 1) : base(player)
+        {
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.BricksToApplyOnRespawn, bricksToApplyOnRespawn);
+            Tags.Add(SpellTags.Brick);
+        }
 
-        protected void GoOnCooldownBrick(int bricksToRemove)
+        protected void RemoveBrickBuffs(int amount)
+        {
+            var brickBuff = MyPlayersBrickBuff;
+            if (brickBuff is null)
+                return;
+            brickBuff.Stacks -= amount;
+            if (brickBuff.Stacks <= 0)
+                MyPlayer.RemoveDebuff(BrickBuff.BrickName);
+        }
+
+        protected void GoOnCooldownBrick(int bricksToRemove = 1)
         {
             RemoveBrickBuffs(bricksToRemove);
             GoOnCooldown();
         }
-        protected void GoOnCooldownBrick()
-        {
-            MyPlayer.RemoveDebuff(BrickBuff.BrickName);
-            GoOnCooldown();
-        }
+
         public override void OnPlayerReset()
         {
             base.OnPlayerReset();
-            for (int i = 0; i < BricksToApplyOnRespawn; i++)
+            for (int i = 0; i < StandardStats.OtherStatsInt[SpellSpecificStats.BricksToApplyOnRespawn]; i++)
                 MyPlayer.ApplyDebuff(new BrickBuff(MyPlayer));
         }
     }
@@ -47,6 +56,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
         public bool ShouldDropBrick { get; set; } = true;
         public List<string> EntityNamesToIgnore { get; set; } = [];
         public float SpeedMultiplierPerUpdate { get; set; } = .93f;
+
         public BrickEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, float startSpeed = 3) : base(owner, ticksUntilDeletion, startPos)
         {
             _startSpeed = startSpeed;
@@ -74,7 +84,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
                     return true;
                 _stopedTicks++;
             }
-            return --_ticksUntilDeletion < 0;
+            return base.Update();
         }
 
         protected override bool HitPlayer(Player other)

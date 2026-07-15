@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>$(DefineConstants);NO_COOLDOWN;SHOW_AUGMENTS</DefineConstants>
+    <!--<DefineConstants>$(DefineConstants);NO_COOLDOWN</DefineConstants>-->
+    <DefineConstants>$(DefineConstants);SHOW_AUGMENTS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
