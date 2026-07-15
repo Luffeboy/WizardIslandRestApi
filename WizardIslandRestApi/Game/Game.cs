@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Augments;
+﻿using System.Runtime.InteropServices;
+using WizardIslandRestApi.Game.Augments;
 using WizardIslandRestApi.Game.Events;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
@@ -188,23 +189,25 @@ namespace WizardIslandRestApi.Game
             {
                 if (Entities[i].MyCollider == null)
                     continue;
-                for (int j = i+1; j < Entities.Count; j++)
+                for (int j = 0; j < Entities.Count; j++)
                 {
-                    if (Entities[j].MyCollider == null)
+                    if (i==j || Entities[j].MyCollider == null)
                         continue;
                     if (Entities[i].MyCollider.CheckCollision(Entities[j].MyCollider))
                     {
                         bool deleteFirst = Entities[i].OnCollision(Entities[j]);
                         bool deleteSecond = Entities[j].OnCollision(Entities[i]);
                         // j should be greater than i, so we delete it first
-                        if (deleteSecond) 
+                        if (deleteSecond)
                         {
                             Entities.RemoveAt(j);
                             j--;
+                            if (j < i)
+                                i--;
                         }
-                        if (deleteFirst) 
+                        if (deleteFirst)
                         {
-                            Entities.RemoveAt(i); 
+                            Entities.RemoveAt(i);
                             i--;
                             break;
                         }

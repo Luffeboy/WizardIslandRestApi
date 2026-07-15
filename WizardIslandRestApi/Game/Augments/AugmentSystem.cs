@@ -86,7 +86,7 @@ namespace WizardIslandRestApi.Game.Augments
 
         public List<AugmentBase> GetAugmentsForPlayer(Player player)
         {
-#if DEBUG
+#if DEBUG && false
             return new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
 #endif
             Random r = new Random();
@@ -179,7 +179,7 @@ namespace WizardIslandRestApi.Game.Augments
         {
             foreach (var player in _game.Players.Values)
             {
-                var augmentData = PlayersAndAugmentsTheyCanChoose.FirstOrDefault()?.AugmentsToChooseFrom.Select(aug =>
+                var augmentData = PlayersAndAugmentsTheyCanChoose.FirstOrDefault(x => x.Player == player)?.AugmentsToChooseFrom.Select(aug =>
                 new {
                     AugmentName = aug.AugmentName,
                     AugmentDescription = aug.AugmentDescription,

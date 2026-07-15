@@ -26,9 +26,10 @@ namespace WizardIslandRestApi.Game
         public Entity(Player owner, Vector2? startPos = null)
         {
             if (startPos == null) startPos = new Vector2();
-            Pos = startPos.Value;
             MyCollider = new Collider(startPos.Value);
             MyCollider.Owner = owner;
+            Pos = startPos.Value;
+            MyCollider.Pos = startPos.Value;
         }
         public void TeleportTo(Vector2 pos)
         {

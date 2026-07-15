@@ -10,6 +10,7 @@
             StandardStats.Range = 20;
             StandardStats.SummonLifetime = 5 * Game._updatesPerSecond;
             StandardStats.Size = 3;
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.SummonQuantity, 1);
 
             Tags.Add(SpellTags.CreateEnvironment);
             Tags.Add(SpellTags.Summon);

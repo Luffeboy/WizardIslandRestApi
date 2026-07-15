@@ -17,6 +17,7 @@ namespace WizardIslandRestApi.Game.Physics
             _pos = pos;
             PreviousPos = pos;
         }
+
         public bool CheckCollision(Collider other)
         {
             // simple check
@@ -46,7 +47,8 @@ namespace WizardIslandRestApi.Game.Physics
             float distanceToClosestPoint = (other.Pos - closestPoint).LengthSqr();
 
             // Step 3: Check if the distance is less than or equal to the circle's radius
-            return distanceToClosestPoint < (other.Size + Size) * (other.Size + Size);
+            float fullSize = Size + other.Size;
+            return distanceToClosestPoint < (fullSize) * (fullSize);
         }
     }
 }
