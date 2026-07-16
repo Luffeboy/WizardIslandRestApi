@@ -107,6 +107,8 @@ namespace WizardIslandRestApi.Game
 
         public void SetGameUpdateFunction(Action function)
         {
+            foreach (Player player in Players.Values)
+                player.GameplayChanged();
             _nextGameUpdateFunction = function;
         }
 
@@ -282,6 +284,11 @@ namespace WizardIslandRestApi.Game
                 _scheduledActions.Add(new ActionAndGameTick(action, gt));
             else
                 _scheduledActions.Insert(index, new ActionAndGameTick(action, gt));
+        }
+
+        public List<ActionAndGameTick> GetCopyOfScheduledActions()
+        {
+            return new List<ActionAndGameTick>(_scheduledActions);
         }
     }
 

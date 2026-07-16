@@ -31,6 +31,10 @@ namespace WizardIslandRestApi.Game.Augments
 
         private void ScheduleAugmentPhase()
         {
+#if DEBUG
+            if (_game.GetCopyOfScheduledActions().Any(actionAndGameTick => actionAndGameTick.MyAction == StartAugmentPhase))
+                return;
+#endif
             if (AugmentsGivenSoFar == 0)
                 _game.ScheduleAction(0, StartAugmentPhase);
             else _game.ScheduleAction(_ticksBetweenAugments, StartAugmentPhase);
@@ -56,6 +60,7 @@ namespace WizardIslandRestApi.Game.Augments
             }
             // manual augments
             {
+                // basic stats
                 var standardSpellStats = new StandardSpellStats();
                 AllAugments.Add(new GenericSpellStatMultiplier(nameof(standardSpellStats.Speed), 1.25f));
                 AllAugments.Add(new GenericSpellStatMultiplier(nameof(standardSpellStats.Damage), 1.25f));
@@ -63,6 +68,12 @@ namespace WizardIslandRestApi.Game.Augments
                 AllAugments.Add(new GenericSpellStatMultiplier(nameof(standardSpellStats.Range), 1.3f));
                 AllAugments.Add(new GenericSpellStatMultiplier(nameof(standardSpellStats.CooldownMultiplier), .9f));
                 AllAugments.Add(new GenericSpellStatMultiplier(nameof(standardSpellStats.Size), 1.25f));
+
+                // more specific stats
+                AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.ProjectileEmitterCount, 1, "Fire away... more", "emitters"));
+                AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.SummonQuantity, 1, "More Summons", "all summons"));
+                AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.BricksToApplyOnRespawn, 1, "More Bricks", "the amount of bricks you spawn with"));
+                
             }
 #if DEBUG && SHOW_AUGMENTS
             Console.WriteLine("\nAll augments");
@@ -110,7 +121,12 @@ namespace WizardIslandRestApi.Game.Augments
                 _timeUntilAugmentPhaseEnds -= Game.DeltaTime;
                 // wait a max of 3 seconds when everyone has chosen an augment
                 if (!PlayersAndAugmentsTheyCanChoose.Any())
+                {
                     _timeUntilAugmentPhaseEnds = MathF.Min(_timeUntilAugmentPhaseEnds, 3f);
+#if DEBUG
+                    _timeUntilAugmentPhaseEnds = -1;
+#endif
+                }
                 // resume the game
                 if (_timeUntilAugmentPhaseEnds <= 0)
                 {

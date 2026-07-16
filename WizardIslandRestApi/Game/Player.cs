@@ -117,6 +117,7 @@ namespace WizardIslandRestApi.Game
 
         public void Reset()
         {
+            GameplayChanged();
             TicksTillAlive = -1;
             Stats.Health = Stats.MaxHealth;
             Vel = new Vector2();
@@ -404,6 +405,11 @@ namespace WizardIslandRestApi.Game
                                 int augmentIndex = JsonSerializer.Deserialize<int>(extraData);
                                 _game.GameAugmentSystem.PlayerSelectAugment(this, augmentIndex);
                                 break;
+                            case (int)ActionPacketType.GiveFreeAugment:
+#if DEBUG
+                                _game.GameAugmentSystem.StartAugmentPhase();
+#endif
+                                break;
                         }
                     }
                 }
@@ -416,6 +422,15 @@ namespace WizardIslandRestApi.Game
             Thread.Sleep(10);
             }
             WebSocket = null;
+        }
+
+        /// <summary>
+        /// Resets the players command queue. Should be called everytime the game changes.
+        /// (player respawning main update loop changed etc.)
+        /// </summary>
+        public void GameplayChanged()
+        {
+            SpellCastQueue.Clear();
         }
 
         public void SendGameState()

@@ -92,6 +92,7 @@ namespace WizardIslandRestApi.Controllers
             Move = 0,
             Spell = 1,
             SelectAugment = 2,
+            GiveFreeAugment = 3, // for testing
         }
 
         public enum PacketToClientType
