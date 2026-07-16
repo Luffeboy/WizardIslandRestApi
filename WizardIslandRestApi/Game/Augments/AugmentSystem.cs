@@ -104,17 +104,22 @@ namespace WizardIslandRestApi.Game.Augments
 
         public void AugmentUpdate()
         {
-            // check if a player has selected an augment
-
-            SendAugmentDataToPlayers();
             // check if all players have chosen an augment, or time has run out
             if (PlayersAndAugmentsTheyCanChoose.Count != _playersAndAugmentsTheyCanChooseStartCount)
             {
                 _timeUntilAugmentPhaseEnds -= Game.DeltaTime;
-                if (_timeUntilAugmentPhaseEnds < 0 ||
-                    !PlayersAndAugmentsTheyCanChoose.Any())
+                // wait a max of 3 seconds when everyone has chosen an augment
+                if (!PlayersAndAugmentsTheyCanChoose.Any())
+                    _timeUntilAugmentPhaseEnds = MathF.Min(_timeUntilAugmentPhaseEnds, 3f);
+                // resume the game
+                if (_timeUntilAugmentPhaseEnds <= 0)
+                {
                     EndAugmentPhase();
+                    return;
+                }
             }
+            // send update to players
+            SendAugmentDataToPlayers();
         }
 
         // start augment selection process
@@ -186,7 +191,7 @@ namespace WizardIslandRestApi.Game.Augments
                 });
                 player.SendData(PacketToClientType.GetAugment, new
                 {
-                    TimeRemaining = _timeUntilAugmentPhaseEndsMax,
+                    TimeRemaining = _timeUntilAugmentPhaseEnds,
                     PlayersWhoHaveNotPickedAugmentsYetCount = PlayersAndAugmentsTheyCanChoose.Count,
                     AugmentData = augmentData,
                 });
