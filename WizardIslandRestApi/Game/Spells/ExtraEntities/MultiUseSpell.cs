@@ -22,7 +22,7 @@
 #if !NO_COOLDOWN
             int cooldown = (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
             _lastUseTick += cooldown;
-            int highestPosibleCooldown = GetCurrentGameTick() - (UsesMax - 1) * cooldown;
+            int highestPosibleCooldown = GetCurrentGameTick() - (StandardStats.OtherStatsInt[SpellSpecificStats.SpellUsesMax] - 1) * cooldown;
             if (_lastUseTick < highestPosibleCooldown) 
                 _lastUseTick = highestPosibleCooldown;
             if (Uses > 0)
