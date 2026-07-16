@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.SpellHelpers;
 namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
     public class Luna : Spell
@@ -10,6 +11,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             StandardStats.Knockback = 1.75f;
             StandardStats.Range = 35;
             StandardStats.Size = 1;
+            StandardStats.Speed = 1.35f;
+
+            ProjectileHelper.SetProjectileStats(this, angle: 1.5f);
 
             Tags.Add(SpellTags.Projectile);
             Tags.Add(SpellTags.Static);
@@ -19,37 +23,43 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            float size = StandardStats.Size;
-            Vector2 endPos = mousePos;
             Vector2 dir = mousePos - pos;
-            if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
-            {
-                dir = dir.Normalized() * StandardStats.Range;
-                endPos = pos + dir;
-            }
-            var ticksUntilDeletion = (int)(dir.Length() * .75f);
-            dir.Normalize();
+            float size = StandardStats.Size;
+            float range = dir.Length();
+            if (range != 0)
+                dir /= range;
+            float minRange = 3f;
+            range = MathF.Max(MathF.Min(range, StandardStats.Range), minRange);
+            var ticksUntilDeletion = Math.Max((int)(range / StandardStats.Speed), 1);
             Vector2 dirNormal = dir.Normal();
-            Vector2 startPos = pos +
-                               dir * (MyPlayer.Size + size + .1f) +
-                               dirNormal * (MyPlayer.Size + size + .1f);
+            Vector2 endPos = pos + dir * range;
             float amountToSide = 1.0f;
-            GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, startPos, endPos, amountToSide)
+            int projectileCount = StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileQuantity];
+            float projectileEndpointDifference = 2 * StandardStats.Size * StandardStats.OtherStatsFloat[SpellSpecificStats.ProjectileAngle];
+            ProjectileHelper.CastSpellWithBurst(this, pos, (spawnPos, iteration) =>
             {
-                Color = "100, 100, 255",
-                Size = size,
-                TicksUntilDeletionMax = ticksUntilDeletion,
-                Damage = StandardStats.Damage,
-                Knockback = StandardStats.Knockback,
-                AmountToSideMultiplier = amountToSide,
-            });
-            GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, startPos, endPos, -amountToSide)
-            {
-                Color = "100, 100, 255",
-                Size = size,
-                TicksUntilDeletionMax = ticksUntilDeletion,
-                Damage = StandardStats.Damage,
-                Knockback = StandardStats.Knockback,
+                for (int i = 0; i < projectileCount; i++)
+                {
+                    float rangeDiff = (i - projectileCount / 2) * projectileEndpointDifference;
+                    Vector2 crescentMoonEndpos = spawnPos + dir * (range + rangeDiff);
+                    GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, spawnPos, crescentMoonEndpos, amountToSide)
+                    {
+                        Color = "100, 100, 255",
+                        Size = size,
+                        TicksUntilDeletionMax = ticksUntilDeletion,
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                        AmountToSideMultiplier = amountToSide,
+                    });
+                    GetCurrentGame().Entities.Add(new CrescentMoonEntity(MyPlayer, spawnPos, crescentMoonEndpos, -amountToSide)
+                    {
+                        Color = "100, 100, 255",
+                        Size = size,
+                        TicksUntilDeletionMax = ticksUntilDeletion,
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                    });
+                }
             });
             GetCurrentGame().ScheduleAction(ticksUntilDeletion, () => 
             {

@@ -35,4 +35,30 @@ namespace WizardIslandRestApi.Game.Augments.GenericAugments
 #endif
         }
     }
+    public class GenericSpecificSpellStatIncreaseAugment : AugmentBase
+    {
+        private readonly string _statName;
+        private readonly int _statIncreaseAmount;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="statName"></param>
+        /// <param name="statIncreaseAmount"></param>
+        /// <param name="augmentName"></param>
+        /// <param name="description">It will say "Increase <discription> by <statIncreaseAmount>"</param>
+        public GenericSpecificSpellStatIncreaseAugment(string statName, int statIncreaseAmount, string augmentName, string description)
+        {
+            AugmentName = augmentName;
+            AugmentDescription = $"Increase {description} by {statIncreaseAmount}.";
+            RequiredOneOfStats.Add(statName);
+            _statName = statName;
+            _statIncreaseAmount = statIncreaseAmount;
+        }
+
+        public override void AugmentSpell(Spell spell)
+        {
+            spell.StandardStats.OtherStatsInt[_statName] += _statIncreaseAmount;
+        }
+    }
 }

@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-
-namespace WizardIslandRestApi.Game.Spells.Movement
+﻿namespace WizardIslandRestApi.Game.Spells.Movement
 {
     public interface ICanWander
     {
         public void StartWander();
     }
+
     public class KeyOfDestiny : Spell, ICanWander
     {
         private KeyOfDestinyEntity _teleportToLocation;
         public override string Name => "Key of Destiny";
         public override int CooldownMax { get; protected set; } = 8 * Game._updatesPerSecond;
+
+        private bool _isWandering = false;
 
         public KeyOfDestiny(Player player) : base(player)
         {
@@ -35,6 +36,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             RemovedFromPlayer();
 
             _teleportToLocation = new KeyOfDestinyEntity(MyPlayer, GetCurrentGame(), MyPlayer.Pos);
+            _teleportToLocation.IsWandering = _isWandering;
             _teleportToLocation.Update();
             GetCurrentGame().Entities.Add(_teleportToLocation);
         }
@@ -52,7 +54,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             if (_teleportToLocation is null)
                 Console.WriteLine("Error: _teleportToLocation is null");
 #endif
-            _teleportToLocation.IsWandering = true;
+            _isWandering = true;
+            _teleportToLocation.IsWandering = _isWandering;
         }
     }
     public class KeyOfDestinyEntity : Entity
