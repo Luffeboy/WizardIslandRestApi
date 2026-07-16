@@ -21,13 +21,14 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            if (mousePos.LengthSqr() > StandardStats.Range * StandardStats.Range)
-                mousePos = mousePos.Normalized() * StandardStats.Range;
+            Vector2 dir = mousePos - pos;
+            if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
+                dir = dir.Normalized() * StandardStats.Range;
             int fallTime = StandardStats.OtherStatsInt[SpellSpecificStats.ActivationDelay];
             int quantity = StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity];
             Random r = new Random();
-            Vector2 firstPos = pos;
-
+            Vector2 firstPos = pos + dir;
+            mousePos = firstPos;
             for (int i = 0; i < quantity; i++)
             {
                 GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos, GetCurrentGame())

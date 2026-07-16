@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells.SpellHelpers;
+﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+using WizardIslandRestApi.Game.Spells.SpellHelpers;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
@@ -19,11 +20,13 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dirs = ProjectileHelper.GetProjectileDirections(this, pos - mousePos);
+            float distance = (mousePos - pos).Length();
+            var dirs = ProjectileHelper.GetProjectileDirections(this, mousePos - pos);
             ProjectileHelper.CastSpellWithBurst(this, pos, (startPos, iteration) =>
             {
                 for(int i = 0; i < dirs.Length; i++)
-                    GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, startPos, startPos - dirs[i], GetCurrentGame())
+                {
+                    GetCurrentGame().Entities.Add(new HomingBoltEntity(MyPlayer, startPos, startPos + dirs[i] * distance, GetCurrentGame())
                     {
                         Speed = StandardStats.Speed,
                         Color = "255, 255, 255",
@@ -32,6 +35,9 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                         Damage = StandardStats.Damage,
                         Knockback = StandardStats.Knockback,
                     });
+
+                    GetCurrentGame().Entities.Add(new ShadowEntity() { Pos = startPos + dirs[i] * distance, Size = 1 });
+                }
             });
             GoOnCooldown();
         }
