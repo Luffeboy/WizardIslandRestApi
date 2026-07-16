@@ -5,13 +5,15 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
     public class Stella : Spell
     {
         private int _waitUntillPoolActivates = (int)(.1f * Game._updatesPerSecond);
-        private float _sizeMultiplier = .75f;
+        const float _actualStartSize = 15f;
+        const float _sizeScaling = .5f;
+        private float _startSize = _actualStartSize * (1f - _sizeScaling);
         public override int CooldownMax { get; protected set; } = 15 * Game._updatesPerSecond;
         public Stella(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
             StandardStats.Range = 50;
-            StandardStats.Size = 15 / _sizeMultiplier;
+            StandardStats.Size = _sizeScaling;
             StandardStats.SummonLifetime = (int)(20 * Game._updatesPerSecond);
 
             Tags.Add(SpellTags.Zone);
@@ -21,7 +23,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos);
-            float size = StandardStats.Size * _sizeMultiplier;
+            float size = _startSize + _actualStartSize * StandardStats.Size;
             if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)
             {
                 dir = dir.Normalized() * StandardStats.Range;

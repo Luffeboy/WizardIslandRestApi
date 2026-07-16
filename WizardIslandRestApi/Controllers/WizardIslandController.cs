@@ -26,7 +26,7 @@ namespace WizardIslandRestApi.Controllers
         public ActionResult<string> StartGame(int gameId, [FromBody] string password)
         {
             var game = _gameManager.GetGame(gameId);
-            if (game == null || game.Players[0].Password != password || !game.CanJoin)
+            if (game == null || game.Players.Count == 0 || game.Players[0].Password != password || !game.CanJoin)
                 return NotFound();
             lock(game)
             {
