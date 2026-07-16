@@ -45,7 +45,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                     Size = StandardStats.Size,
                     TicksUntilDeletion = StandardStats.SummonLifetime,
                     Damage = StandardStats.Damage,
-                    Knockback = StandardStats.Knockback
+                    Knockback = StandardStats.Knockback,
                 });
                 pos = firstPos + new Vector2((float)(r.NextDouble() * 2 - 1), (float)(r.NextDouble() * 2 - 1)) * StandardStats.Size / 4;
             }
@@ -61,6 +61,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public float Knockback { get; set; }
         public BarrelEntity(Player owner, Game game, Vector2 startPos) : base(owner, startPos)
         {
+            CantHitSameTypeOfEntityFromSamePlayer = false;
             _game = game;
             EntityId = "Barrel";
             TeleportTo(startPos);

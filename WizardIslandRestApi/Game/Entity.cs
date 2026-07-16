@@ -44,6 +44,7 @@ namespace WizardIslandRestApi.Game
         /// </summary>
         /// <returns></returns>
         public abstract bool Update();
+
         /// <summary>
         /// returns true, if this entity should be deleted
         /// </summary>
@@ -51,10 +52,18 @@ namespace WizardIslandRestApi.Game
         /// <returns></returns>
         public virtual bool OnCollision(Entity other)
         {
-            return other.Height != EntityHeight.Ground && 
-                (CantHitSameTypeOfEntityFromSamePlayer && 
-                (other.MyCollider.Owner != MyCollider.Owner || other.EntityId != EntityId));
+            // a easier way to look at it
+            //if (other.Height == EntityHeight.Ground)
+            //    return false;
+            //if (CantHitSameTypeOfEntityFromSamePlayer && other.MyCollider.Owner == MyCollider.Owner && other.EntityId == EntityId)
+            //    return false;
+            //return true;
+            // shortened version
+            return other.Height != EntityHeight.Ground &&
+                (!CantHitSameTypeOfEntityFromSamePlayer ||
+                other.MyCollider.Owner != MyCollider.Owner || other.EntityId != EntityId);
         }
+
         /// <summary>
         /// returns true, if this entity should be deleted
         /// </summary>
