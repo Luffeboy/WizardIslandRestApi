@@ -26,7 +26,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Vector2 spellDir = mousePos - startPos;
             float spellLen = StandardStats.Range;
             int delay = StandardStats.OtherStatsInt[SpellSpecificStats.ActivationDelay];
-            //float spellLen = spellDir.Length();
             spellDir.Normalize();
             float forwardAngle = HomingBoltEntity.GetAngleFromDirection(spellDir);
             ShadowEntity[] spells = new ShadowEntity[(int)(spellLen + 1)];

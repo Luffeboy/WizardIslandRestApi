@@ -6,9 +6,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
     public class SpeedBlits : MultiUseSpell
     {
         public override string Name => "Speed blitz";
-        public SpeedBlits(Player player) : base(player)
+        public SpeedBlits(Player player) : base(player, 5)
         {
-            UsesMax = 5;
             CooldownBetweenUses = 3;
             Type = SpellType.Ultimate;
             StandardStats.Damage = 10;

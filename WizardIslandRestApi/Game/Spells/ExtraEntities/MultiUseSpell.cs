@@ -8,13 +8,13 @@
         { 
             get 
             {
-                return Math.Min((GetCurrentGameTick() - _lastUseTick) / CooldownMax, UsesMax);
-            } 
+                return Math.Min((GetCurrentGameTick() - _lastUseTick) / CooldownMax, StandardStats.OtherStatsInt[SpellSpecificStats.SpellUsesMax]);
+            }
         }
-        public int UsesMax {  get; set; }
         public int CooldownBetweenUses { get; set; } = 0;
-        public MultiUseSpell(Player player) : base(player)
+        public MultiUseSpell(Player player, int maxUses = 1) : base(player)
         {
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.SpellUsesMax, maxUses);
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)

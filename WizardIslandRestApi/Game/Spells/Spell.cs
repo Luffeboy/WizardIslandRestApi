@@ -58,6 +58,7 @@ namespace WizardIslandRestApi.Game.Spells
         public const string BasicSpellsToCopy = "BasicSpellsToCopy";
         public const string ActivationDelay = "ActivationDelay";
 
+        public const string SpellUsesMax = "SpellUsesMax";
         public const string BricksToApplyOnRespawn = "BricksToApplyOnRespawn";
     }
 

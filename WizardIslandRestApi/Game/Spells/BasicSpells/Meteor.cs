@@ -7,28 +7,40 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
     {
         public override string Name { get { return "Meteor"; } }
         public override int CooldownMax { get; protected set; } = (int)(15.0f * Game._updatesPerSecond);
-        private int _fallTime = (int)(.5f * Game._updatesPerSecond);
         public Meteor(Player player) : base(player)
         {
             StandardStats.Damage = 15;
             StandardStats.Knockback = 3;
             StandardStats.Size = 4.3f;
+            StandardStats.Range = 25f;
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.ActivationDelay, (int)(.5f * Game._updatesPerSecond));
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.SummonQuantity, 1);
 
             Tags.Add(SpellTags.Static);
             Tags.Add(SpellTags.Zone);
         }
         public override void OnCast(Vector2 pos, Vector2 mousePos)
         {
-            var dir = (mousePos - pos).Normalized();
-            GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos, GetCurrentGame())
+            if (mousePos.LengthSqr() > StandardStats.Range * StandardStats.Range)
+                mousePos = mousePos.Normalized() * StandardStats.Range;
+            int fallTime = StandardStats.OtherStatsInt[SpellSpecificStats.ActivationDelay];
+            int quantity = StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity];
+            Random r = new Random();
+            Vector2 firstPos = pos;
+
+            for (int i = 0; i < quantity; i++)
             {
-                Color = "50, 50, 50",
-                Size = StandardStats.Size,
-                FallTime = _fallTime,
-                Damage = StandardStats.Damage,
-                KnockbackMin = StandardStats.Knockback * 0.8f,
-                KnockbackMax = StandardStats.Knockback * 1.2f,
-            });
+                GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos, GetCurrentGame())
+                {
+                    Color = "50, 50, 50",
+                    Size = StandardStats.Size,
+                    FallTime = fallTime,
+                    Damage = StandardStats.Damage,
+                    KnockbackMin = StandardStats.Knockback * 0.8f,
+                    KnockbackMax = StandardStats.Knockback * 1.2f,
+                });
+                mousePos = firstPos + new Vector2((float)(r.NextDouble() * 2 - 1), (float)(r.NextDouble() * 2 - 1)) * StandardStats.Size * 2;
+            }
             GoOnCooldown();
         }
     }
