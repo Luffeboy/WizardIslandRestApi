@@ -6,7 +6,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
     {
         public CopyOneMoreSpellAugment()
         {
-            AugmentName = "Another one";
+            AugmentName = "Another One";
             AugmentDescription = "Yoinky sploinky one more (basic) spell.";
             RequiredOneOfStats.Add(SpellSpecificStats.BasicSpellsToCopy);
         }

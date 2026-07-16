@@ -10,7 +10,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
 
         public GiveCooldownReductionOnCastAugment()
         {
-            AugmentName = "Addition reloading";
+            AugmentName = "Addition To Reloading";
             AugmentDescription = $"Upon casting spell, gives a buff reducing all cooldowns by {MathF.Round((1f - CooldownReduction) * 100)}%.\nThe buff lasts {BuffDuration / Game._updatesPerSecond} seconds.";
             RequiredOneOfTags.Add(SpellTags.CanGiveCooldownReductionOnCast);
         }

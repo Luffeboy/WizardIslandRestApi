@@ -7,7 +7,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
         public float ActivationSpeedMultiplier { get; set; } = .8f;
         public ActivationSpeedAugment()
         {
-            AugmentName = "Activation speed +";
+            AugmentName = "Activation Speed +";
             AugmentDescription = $"Increase the activation speed by {(1f - ActivationSpeedMultiplier) * 100}%.\nOf spells with a delay.";
             RequiredOneOfStats.Add(SpellSpecificStats.ActivationDelay);
         }

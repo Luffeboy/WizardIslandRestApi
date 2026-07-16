@@ -9,7 +9,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
 
         public FastGrappleAugment()
         {
-            AugmentName = "Super fast grappler";
+            AugmentName = "Super Fast Grappler";
             AugmentDescription = $"A buff to the gappling hook.\nReduces its cooldown by {MathF.Round((1f - CooldownReduction) * 100)}%.\n Increases it's speed by {MathF.Round((SpeedMultiplier-1)*100)}%.";
             RequiredOneOfTags.Add(SpellTags.GrappleHook);
         }

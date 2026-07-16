@@ -22,7 +22,13 @@ namespace WizardIslandRestApi.Game.Augments
         /// </summary>
         public List<string> RequiredOneOfStandardStats { get; } = new List<string>();
 
+        /// <summary>
+        /// Wether or not this augment can be chosen several times by a given player in a single round.
+        /// </summary>
+        public bool CanBeStacked { get; set; } = true;
+
         public string AugmentName { get; set; } = "This augment doesn't have a name...";
+
         public string AugmentDescription { get; set; } = "This augment doesn't have a description...";
 
         public bool CanAugmentSpell(Spell spell)

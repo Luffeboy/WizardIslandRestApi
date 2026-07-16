@@ -9,7 +9,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
 
         public CanWanderAugment()
         {
-            AugmentName = "Wandering around";
+            AugmentName = "Wandering Around";
             AugmentDescription = $"Makes Key Of Destiny wander around on its own.\nAlso reduces its cooldown by {MathF.Round((1f - CooldownReduction) * 100)}%.";
             RequiredOneOfTags.Add(SpellTags.CanWander);
         }

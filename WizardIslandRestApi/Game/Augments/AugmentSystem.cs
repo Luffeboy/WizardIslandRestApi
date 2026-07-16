@@ -193,6 +193,16 @@ namespace WizardIslandRestApi.Game.Augments
 
                 PlayersAndAugmentsTheyCanChoose.RemoveAt(i);
                 // maybe also remove the augment from _playersAndAugmentsTheyCanUse, if we don't want repeat-augments
+                if (!augment.CanBeStacked)
+                {
+#if DEBUG
+                    if (_playersAndAugmentsTheyCanUse[player].Remove(augment))
+                        Console.WriteLine("Removed augment from augment pool.\n" + augment.AugmentName);
+                    else Console.WriteLine("Faield to remove augment from augment pool, even though it shouldnt be able to stack.\n" + augment.AugmentName);
+#else
+                    _playersAndAugmentsTheyCanUse[player].Remove(augment)
+#endif
+                }
                 break;
             }
         }
