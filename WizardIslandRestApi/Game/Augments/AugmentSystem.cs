@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Augments.GenericAugments;
+﻿using System.Numerics;
+using WizardIslandRestApi.Game.Augments.GenericAugments;
 using WizardIslandRestApi.Game.Spells;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
@@ -14,6 +15,7 @@ namespace WizardIslandRestApi.Game.Augments
 
         public List<PlayerAugmentConnector> PlayersAndAugmentsTheyCanChoose { get; } = [];
         private Dictionary<Player, List<AugmentBase>> _playersAndAugmentsTheyCanUse { get; } = [];
+        private Dictionary<Player, List<AugmentBase>> _playersAugmentHistory { get; } = [];
 
         private int _playersAndAugmentsTheyCanChooseStartCount = -1;
         private float _timeUntilAugmentPhaseEnds = -1f;
@@ -93,6 +95,7 @@ namespace WizardIslandRestApi.Game.Augments
                 var augments = AllAugments.Where(aug => playerSpells.Any(spell => aug.CanAugmentSpell(spell))).ToList();
                 if (augments.Any())
                     _playersAndAugmentsTheyCanUse.Add(player, augments);
+                _playersAugmentHistory.Add(player, []);
             }
         }
 
@@ -187,9 +190,8 @@ namespace WizardIslandRestApi.Game.Augments
                     return;
 
                 var augment = playerAndAugments.AugmentsToChooseFrom[augmentIndex];
-                foreach (var spell in player.GetOriginalSpells())
-                    augment.AttemptAugmentSpell(spell);
-                augment.AugmentPlayer(player);
+                ApplyAugment(augment, player, player.GetOriginalSpells());
+                _playersAugmentHistory[player].Add(augment);
 
                 PlayersAndAugmentsTheyCanChoose.RemoveAt(i);
                 // maybe also remove the augment from _playersAndAugmentsTheyCanUse, if we don't want repeat-augments
@@ -205,6 +207,20 @@ namespace WizardIslandRestApi.Game.Augments
                 }
                 break;
             }
+        }
+
+        public void ApplyAugment(AugmentBase augment, Player player, Spell[] spells)
+        {
+            foreach (var spell in spells)
+                augment.AttemptAugmentSpell(spell);
+            augment.AugmentPlayer(player);
+        }
+
+        public void ReApplyAllAugmentToPlayersSpellsOnly(Player player, Spell[] spells)
+        {
+            foreach (AugmentBase augment in _playersAugmentHistory[player])
+                foreach (var spell in spells)
+                    augment.AttemptAugmentSpell(spell);
         }
 
         public void SendAugmentDataToPlayers()

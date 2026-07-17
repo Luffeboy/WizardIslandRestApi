@@ -12,15 +12,6 @@ namespace WizardIslandRestApi.Game.Events
             _game = game;
         }
         private static Random _random = new Random();
-        //private static Func<Game, EventBase>[] _gameFunc = new Func<Game, EventBase>[]
-        //{
-        //    (game) => new NoEvent(game),
-        //    (game) => new FireStormEvent(game),
-        //    (game) => new RisingTideEvent(game),
-        //    (game) => new UltraRapidFire(game),
-        //    (game) => new WinterEvent(game),
-        //    (game) => new BackToBasicsEvent(game),
-        //};
         private static int MaxWeights { get { return _gameEventsAndWeights.Sum(eaw => eaw.Weight);  } }
         private static EventAndWeight[] _gameEventsAndWeights = new EventAndWeight[]
         {

@@ -107,7 +107,7 @@ namespace WizardIslandRestApi.Game.Spells
         public Player MyPlayer { get; private set; }
         public virtual SpellType Type { get; set; } = SpellType.Attack;
         public List<string> Tags { get; } = new List<string>();
-        public StandardSpellStats StandardStats { get; } = new StandardSpellStats();
+        public StandardSpellStats StandardStats { get; private set; } = new StandardSpellStats();
         public virtual bool CanBeReplaced { get; protected set; } = true; // set this to false, if it could "dangerous" to replace this spell currently
         // static stuff
         private static Func<Player, Spell>[] _availableSpells = new Func<Player, Spell>[]
@@ -234,6 +234,16 @@ namespace WizardIslandRestApi.Game.Spells
         public void SetSpellIndex(int index)
         {
             SpellIndex = index;
+        }
+
+        /// <summary>
+        /// Do be carefull using this function as spells generally don't check if they have the corret stats.
+        /// So make sure all used stats are in the passed in StandardSpellStats object.
+        /// </summary>
+        /// <param name="stats"></param>
+        public void SetStandardStats(StandardSpellStats stats)
+        {
+            StandardStats = stats;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells;
+﻿using WizardIslandRestApi.Game.Augments;
+using WizardIslandRestApi.Game.Spells;
 using WizardIslandRestApi.Game.Spells.BasicSpells;
 namespace WizardIslandRestApi.Game.Events
 {
@@ -18,8 +19,11 @@ namespace WizardIslandRestApi.Game.Events
                 _spells.Add(player.Key, spells);
                 Spell[] fireballs = new Spell[_game.AllowedSpellCount];
                 for (int i = 0; i < fireballs.Length; i++)
+                {
                     fireballs[i] = new FireBall(player.Value);
+                }
                 player.Value.SetSpells(fireballs);
+                _game.GameAugmentSystem.ReApplyAllAugmentToPlayersSpellsOnly(player.Value, fireballs);
             }
         }
 
