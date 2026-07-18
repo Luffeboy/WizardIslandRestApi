@@ -186,10 +186,10 @@ namespace WizardIslandRestApi.Game.Augments
                 var playerAndAugments = PlayersAndAugmentsTheyCanChoose[i];
                 if (playerAndAugments.Player != player)
                     continue;
-                if (augmentIndex >= playerAndAugments.AugmentsToChooseFrom.Count)
+                if (augmentIndex >= playerAndAugments.AugmentsToChooseFromAndSpellsEffected.Count)
                     return;
 
-                var augment = playerAndAugments.AugmentsToChooseFrom[augmentIndex];
+                var augment = playerAndAugments.AugmentsToChooseFromAndSpellsEffected[augmentIndex].Item1;
                 ApplyAugment(augment, player, player.GetOriginalSpells());
                 _playersAugmentHistory[player].Add(augment);
 
@@ -227,10 +227,12 @@ namespace WizardIslandRestApi.Game.Augments
         {
             foreach (var player in _game.Players.Values)
             {
-                var augmentData = PlayersAndAugmentsTheyCanChoose.FirstOrDefault(x => x.Player == player)?.AugmentsToChooseFrom.Select(aug =>
+                var augmentData = PlayersAndAugmentsTheyCanChoose.FirstOrDefault(x => x.Player == player)?
+                    .AugmentsToChooseFromAndSpellsEffected.Select(aug =>
                 new {
-                    AugmentName = aug.AugmentName,
-                    AugmentDescription = aug.AugmentDescription,
+                    AugmentName = aug.Item1.AugmentName,
+                    AugmentDescription = aug.Item1.AugmentDescription,
+                    AugmentsEffected = aug.Item2,
                 });
                 player.SendData(PacketToClientType.GetAugment, new
                 {
@@ -245,12 +247,20 @@ namespace WizardIslandRestApi.Game.Augments
     public class PlayerAugmentConnector
     {
         public Player Player { get; private set; }
-        public List<AugmentBase> AugmentsToChooseFrom { get; private set; }
+        public List<Tuple<AugmentBase, List<string>>> AugmentsToChooseFromAndSpellsEffected { get; private set; } = [];
 
         public PlayerAugmentConnector(Player player, List<AugmentBase> augments)
         {
             Player = player;
-            AugmentsToChooseFrom = augments;
+            var playerSpells = player.GetOriginalSpells();
+            foreach (var augment in augments)
+            {
+                List<string> spellsThatAreEffected = [];
+                foreach (var spell in playerSpells)
+                    if (augment.CanAugmentSpell(spell))
+                        spellsThatAreEffected.Add(spell.ToString());
+                AugmentsToChooseFromAndSpellsEffected.Add(new (augment, spellsThatAreEffected));
+            }
         }
     }
 }
