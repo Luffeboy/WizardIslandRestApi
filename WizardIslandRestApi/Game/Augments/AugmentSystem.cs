@@ -202,7 +202,7 @@ namespace WizardIslandRestApi.Game.Augments
                         Console.WriteLine("Removed augment from augment pool.\n" + augment.AugmentName);
                     else Console.WriteLine("Faield to remove augment from augment pool, even though it shouldnt be able to stack.\n" + augment.AugmentName);
 #else
-                    _playersAndAugmentsTheyCanUse[player].Remove(augment)
+                    _playersAndAugmentsTheyCanUse[player].Remove(augment);
 #endif
                 }
                 break;

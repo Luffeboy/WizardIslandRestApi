@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using WizardIslandRestApi.Game.Augments;
 using WizardIslandRestApi.Game.Events;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
@@ -119,6 +120,11 @@ namespace WizardIslandRestApi.Game
 
         private void DefaultGameUpdate()
         {
+#if PROFILE_UPDATE_TIME
+            var gameLoopTimer = new Stopwatch();
+            gameLoopTimer.Start();
+#endif
+
             // check if it is time for a new event
             if (--TicksTillNextEvent < 0)
                 SelectNewEvent();
@@ -130,8 +136,20 @@ namespace WizardIslandRestApi.Game
             // end game
             if (GameTick > _gameDuration)
                 CurrentState = GameState.Ended;
+
+
+#if PROFILE_UPDATE_TIME
+            gameLoopTimer.Stop();
+            Console.WriteLine("Full update time: " + (gameLoopTimer.ElapsedMilliseconds / 1000f));
+            gameLoopTimer.Restart();
+#endif
             foreach (Player p in Players.Values)
                 p.SendGameState();
+
+#if PROFILE_UPDATE_TIME
+            gameLoopTimer.Stop();
+            Console.WriteLine("Sending data to palyers time: " + (gameLoopTimer.ElapsedMilliseconds / 1000f));
+#endif
         }
 
         public Player? AddPlayer(int[] spells)
@@ -161,6 +179,10 @@ namespace WizardIslandRestApi.Game
             // update players
             foreach (Player player in Players.Values)
                 player.Update();
+#if PROFILE_UPDATE_TIME
+            Stopwatch collisionDetectionStopwatch = new Stopwatch();
+            collisionDetectionStopwatch.Start();
+#endif
             // update entities, and check if they hit a player
             for (int i = 0; i < Entities.Count; i++)
             {
@@ -216,6 +238,10 @@ namespace WizardIslandRestApi.Game
                     }
                 }
             }
+#if PROFILE_UPDATE_TIME
+            collisionDetectionStopwatch.Stop();
+            Console.WriteLine("Collision detection/resulution time: " + (collisionDetectionStopwatch.ElapsedMilliseconds / 1000f));
+#endif
         }
 
         public void StartGame()

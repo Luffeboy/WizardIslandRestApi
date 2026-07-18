@@ -7,17 +7,17 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         private GrappleHookEntity? _hook = null;
         public override SpellType Type { get; set; } = SpellType.Movement;
         public override string Name => "Grapple hook";
+        public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
+
         public GrappleHook(Player player) : base(player)
         {
             StandardStats.Speed = 4;
-            StandardStats.Range = 1.5f * StandardStats.Speed;
+            StandardStats.Range = 1.5f * Game._updatesPerSecond;
             StandardStats.Size = .5f;
 
             Tags.Add(SpellTags.Projectile);
             Tags.Add(SpellTags.GrappleHook);
         }
-
-        public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
@@ -30,7 +30,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             }
             else
             {
-                GetCurrentGame().Entities.Add(_hook = new GrappleHookEntity(MyPlayer, StandardStats.GetLifetime(), startPos, this)
+                GetCurrentGame().Entities.Add(_hook = new GrappleHookEntity(MyPlayer, (int)StandardStats.Range, startPos, this)
                 {
                     Speed = StandardStats.Speed,
                     Dir = (mousePos - startPos).Normalized(),
@@ -55,6 +55,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             }
         }
     }
+
     public class GrappleHookEntity : EntityPlus
     {
         private GrappleHook _spell;

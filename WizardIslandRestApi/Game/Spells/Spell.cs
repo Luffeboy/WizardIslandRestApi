@@ -93,7 +93,7 @@ namespace WizardIslandRestApi.Game.Spells
             if (Speed == 0 || Range == 0)
                 Console.WriteLine($"Warning from GetLifetime: Speed ({Speed}) or Range ({Range}) is 0... Remember to set these values!");
 #endif
-            return Speed != 0 ? (int)(Range / Speed * Game._updatesPerSecond) : 1;
+            return Math.Max(Speed != 0 ? (int)(Range / Speed * Game._updatesPerSecond) : 1, 1);
         }
     }
 

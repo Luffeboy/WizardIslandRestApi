@@ -20,35 +20,25 @@ namespace WizardIslandRestApi.Game.Physics
 
         public bool CheckCollision(Collider other)
         {
-            // simple check
-            //Vector2 diff = Pos - other.Pos;
-            //float size = Size + other.Size;
-            //if (diff.x * diff.x + diff.y * diff.y < size * size)
-            //    return true;
-            // raycast check
-            // Step 1: Calculate the closest point on the line to the circle's center
-            // Calculate the direction vector of the line (normalized)
+            float fullSizeSqr = (Size + other.Size) * (Size + other.Size);
 
-            float maxLength = (Pos - PreviousPos).Length();
-            if (maxLength == 0) maxLength = .001f;
-            Vector2 lineDir = (Pos - PreviousPos) / maxLength;
+            Vector2 moveDir = Pos - PreviousPos;
+            float moveDirLengthSqr = moveDir.LengthSqr();
 
-            // Find the projection of the circle's center onto the line
-            // Vector from lineStart to the circle's center
+            // Handle stationary case
+            if (moveDirLengthSqr == 0)
+            {
+                return (Pos - other.Pos).LengthSqr() <= fullSizeSqr;
+            }
+
             Vector2 circleToLineStart = other.Pos - PreviousPos;
+            float projectionLength = circleToLineStart.Dot(moveDir);
+            projectionLength = Math.Max(0, Math.Min(projectionLength, moveDirLengthSqr));
 
-            // Projection of circleToLineStart onto the line direction
-            float projectionLength = circleToLineStart.Dot(lineDir);
-            projectionLength = Math.Max(0, Math.Min(projectionLength, maxLength));
-            // Calculate the closest point on the line
-            Vector2 closestPoint = PreviousPos + lineDir * projectionLength;
-
-            // Step 2: Calculate the distance between the circle's center and the closest point on the line
+            Vector2 closestPoint = PreviousPos + moveDir * (projectionLength / moveDirLengthSqr);
             float distanceToClosestPoint = (other.Pos - closestPoint).LengthSqr();
 
-            // Step 3: Check if the distance is less than or equal to the circle's radius
-            float fullSize = Size + other.Size;
-            return distanceToClosestPoint < (fullSize) * (fullSize);
+            return distanceToClosestPoint <= fullSizeSqr;
         }
     }
 }

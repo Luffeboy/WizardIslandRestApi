@@ -10,6 +10,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants);NO_COOLDOWN</DefineConstants>
     <DefineConstants>$(DefineConstants);SHOW_AUGMENTS</DefineConstants>
+    <!--<DefineConstants>$(DefineConstants);PROFILE_UPDATE_TIME</DefineConstants>-->
   </PropertyGroup>
 
   <ItemGroup>
