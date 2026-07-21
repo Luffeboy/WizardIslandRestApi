@@ -74,7 +74,6 @@ namespace WizardIslandRestApi.Game.Augments
                 // more specific stats
                 AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.ProjectileEmitterCount, 1, "Fire away... more", "emitters"));
                 AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.SummonQuantity, 1, "More Summons", "all summons"));
-                AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.BricksToApplyOnRespawn, 1, "More Bricks", "the amount of bricks you spawn with"));
                 AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.SpellUsesMax, 1, "More max uses", "spells that have more uses"));
                 
             }
@@ -211,9 +210,11 @@ namespace WizardIslandRestApi.Game.Augments
 
         public void ApplyAugment(AugmentBase augment, Player player, Spell[] spells)
         {
+            int spellsThatApplied = 0;
             foreach (var spell in spells)
-                augment.AttemptAugmentSpell(spell);
-            augment.AugmentPlayer(player);
+                if (augment.AttemptAugmentSpell(spell))
+                    spellsThatApplied++;
+            augment.AugmentPlayer(player, spellsThatApplied);
         }
 
         public void ReApplyAllAugmentToPlayersSpellsOnly(Player player, Spell[] spells)

@@ -88,6 +88,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
                     return true;
                 _stopedTicks++;
                 Density += 1.0f / Game._updatesPerSecond;
+                VisableTo = _originalOwner.Id;
             }
             return base.Update();
         }

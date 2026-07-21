@@ -57,13 +57,17 @@ namespace WizardIslandRestApi.Game.Augments
             return RequiredOneOfTags.Count == 0 || spell.Tags.Any(tag => RequiredOneOfTags.Contains(tag));
         }
 
-        public void AttemptAugmentSpell(Spell spell)
+        public bool AttemptAugmentSpell(Spell spell)
         {
             if (CanAugmentSpell(spell))
+            {
                 AugmentSpell(spell);
+                return true;
+            }
+            return false;
         }
 
         public virtual void AugmentSpell(Spell spell) { }
-        public virtual void AugmentPlayer(Player player) { }
+        public virtual void AugmentPlayer(Player player, int spellsThatWereCouldBeAugmented) { }
     }
 }

@@ -35,7 +35,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 var wallPart = _wallEntities[index];
                 _wallEntities.RemoveAt(index);
                 wallPart.ShouldBeRemoved = true;
-                bool shouldDropBrick = _wallEntitiesThatGivesABrickRemaining-- > 0;
+                bool shouldDropBrick = _wallEntitiesThatGivesABrickRemaining-- >= 0;
                 var wallPos = wallPart.Pos;
                 GetCurrentGame().Entities.Add(new BrickEntity(MyPlayer, CooldownMax, wallPos, StandardStats.Speed)
                 {
@@ -75,6 +75,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
             RemoveBrickBuffs(bricksToRemove);
         }
+
         public override void FullReset()
         {
             _wallEntities.Clear();
@@ -90,19 +91,23 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             EntityId = "BrickWall";
             Color = BrickBuff.BrickColor;
         }
+
         public override bool OnCollision(Entity other)
         {
             if (other.EntityId == "BrickWall")
                 return false;
             return false;
         }
+
         public override bool OnCollision(Player other)
         {
             return false;
         }
+
         public override void ReTarget(Vector2 pos)
         {
         }
+
         public override bool Update()
         {
             return ShouldBeRemoved;

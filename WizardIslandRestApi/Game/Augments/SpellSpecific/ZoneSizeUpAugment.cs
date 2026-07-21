@@ -5,6 +5,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
     public class ZoneSizeUpAugment : AugmentBase
     {
         public float SizeMultiplier { get; set; } = 2f;
+
         public ZoneSizeUpAugment()
         {
             AugmentName = "Zoning Spell";
@@ -12,6 +13,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
             RequiredOneOfTags.Add(SpellTags.Zone);
             CanBeStacked = false;
         }
+
         public override void AugmentSpell(Spell spell)
         {
             spell.StandardStats.Size *= SizeMultiplier;
