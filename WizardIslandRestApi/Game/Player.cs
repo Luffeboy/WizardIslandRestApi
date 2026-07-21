@@ -487,6 +487,12 @@ namespace WizardIslandRestApi.Game
         public int CooldownMax { get; set; }
     }
 
+    public class DebuffMinimum()
+    {
+        public string Name { get; set; }
+        public int Stacks { get; set; }
+    }
+
     public class PlayerMinimum
     {
         public int Id { get; set; }
@@ -499,7 +505,7 @@ namespace WizardIslandRestApi.Game
         public bool IsDead { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
-        public IEnumerable<string> Debuffs { get; set; }
+        public IEnumerable<DebuffMinimum> Debuffs { get; set; }
         public PlayerMinimum(Player player) 
         {
             Id = player.Id;
@@ -512,7 +518,7 @@ namespace WizardIslandRestApi.Game
             IsDead = player.IsDead;
             Name = player.UserName;
             Color = player.Color;
-            Debuffs = player.GetDebuffs().Select(d => d.ToString());
+            Debuffs = player.GetDebuffs().Select(d => new DebuffMinimum() { Name = d.ToString(), Stacks = d.Stacks });
         }
 
         public static IEnumerable<PlayerMinimum> Copy(IEnumerable<Player> players)

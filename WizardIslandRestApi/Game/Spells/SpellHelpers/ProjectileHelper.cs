@@ -51,11 +51,12 @@
             Vector2 playerLastPos = player.Pos;
             for (int j = 0; j < burst; j++)
             {
+                int iteration = j;
                 spell.GetCurrentGame().ScheduleAction(delay += delayAdd, () =>
                 {
                     spawnPos += player.Pos - playerLastPos;
                     playerLastPos = player.Pos;
-                    actionWithUpdatedStartPosAndIteration(spawnPos, j);
+                    actionWithUpdatedStartPosAndIteration(spawnPos, iteration);
                 });
             }
         }
