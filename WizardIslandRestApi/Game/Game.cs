@@ -189,6 +189,7 @@ namespace WizardIslandRestApi.Game
                 // update entities
                 if (Entities[i].Update())
                 {
+                    Entities[i].OnExpire(EntityExpiredReason.AfterUpdating);
                     Entities.RemoveAt(i);
                     i--;
                     continue;
@@ -201,6 +202,7 @@ namespace WizardIslandRestApi.Game
                         {
                             if (Entities[i].OnCollision(Players[j]))
                             {
+                                Entities[i].OnExpire(EntityExpiredReason.CollisionWithPlayer);
                                 Entities.RemoveAt(i);
                                 i--;
                                 break;
@@ -224,6 +226,7 @@ namespace WizardIslandRestApi.Game
                         // j should be greater than i, so we delete it first
                         if (deleteSecond)
                         {
+                            Entities[j].OnExpire(EntityExpiredReason.CollisionWithOtherEntity);
                             Entities.RemoveAt(j);
                             j--;
                             if (j < i)
@@ -231,6 +234,7 @@ namespace WizardIslandRestApi.Game
                         }
                         if (deleteFirst)
                         {
+                            Entities[i].OnExpire(EntityExpiredReason.CollisionWithOtherEntity);
                             Entities.RemoveAt(i);
                             i--;
                             break;

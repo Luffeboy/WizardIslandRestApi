@@ -95,7 +95,6 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             {
                 for (int i = 0; i < _linksVisual.Length; i++)
                     _linksVisual[i].TicksUntilDeletion = -1;
-                Die();
                 return true;
             }
             // move links to make it look like a chain
@@ -107,6 +106,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
                 _linksVisual[i].Pos = MyCollider.Owner.Pos + dir * distBetween * (i + 1);
             return false;
         }
+
         public override bool OnCollision(Entity other)
         {
             if (base.OnCollision(other) && !HasHit)
@@ -123,11 +123,13 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             _hitPlayer = other;
             return false;
         }
+
         public void Delete()
         {
             _ticksUntilDeletion = -1;
         }
-        public void Die()
+
+        public override void OnExpire(EntityExpiredReason reason)
         {
             if (_spell.CanCast)
                 _spell.ForceGoOnCooldown(HasHit ? 1.0f : .5f);

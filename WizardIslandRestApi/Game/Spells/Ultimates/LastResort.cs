@@ -103,7 +103,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             MyCollider.Pos = Pos;
             if (_ticksUntilDeletion < DeleteWhenLessThan)
             {
-                Die();
                 return true;
             }
             return false;
@@ -114,14 +113,15 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             other.TakeDamage(Damage, MyCollider.Owner);
             Vector2 prevPos = Vector2.CalculatePointOnSpline(StartPos, EndPos, ControlPoint, (float)(_ticksUntilDeletionMax - _ticksUntilDeletion) / (float)_ticksUntilDeletionMax - .3f);
             other.ApplyKnockback((other.Pos - MyCollider.PreviousPos).Normalized(), Knockback);
-            Die();
             return true;
         }
+
         public override bool OnCollision(Entity other)
         {
             return false;
         }
-        private void Die()
+
+        public override void OnExpire(EntityExpiredReason reason)
         {
             MyCollider.Owner.Stats.Health += _healthCost;
         }

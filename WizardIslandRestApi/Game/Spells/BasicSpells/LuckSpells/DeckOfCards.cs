@@ -10,11 +10,10 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
         public override string Name => _nextCard == null ? "Deck Of Cards" : $"Card: {_nextCard.Number}";
 
-        public DeckOfCards(Player player) : base(player) // todo fix ace of spades?
+        public DeckOfCards(Player player) : base(player)
         {
             if (player is null)
                 return;
-            GetNewCard();
             StandardStats.Damage = 5;
             StandardStats.Knockback = 1.5f;
             StandardStats.Speed = 50.0f / Game._updatesPerSecond;
@@ -23,6 +22,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
             Tags.Add(SpellTags.Luck);
             Tags.Add(SpellTags.Projectile);
+
+            GetNewCard();
         }
 
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
@@ -97,7 +98,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public float Speed { get; set; }
-        //public override int TicksUntillCanHitOwner { get; set; } = (int)(.5f * Game._updatesPerSecond);
+
         public CardEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, string cardNum, float damage, float knockback, float speed, Vector2? dir = null, Action? goOnCooldown = null) : base(owner, ticksUntilDeletion, startPos)
         {
             _goOnCooldown = goOnCooldown;
@@ -106,6 +107,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             EntityId = $"Card_{cardNum.Replace(' ', '_')}";
             if (dir is not null)
                 Dir = dir.Value;
+            else Dir = new Vector2(1, 0);
             Damage = damage;
             Knockback = knockback;
             Speed = speed;
@@ -203,40 +205,28 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
         public override void ReTarget(Vector2 pos)
         {
+            Dir = (pos - Pos).Normalized();
             _ticksUntilDeletion = _ticksUntilDeletionMax;
         }
 
         public override bool Update()
         {
             Pos += Dir * Speed;
-            if (base.Update())
-            {
-                _onDestroy();
-                _goOnCooldown?.Invoke();
-                return true;
-            }
-            return false;
-        }
-
-        public override bool OnCollision(Entity other)
-        {
-            if (base.OnCollision(other))
-            {
-                _onDestroy();
-                _goOnCooldown?.Invoke();
-                return true;
-            }
-            return false;
+            return base.Update();
         }
 
         protected override bool HitPlayer(Player other)
         {
-            if (_shouldUseOnDestroyWhenHittingPlayer)
-                _onDestroy();
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback(Dir, Knockback);
-            _goOnCooldown?.Invoke();
             return true;
+        }
+
+        public override void OnExpire(EntityExpiredReason reason)
+        {
+            _goOnCooldown?.Invoke();
+            if (reason != EntityExpiredReason.CollisionWithPlayer || _shouldUseOnDestroyWhenHittingPlayer)
+                _onDestroy();
         }
     }
 }

@@ -190,7 +190,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             }
             if (_ticksUntillDeleting < 0)
             {
-                Die();
                 return true;
             }    
             return false;
@@ -245,7 +244,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 return;
             _ticksUntillDeleting = -1;
         }
-        private void Die()
+
+        public override void OnExpire(EntityExpiredReason reason)
         {
             // give the player the health back
             MyCollider.Owner.Stats.Health += BloodWorm.WormPartCost;
@@ -258,7 +258,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             }
             else
                 _spell.ForceGoOnCooldown();
-            
         }
     }
 }

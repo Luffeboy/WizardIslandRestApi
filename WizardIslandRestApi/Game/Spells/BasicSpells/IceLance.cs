@@ -91,7 +91,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         {
             if (base.OnCollision(other))
             {
-                Die();
                 return true; 
             }
             return false;
@@ -111,12 +110,12 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
             if (ended)
             {
-                Die();
                 return true;
             }
             return false;
         }
-        private void Die()
+
+        public override void OnExpire(EntityExpiredReason reason)
         {
             var pos = Pos;
             var dir = (IceTarget - Pos).Normalized();
@@ -137,7 +136,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
         protected override bool HitPlayer(Player other)
         {
-            Die();
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback((other.MyCollider.Pos - (Pos - Dir * Speed * 5)).Normalized(), Knockback);
             other.ApplyDebuff(new Slowed(other) { SpeedMultiplier = SlowAmount, TicksTillRemoval = 30 });

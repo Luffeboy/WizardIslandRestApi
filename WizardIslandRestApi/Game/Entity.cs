@@ -7,6 +7,14 @@ namespace WizardIslandRestApi.Game
         Normal,
         Ground
     }
+
+    public enum EntityExpiredReason
+    {
+        AfterUpdating,
+        CollisionWithPlayer,
+        CollisionWithOtherEntity,
+    }
+
     public abstract class Entity : IUpdateable
     {
         private float _size;
@@ -70,5 +78,6 @@ namespace WizardIslandRestApi.Game
         /// <param name="other"></param>
         /// <returns></returns>
         public abstract bool OnCollision(Player other);
+        public virtual void OnExpire(EntityExpiredReason reason) { }
     }
 }
