@@ -32,6 +32,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             GoOnCooldown();
         }
     }
+
     public class BlackHoleEntity : Entity
     {
         private Game _game;
@@ -88,7 +89,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                 float amount = dir.LengthSqr();
                 if (amount < minAmount)
                     amount = minAmount;
-                e.Pos += dir * (GravityPull / amount);
+                e.Pos += dir * (GravityPull / amount) / e.Density;
             }
             Pos += Dir * Speed;
             _TicksUntilDeletion--;

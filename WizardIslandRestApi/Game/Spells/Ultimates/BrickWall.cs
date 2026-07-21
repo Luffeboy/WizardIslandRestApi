@@ -26,7 +26,6 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Tags.Add(SpellTags.Summon);
         }
 
-
         public override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (_wallEntities.Count > 0)
@@ -44,7 +43,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     ShouldDropBrick = shouldDropBrick,
                     Damage = StandardStats.Damage,
                     Knockback = StandardStats.Knockback,
-                    EntityNamesToIgnore = ["Brick", "BrickWall"]
+                    EntityNamesToIgnore = ["Brick", "BrickWall"],
                 });
                 if (_wallEntities.Count == 0)
                     GoOnCooldown();
@@ -68,6 +67,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 var wallPart = new BrickWallEntity(MyPlayer, brickPos)
                 {
                     Size = StandardStats.Size,
+                    Density = 25,
                 };
                 GetCurrentGame().Entities.Add(wallPart);
                 _wallEntities.Add(wallPart);

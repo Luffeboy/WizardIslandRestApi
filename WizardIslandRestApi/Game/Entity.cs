@@ -25,6 +25,8 @@ namespace WizardIslandRestApi.Game
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
         public Collider MyCollider { get; protected set; } // may be null :)
         public bool CantHitSameTypeOfEntityFromSamePlayer { get; set; } = true;
+        public float Density { get; set; } = 1;
+
         /// <summary>
         /// VisableTo -1 is everyone, else it is their id. Any other number makes it invisable to everyone
         /// </summary>

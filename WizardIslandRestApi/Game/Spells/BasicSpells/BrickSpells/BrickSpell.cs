@@ -57,13 +57,17 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
         public List<string> EntityNamesToIgnore { get; set; } = [];
         public float SpeedMultiplierPerUpdate { get; set; } = .93f;
 
+        private Player _originalOwner;
+
         public BrickEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, float startSpeed = 3) : base(owner, ticksUntilDeletion, startPos)
         {
+            _originalOwner = owner;
             _startSpeed = startSpeed;
             Speed = startSpeed;
             EntityId = "Brick";
             Size = .75f;
             Color = BrickBuff.BrickColor;
+            Density = 8;
         }
 
         public override void ReTarget(Vector2 pos)
@@ -83,15 +87,15 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
                 if (!ShouldDropBrick)
                     return true;
                 _stopedTicks++;
+                Density += 1.0f / Game._updatesPerSecond;
             }
             return base.Update();
         }
 
         protected override bool HitPlayer(Player other)
         {
-            if (_stopedTicks > 1 * Game._updatesPerSecond)
+            if (_stopedTicks > 1 * Game._updatesPerSecond && other == MyCollider.Owner)
             {
-                PlayerPickUp(other);
                 return true;
             }
             if (_stopedTicks == 0)
@@ -103,15 +107,18 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
             }
             return false;
         }
-        protected void PlayerPickUp(Player player)
+
+        public override void OnExpire(EntityExpiredReason reason)
         {
-            player.ApplyDebuff(new BrickBuff(player));
+            if (ShouldDropBrick)
+                _originalOwner?.ApplyDebuff(new BrickBuff(_originalOwner));
         }
+
         public override bool OnCollision(Entity other)
         {
             if (EntityNamesToIgnore.Contains(other.EntityId))
                 return false;
-            if (base.OnCollision(other))
+            if (base.OnCollision(other) && other is not BlackHoleEntity)
             {
                 Speed = 0;
                 Height = EntityHeight.Ground;
