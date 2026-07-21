@@ -497,6 +497,7 @@ namespace WizardIslandRestApi.Game
     {
         public int Id { get; set; }
         public Vector2 Pos { get; set; }
+        public Vector2 Velocity { get; set; }
         public float Size { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
@@ -511,6 +512,7 @@ namespace WizardIslandRestApi.Game
             Id = player.Id;
             Size = player.Size;
             Pos = player.Pos;
+            Velocity = player.Vel;
             Health = player.Stats.Health;
             MaxHealth = player.Stats.MaxHealth;
             Kills = player.ScoreStats.Kills;
