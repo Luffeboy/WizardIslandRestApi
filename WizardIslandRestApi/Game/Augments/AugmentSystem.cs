@@ -14,8 +14,7 @@ namespace WizardIslandRestApi.Game.Augments
         public int AugmentsGivenSoFar { get; set; } = 0;
 
         public List<PlayerAugmentConnector> PlayersAndAugmentsTheyCanChoose { get; } = [];
-        private Dictionary<Player, List<AugmentBase>> _playersAndAugmentsTheyCanUse { get; } = [];
-        private Dictionary<Player, List<AugmentBase>> _playersAugmentHistory { get; } = [];
+        public Dictionary<Player, PlayerAugmentData> AllPlayerAugmentData { get; } = [];
 
         private int _playersAndAugmentsTheyCanChooseStartCount = -1;
         private float _timeUntilAugmentPhaseEnds = -1f;
@@ -26,7 +25,8 @@ namespace WizardIslandRestApi.Game.Augments
         public AugmentSystem(Game game)
         {
             _game = game;
-            GetAllAugmentsPlayersCanUse();
+            foreach (var player in _game.Players.Values)
+                AllPlayerAugmentData.Add(player, new PlayerAugmentData(player));
             _ticksBetweenAugments = Game._gameDuration / (MaxAugmentsPerPlayer + 1);
             ScheduleAugmentPhase();
         }
@@ -86,25 +86,13 @@ namespace WizardIslandRestApi.Game.Augments
 #endif
         }
 
-        private void GetAllAugmentsPlayersCanUse()
-        {
-            foreach (var player in _game.Players.Values)
-            {
-                var playerSpells = player.GetOriginalSpells();
-                var augments = AllAugments.Where(aug => playerSpells.Any(spell => aug.CanAugmentSpell(spell))).ToList();
-                if (augments.Any())
-                    _playersAndAugmentsTheyCanUse.Add(player, augments);
-                _playersAugmentHistory.Add(player, []);
-            }
-        }
-
         public List<AugmentBase> GetAugmentsForPlayer(Player player)
         {
 #if DEBUG
-            return new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
+            return new List<AugmentBase>(AllPlayerAugmentData[player].UsableAugments);
 #endif
             Random r = new Random();
-            var allAvailableAugmentsToPlayer = new List<AugmentBase>(_playersAndAugmentsTheyCanUse[player]);
+            var allAvailableAugmentsToPlayer = new List<AugmentBase>(AllPlayerAugmentData[player].UsableAugments);
             var augmentsToChooseFrom = new List<AugmentBase>();
             for (int i = 0; i < AugmentsToChooseFromCount && allAvailableAugmentsToPlayer.Any(); i++)
             {
@@ -190,18 +178,18 @@ namespace WizardIslandRestApi.Game.Augments
 
                 var augment = playerAndAugments.AugmentsToChooseFromAndSpellsEffected[augmentIndex].Item1;
                 ApplyAugment(augment, player, player.GetOriginalSpells());
-                _playersAugmentHistory[player].Add(augment);
+                AllPlayerAugmentData[player].AugmentHistory.Add(augment);
 
                 PlayersAndAugmentsTheyCanChoose.RemoveAt(i);
                 // maybe also remove the augment from _playersAndAugmentsTheyCanUse, if we don't want repeat-augments
                 if (!augment.CanBeStacked)
                 {
 #if DEBUG
-                    if (_playersAndAugmentsTheyCanUse[player].Remove(augment))
+                    if (AllPlayerAugmentData[player].UsableAugments.Remove(augment))
                         Console.WriteLine("Removed augment from augment pool.\n" + augment.AugmentName);
                     else Console.WriteLine("Faield to remove augment from augment pool, even though it shouldnt be able to stack.\n" + augment.AugmentName);
 #else
-                    _playersAndAugmentsTheyCanUse[player].Remove(augment);
+                    AllPlayerAugmentData[player].UsableAugments.Remove(augment);
 #endif
                 }
                 break;
@@ -219,7 +207,7 @@ namespace WizardIslandRestApi.Game.Augments
 
         public void ReApplyAllAugmentToPlayersSpellsOnly(Player player, Spell[] spells)
         {
-            foreach (AugmentBase augment in _playersAugmentHistory[player])
+            foreach (AugmentBase augment in AllPlayerAugmentData[player].AugmentHistory)
                 foreach (var spell in spells)
                     augment.AttemptAugmentSpell(spell);
         }

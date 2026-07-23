@@ -22,5 +22,4 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
                     spell.MyPlayer.ApplyDebuff(new BrickBuff(spell.MyPlayer));
         }
     }
-    
 }
