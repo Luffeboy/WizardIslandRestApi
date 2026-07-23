@@ -19,7 +19,7 @@
         /// Can be set to false, if this entity should be able to hit the owner directly after being created.
         /// </summary>
         public bool IgnoreHitOnOwnerOnSpawn = true;
-        private bool _hitOwnerLastUpdate = true;
+        protected bool _hitOwnerLastUpdate = true;
         public int TicksUntilDeletion
         {
             get { return _ticksUntilDeletion; }
@@ -52,7 +52,6 @@
             }
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback((other.MyCollider.Pos - (Pos - Dir * Speed * 5)).Normalized(), Knockback);
-            //other.ApplyKnockback((other.MyCollider.Pos - MyCollider.PreviousPos).Normalized(), Knockback);
 
             return true;
         }

@@ -30,7 +30,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 {
                     Damage = StandardStats.Damage,
                     Knockback = StandardStats.Knockback,
-                    ShotsBeforeDeleing = StandardStats.OtherStatsInt[SpellSpecificStats.ShotsUntilDepletion],
+                    ShotsBeforeDeleting = StandardStats.OtherStatsInt[SpellSpecificStats.ShotsUntilDepletion],
                     TicksBeforeShootingMax = (int)((float)Game._updatesPerSecond / 15f),
                     Size = StandardStats.Size,
                     EmittedProjectileSpeed = StandardStats.Speed,
@@ -50,7 +50,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         public float CurrentOrbitAngle { get; set; }
         public float CirclingRadius { get; set; }
         public int TicksBeforeShootingMax { get { return _ticksBeforeShootingMax; } set { _ticksBeforeShootingMax = value; _ticksBeforeShooting = value; } }
-        public int ShotsBeforeDeleing { get; set; }
+        public int ShotsBeforeDeleting { get; set; }
         public float Damage { get; set; }
         public float Knockback { get; set; }
         public float Speed { get; set; } = MathF.PI * 2 / Game._updatesPerSecond;
@@ -87,7 +87,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             if (_ticksBeforeShooting-- < 0)
             {
                 Vector2 dir = (_target - Pos) / CirclingRadius;
-                float size = .3f;
+                float size = Size / 2;
                 _ticksBeforeShooting = _ticksBeforeShootingMax;
                 _game.Entities.Add(new SimpleSpellEntity(MyCollider.Owner, Pos + dir * (Size + size + .1f))
                 {
@@ -102,7 +102,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     IgnoreHitOnOwnerOnSpawn = false,
                     CantHitSameTypeOfEntityFromSamePlayer = false,
                 });
-                return --ShotsBeforeDeleing < 0;
+                return --ShotsBeforeDeleting < 0;
             }
             return false;
 
