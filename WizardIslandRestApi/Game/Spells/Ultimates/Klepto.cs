@@ -53,7 +53,7 @@
                 // amount of spells to steal
                 int ultsToSteal = StandardStats.OtherStatsInt[SpellSpecificStats.UltimateSpellsToCopy];
                 int normalsToSteal = StandardStats.OtherStatsInt[SpellSpecificStats.BasicSpellsToCopy];
-                var spells = targetPlayer.GetSpells();
+                var spells = targetPlayer.GetOriginalSpells();
                 Dictionary<SpellType, List<int>> spellsByType = new();
                 // spells that connot be stolen
                 List<System.Type> nonSealableSpells = [typeof(CopySpell), typeof(Klepto)]; // I don't think I can get these two to work properly
@@ -69,6 +69,7 @@
                     else
                         spellsByType.Add(spell.Type, new() { spell.SpellIndex });
                 }
+
                 // Steal one ultimate and one normal spells
                 for (int i = 0; i < ultsToSteal; i++)
                 {
@@ -98,6 +99,10 @@
                         _stolenSpells.Add(stolenSpell);
                     }
                 }
+
+                // apply augments
+                GetCurrentGame().GameAugmentSystem.ReApplyAllAugmentToPlayersSpellsOnly(MyPlayer, _stolenSpells);
+
                 // Visual effect for stealing - maybe later
                 // Schedule a check to see if the spells are used up
                 void CheckStolenSpellsAreOnCooldown()

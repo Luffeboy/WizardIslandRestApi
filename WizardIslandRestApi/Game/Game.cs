@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using WizardIslandRestApi.Game.Augments;
+﻿using WizardIslandRestApi.Game.Augments;
 using WizardIslandRestApi.Game.Events;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
@@ -86,6 +84,7 @@ namespace WizardIslandRestApi.Game
                         CurrentState = GameState.Ended;
                     foreach (Player p in Players.Values)
                         p.SendGameState();
+                    RemoveDisconnectedPlayers();
                 }
                 SleepBetweenUpdates();
 
@@ -95,6 +94,7 @@ namespace WizardIslandRestApi.Game
                 lock (this)
                 {
                     GameUpdateFunction();
+                    RemoveDisconnectedPlayers();
                 }
                 if (_nextGameUpdateFunction != null)
                 {
@@ -104,6 +104,20 @@ namespace WizardIslandRestApi.Game
                 SleepBetweenUpdates();
             }
             EndGame();
+        }
+
+        private void RemoveDisconnectedPlayers()
+        {
+            var ids = Players.Keys.ToList();
+            for (int i = 0; i < ids.Count; i++)
+            {
+                if (!Players[ids[i]].IsConnected)
+                {
+                    Players.Remove(ids[i]);
+                    if (Players.Count == 0)
+                        CurrentState = GameState.Ended;
+                }
+            }
         }
 
         public void SetGameUpdateFunction(Action function)

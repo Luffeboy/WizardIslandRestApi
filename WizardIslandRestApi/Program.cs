@@ -35,7 +35,6 @@ app.Map("/joinGame", async context =>
         {
             using var socket = await context.WebSockets.AcceptWebSocketAsync();
             await GameManager.Instance.JoinAndPlayGame(id, socket);
-            context.Response.StatusCode = 200;
             return;
         }
     }

@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Net.Sockets;
-using System.Net.WebSockets;
-using System.Numerics;
+﻿using System.Net.WebSockets;
 using System.Text.Json;
 using WizardIslandRestApi.Game.Physics;
 using WizardIslandRestApi.Game.Spells;
@@ -56,6 +53,7 @@ namespace WizardIslandRestApi.Game
         public int Id { get; set; }
         public Game _game { get; private set; }
         public WebSocket? WebSocket { get; private set; } = null;
+        public bool IsConnected { get => WebSocket != null; }
         public string Name { get; set; }
         public string Password { get; }
         public float CanStopSpeed { get { return Stats.Speed * 1.1f; } }

@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using WizardIslandRestApi.Game.Augments.GenericAugments;
+﻿using WizardIslandRestApi.Game.Augments.GenericAugments;
 using WizardIslandRestApi.Game.Spells;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
@@ -205,7 +204,7 @@ namespace WizardIslandRestApi.Game.Augments
             augment.AugmentPlayer(player, spellsThatApplied);
         }
 
-        public void ReApplyAllAugmentToPlayersSpellsOnly(Player player, Spell[] spells)
+        public void ReApplyAllAugmentToPlayersSpellsOnly(Player player, IEnumerable<Spell> spells)
         {
             foreach (AugmentBase augment in AllPlayerAugmentData[player].AugmentHistory)
                 foreach (var spell in spells)
