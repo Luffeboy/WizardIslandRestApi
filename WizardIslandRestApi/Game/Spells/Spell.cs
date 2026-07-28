@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using Microsoft.OpenApi.Extensions;
 using WizardIslandRestApi.Game.Spells.BasicSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
@@ -8,12 +8,29 @@ using WizardIslandRestApi.Game.Spells.Ultimates;
 
 namespace WizardIslandRestApi.Game.Spells
 {
+    public class SpellObservers
+    {
+        public event EventHandler? WasCast;
+        public event EventHandler? WentOnCooldown;
+
+        private Spell _spell;
+
+        public SpellObservers(Spell spell)
+        {
+            _spell = spell;
+        }
+
+        public void InvokeWentOnCooldown() => WentOnCooldown?.Invoke(_spell, null);
+        public void InvokeWasCast() => WasCast?.Invoke(_spell, null);
+    }
+
     public enum SpellType
     {
         Attack,
         Movement,
         Ultimate,
     }
+
     public static class SpellTags
     {
         public const string Luck = "Luck";
@@ -109,6 +126,7 @@ namespace WizardIslandRestApi.Game.Spells
         public virtual SpellType Type { get; set; } = SpellType.Attack;
         public List<string> Tags { get; } = new List<string>();
         public StandardSpellStats StandardStats { get; private set; } = new StandardSpellStats();
+        public SpellObservers Observers { get; }
         public virtual bool CanBeReplaced { get; protected set; } = true; // set this to false, if it could "dangerous" to replace this spell currently
         // static stuff
         private static Func<Player, Spell>[] _availableSpells = new Func<Player, Spell>[]
@@ -176,6 +194,7 @@ namespace WizardIslandRestApi.Game.Spells
         public Spell(Player player)
         {
             MyPlayer = player;
+            Observers = new SpellObservers(this);
         }
 
         public virtual void PostSpellConstructor()
@@ -191,9 +210,15 @@ namespace WizardIslandRestApi.Game.Spells
 
         public Game GetCurrentGame() { return MyPlayer.GetGame(); }
         protected int GetCurrentGameTick() { return GetCurrentGame().GameTick; }
-        public abstract void OnCast(Vector2 startPos, Vector2 mousePos);
+        public void CastSpell(Vector2 startPos, Vector2 mousePos)
+        {
+            Observers.InvokeWasCast();
+            OnCast(startPos, mousePos);
+        }
+        protected abstract void OnCast(Vector2 startPos, Vector2 mousePos);
         public void GoOnCooldown()
         {
+            Observers.InvokeWentOnCooldown();
 #if !NO_COOLDOWN
             CurrentCooldown = GetCurrentGameTick() + (int)(
                 CooldownMax * 

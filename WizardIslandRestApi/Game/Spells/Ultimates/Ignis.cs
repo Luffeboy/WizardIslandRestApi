@@ -50,7 +50,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override int CooldownMax { get; protected set; } = 1 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (_previousSpells is null) // first activation
             {

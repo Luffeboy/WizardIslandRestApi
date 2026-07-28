@@ -8,7 +8,7 @@
         {
             StandardStats.Range = 50;
         }
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos);
             if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)

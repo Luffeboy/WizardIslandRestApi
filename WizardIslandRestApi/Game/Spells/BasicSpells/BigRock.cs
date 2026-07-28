@@ -20,7 +20,7 @@
 
         public override int CooldownMax { get; protected set; } = (int)(6.5f * Game._updatesPerSecond);
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             Vector2 dir = mousePos - startPos;
             if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)

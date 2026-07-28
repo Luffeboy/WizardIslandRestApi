@@ -10,7 +10,7 @@
             StandardStats.Range = 1;
         }
 
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             Vector2 dir = (mousePos - pos).Normalized();
             GetCurrentGame().Entities.Add(new ParryEntity(MyPlayer)

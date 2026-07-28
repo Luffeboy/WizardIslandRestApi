@@ -18,7 +18,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
             Tags.Add(SpellTags.SelfDamage);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             var dir = (mousePos - startPos).Normalized();
             GetCurrentGame().Entities.Add(new ExplosionEntity(MyPlayer, startPos + dir * (StandardStats.Size / 2 + MyPlayer.Size))

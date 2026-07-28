@@ -21,7 +21,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override int CooldownMax { get; protected set; } = (int)(25 * Game._updatesPerSecond);
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             Vector2 spellDir = mousePos - startPos;
             float spellLen = StandardStats.Range;

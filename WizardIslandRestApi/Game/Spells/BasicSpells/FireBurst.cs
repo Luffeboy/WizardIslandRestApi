@@ -22,7 +22,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
             Tags.Add(SpellTags.Projectile);
         }
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             float size = StandardStats.Size;
             float distanceBetweenFireballs = 5f + size * 2;

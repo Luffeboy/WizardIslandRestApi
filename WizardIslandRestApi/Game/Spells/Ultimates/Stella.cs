@@ -19,7 +19,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Tags.Add(SpellTags.Zone);
         }
 
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos);
             float size = _startSize + _actualStartSize * StandardStats.Size;

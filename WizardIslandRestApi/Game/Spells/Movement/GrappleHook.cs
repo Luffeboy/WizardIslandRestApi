@@ -19,7 +19,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             Tags.Add(SpellTags.GrappleHook);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (_hook != null)
             {

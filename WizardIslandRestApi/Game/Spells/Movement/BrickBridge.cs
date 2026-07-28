@@ -17,7 +17,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             Tags.Add(SpellTags.Static);
         }
 
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             int brickCount = BrickCount;
             if (brickCount > StandardStats.OtherStatsInt[SpellSpecificStats.BricksToApplyOnRespawn])

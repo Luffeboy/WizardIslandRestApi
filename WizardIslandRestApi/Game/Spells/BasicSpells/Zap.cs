@@ -15,7 +15,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if ((mousePos - startPos).LengthSqr() > StandardStats.Range * StandardStats.Range)
                 mousePos = startPos + (mousePos - startPos).Normalized() * StandardStats.Range;

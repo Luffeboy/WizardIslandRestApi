@@ -110,7 +110,7 @@ namespace WizardIslandRestApi.Game
                 return;
             OverridesAndObservers.OnSpellCast?.Invoke(spellIndex);
             lock(MySpells[spellIndex])
-                MySpells[spellIndex].OnCast(Pos, mousePos);
+                MySpells[spellIndex].CastSpell(Pos, mousePos);
         }
 
         public void Reset()

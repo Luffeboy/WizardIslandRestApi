@@ -20,7 +20,7 @@
             Tags.Add(SpellTags.CanWander);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             var dir = _teleportToLocation.Pos - startPos;
             MyPlayer.TeleportTo(_teleportToLocation.Pos);

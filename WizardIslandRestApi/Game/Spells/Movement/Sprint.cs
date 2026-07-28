@@ -13,7 +13,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
 
             Tags.Add(SpellTags.Buff);
         }
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             MyPlayer.ApplyDebuff(new SpeedBuff(MyPlayer) { SpeedMultiplier = _speedMultiplier, TicksTillRemoval = StandardStats.BuffAndDebuffTime });
             GoOnCooldown();

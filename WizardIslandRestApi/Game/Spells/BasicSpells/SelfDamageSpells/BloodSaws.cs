@@ -41,7 +41,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
         public override bool CanCast => _instancesOfDamageTaken >= _stackCost;
         public override int CurrentCooldown { get { return _instancesOfDamageTaken >= _stackCost ? -1 : GetCurrentGameTick() + (int)((float)_instancesOfDamageTaken * Game._updatesPerSecond / _stackCost); } set { _currentCooldown = value; } }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             int sawCount = _instancesOfDamageTaken / _stackCost;
             if (sawCount == 0) return; // this should not happen, but just in case :)
@@ -71,7 +71,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells
                     ForwardAngle = activeAngle
                 });
             }
-            //GetCurrentGame().Entities.Add(new ShadowEntity() { Pos = startPos + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 5, Size = 3 });
+            GoOnCooldown();
         }
         public override string ToString()
         {

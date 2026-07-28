@@ -22,7 +22,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             Tags.Add(SpellTags.Zone);
             Tags.Add(SpellTags.Static);
         }
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             Vector2 dir = mousePos - startPos;
             float len = dir.Length();

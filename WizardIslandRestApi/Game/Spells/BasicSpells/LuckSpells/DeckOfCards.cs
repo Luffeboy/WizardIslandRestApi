@@ -26,7 +26,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             GetNewCard();
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (!_nextCard.HasBeenCast)
             {

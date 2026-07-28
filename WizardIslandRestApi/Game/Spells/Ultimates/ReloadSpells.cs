@@ -16,7 +16,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Tags.Add(SpellTags.CanGiveCooldownReductionOnCast);
         }
         public override int CooldownMax { get; protected set; } = 999 * Game._updatesPerSecond;
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             var spells = MyPlayer.GetSpells();
             var cooldownsSummed = 0;

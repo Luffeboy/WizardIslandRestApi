@@ -13,7 +13,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             StandardStats.Knockback = 1.5f;
             StandardStats.Range = 30;
         }
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos);
             if (dir.LengthSqr() > StandardStats.Range * StandardStats.Range)

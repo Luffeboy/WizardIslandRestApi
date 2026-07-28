@@ -17,16 +17,16 @@
 
         public override int CooldownMax { get; protected set; } = 20 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (_stolenSpells.Any())
             {
                 // activate all stolen spells
-                for (int i = 0; i < _stolenSpells.Count; i++)
+                for (int i = _stolenSpells.Count - 1; i >= 0; i--)
                 {
                     var spell = _stolenSpells[i];
                     if (spell.CanCast)
-                        spell.OnCast(startPos, mousePos);
+                        spell.CastSpell(startPos, mousePos);
                 }
                 return;
             }
@@ -96,6 +96,7 @@
 
                         var stolenSpell = Spell.GetSpell(MyPlayer, spellIndex);
                         stolenSpell.FullReset();
+                        stolenSpell.OnPlayerReset();
                         _stolenSpells.Add(stolenSpell);
                     }
                 }
@@ -104,23 +105,24 @@
                 GetCurrentGame().GameAugmentSystem.ReApplyAllAugmentToPlayersSpellsOnly(MyPlayer, _stolenSpells);
 
                 // Visual effect for stealing - maybe later
-                // Schedule a check to see if the spells are used up
-                void CheckStolenSpellsAreOnCooldown()
-                {
-                    for (int i = 0; i < _stolenSpells.Count; i++)
-                        if (!_stolenSpells[i].CanCast)
-                        {
-                            _stolenSpells[i].RemovedFromPlayer();
-                            _stolenSpells.RemoveAt(i--);
-                        }
-                    
-                    if (_stolenSpells.Any())
-                        GetCurrentGame().ScheduleAction(10, CheckStolenSpellsAreOnCooldown);
-                    else 
-                        GoOnCooldown();
-                }
-                CheckStolenSpellsAreOnCooldown();
+
+                // Check to see if the spells are used up
+                for (int i = 0; i < _stolenSpells.Count; i++)
+                    _stolenSpells[i].Observers.WentOnCooldown += RemoveFromStolenSpellsObserver;
             }
+        }
+
+        private void RemoveFromStolenSpellsObserver(object? sender, EventArgs e)
+        {
+            Spell? spell = sender as Spell;
+            for (int i = 0; i < _stolenSpells.Count; i++)
+                if (_stolenSpells[i] == spell)
+                {
+                    _stolenSpells[i].RemovedFromPlayer();
+                    _stolenSpells.RemoveAt(i);
+                }
+            if (!_stolenSpells.Any())
+                GoOnCooldown();
         }
 
         public override void FullReset()

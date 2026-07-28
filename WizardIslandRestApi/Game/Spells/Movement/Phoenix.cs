@@ -16,7 +16,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         }
 
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             int ticksTillRemoval = StandardStats.BuffAndDebuffTime;
             MyPlayer.ApplyDebuff(new Invulnerability(MyPlayer) { TicksTillRemoval = ticksTillRemoval });

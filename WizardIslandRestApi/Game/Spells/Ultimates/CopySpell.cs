@@ -17,14 +17,12 @@
             Tags.Add(SpellTags.UseOtherSpell);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             // we already cast the copy, reuse the old spell
             if (_spell != null)
             {
-                _spell.OnCast(startPos, mousePos);
-                if (!_spell.CanCast)
-                    CopyGoOnCooldown();
+                _spell.CastSpell(startPos, mousePos);
                 return;
             }
 
@@ -35,18 +33,9 @@
             _spell = Spell.GetSpell(MyPlayer, spells[_lastUsedSpellIndex].SpellIndex);
             _spell.FullReset();
             _spell.OnPlayerReset();
+            _spell.Observers.WentOnCooldown += CopyGoOnCooldownObserver;
 
-            _spell.OnCast(startPos, mousePos);
-            if (!_spell.CanCast)
-            {
-                CopyGoOnCooldown();
-                return;
-            }
-            // spell can be cast, again
-            GetCurrentGame().Entities.Add(new WaitUntillSpellOnCooldownEntity(MyPlayer, _spell, () =>
-            {
-                CopyGoOnCooldown();
-            }));
+            _spell.CastSpell(startPos, mousePos);
         }
 
         private void Observe(int spellIndex)
@@ -54,6 +43,7 @@
             _lastUsedSpellIndex = _justUsedSpellIndex;
             _justUsedSpellIndex = spellIndex;
         }
+
         public override string ToString()
         {
             if (_spell != null)
@@ -63,6 +53,12 @@
                 return "Copy...";
             return "copy: " + spells[_justUsedSpellIndex].ToString();
         }
+
+        private void CopyGoOnCooldownObserver(object? sender, EventArgs e)
+        {
+            CopyGoOnCooldown();
+        }
+
         private void CopyGoOnCooldown()
         {
             GoOnCooldown();

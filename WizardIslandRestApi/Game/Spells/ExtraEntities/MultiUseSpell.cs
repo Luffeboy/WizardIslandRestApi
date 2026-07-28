@@ -17,18 +17,21 @@
             StandardStats.OtherStatsInt.Add(SpellSpecificStats.SpellUsesMax, maxUses);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
 #if !NO_COOLDOWN
             int cooldown = (int)(CooldownMax * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
             _lastUseTick += cooldown;
             int highestPosibleCooldown = GetCurrentGameTick() - (StandardStats.OtherStatsInt[SpellSpecificStats.SpellUsesMax] - 1) * cooldown;
-            if (_lastUseTick < highestPosibleCooldown) 
+            if (_lastUseTick < highestPosibleCooldown)
                 _lastUseTick = highestPosibleCooldown;
             if (Uses > 0)
                 CurrentCooldown = GetCurrentGameTick() + CooldownBetweenUses;
             else
+            {
                 CurrentCooldown = _lastUseTick + cooldown;
+                Observers.InvokeWentOnCooldown();
+            }
 #endif
             OnUse(startPos, mousePos);
         }

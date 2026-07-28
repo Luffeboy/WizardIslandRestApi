@@ -18,7 +18,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             Tags.Add(SpellTags.Projectile);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             var projectileDirections = ProjectileHelper.GetProjectileDirections(this, mousePos - startPos);
             ProjectileHelper.CastSpellWithBurst(this, startPos, (spawnPos, iteration) =>

@@ -21,7 +21,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override int CooldownMax { get; protected set; } = 18 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             int emitters = StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileEmitterCount];
             float startAngle = (float)(new Random().NextDouble() * Math.PI * 2);

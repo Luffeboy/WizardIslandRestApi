@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using WizardIslandRestApi.Game.Spells.BasicSpells;
-using WizardIslandRestApi.Game.Spells.Debuffs;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
@@ -34,7 +32,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Tags.Add(SpellTags.SelfDamage);
         }
 
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             switch (_currentState)
             {
@@ -52,8 +50,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                             return false;
                         }
                         MyPlayer.Stats.Health -= WormPartCost; // we don't want to scale it with damage multipliers, in this case
-                                                               // actually create the worm part
-                        CreateWormPart(pos, mousePos);
+
+                        CreateWormPart(pos, mousePos); // actually create the worm part
                         return true;
                     }
                     void SchedueledAction()

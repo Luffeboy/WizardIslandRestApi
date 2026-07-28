@@ -23,7 +23,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             Tags.Add(SpellTags.Zone);
 
         }
-        public override void OnCast(Vector2 pos, Vector2 mousePos)
+        protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             var dir = (mousePos - pos).Normalized();
             GetCurrentGame().Entities.Add(new CirclingSnakePart(MyPlayer, StandardStats.GetLifetime(), GetCurrentGame(), pos, StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileQuantity])

@@ -26,7 +26,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             Tags.Add(SpellTags.Summon);
         }
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (_wallEntities.Count > 0)
             {

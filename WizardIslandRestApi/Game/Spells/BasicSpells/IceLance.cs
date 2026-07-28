@@ -26,7 +26,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
         public override int CooldownMax { get; protected set; } = 12 * Game._updatesPerSecond;
 
-        public override void OnCast(Vector2 startPos, Vector2 mousePos)
+        protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
             if (_entities.Count == 0)
             {
@@ -63,6 +63,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         public void EntityExpired(IceLanceEntity entity)
         {
             _entities.Remove(entity);
+            GoOnCooldown(); // for observers
 #if !NO_COOLDOWN
             CurrentCooldown = _usedSpellTick;
 #endif
