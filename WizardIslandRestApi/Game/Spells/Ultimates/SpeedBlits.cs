@@ -30,6 +30,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 endPos = endPos / len * StandardStats.Range;
                 len = StandardStats.Range;
             }
+            else if (len == 0)
+                len = .01f;
+            
             endPos = endPos + startPos;
 
             string color = "255,255,0";
