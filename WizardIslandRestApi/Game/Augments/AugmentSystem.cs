@@ -142,7 +142,7 @@ namespace WizardIslandRestApi.Game.Augments
                 if (augments.Any())
                     PlayersAndAugmentsTheyCanChoose.Add(new PlayerAugmentConnector(player, augments));
 #if DEBUG
-                else Console.WriteLine($"Player: {player.Name} was unable to get any augments");
+                else Console.WriteLine($"Player: {player.UserName} was unable to get any augments");
 #endif
             }
             _playersAndAugmentsTheyCanChooseStartCount = PlayersAndAugmentsTheyCanChoose.Count;

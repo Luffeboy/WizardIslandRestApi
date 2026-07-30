@@ -5,6 +5,14 @@ using static WizardIslandRestApi.Controllers.WizardIslandController;
 
 namespace WizardIslandRestApi.Game
 {
+    public class AvailableGameData
+    {
+        public int Id { get; set; }
+        public int PlayerCount { get; set; }
+        public string CreatorName { get; set; }
+        public int SpellCount { get; set; }
+    }
+
     public class GameManager
     {
         public static GameManager Instance { get; private set; } = null;
@@ -18,16 +26,24 @@ namespace WizardIslandRestApi.Game
             Instance = this;
         }
 
-        public IEnumerable<int> GetAvailableGames()
+        public IEnumerable<AvailableGameData> GetAvailableGames()
         {
-            return _games.Values.Where(g => g.CanJoin).Select(g => g.Id);
+            return _games.Values.Where(g => g.CanJoin).Select(g => new AvailableGameData()
+            {
+                Id = g.Id,
+                PlayerCount = g.Players.Count,
+                CreatorName = g.Players.Values.FirstOrDefault()?.UserName ?? "Can't find player name",
+                SpellCount = g.AllowedSpellCount,
+            });
         }
+
         public Game? GetGame(int gameId)
         {
             if (!_games.ContainsKey(gameId))
                 return null;
             return _games[gameId];
         }
+
         public int CreateNewGame()
         {
             lock (_games)
@@ -40,15 +56,7 @@ namespace WizardIslandRestApi.Game
                 return id;
             }
         }
-        //public Player JoinGame(int gameId)
-        //{
-        //    if (!_games.ContainsKey(gameId))
-        //        return null;
-        //    lock (_games[gameId]) 
-        //    {
-        //        return _games[gameId].AddPlayer();
-        //    }
-        //}
+
         public void DeleteGame(int gameId)
         {
             lock (_games)

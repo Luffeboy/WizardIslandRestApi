@@ -54,7 +54,6 @@ namespace WizardIslandRestApi.Game
         public Game _game { get; private set; }
         public WebSocket? WebSocket { get; private set; } = null;
         public bool IsConnected { get => WebSocket != null; }
-        public string Name { get; set; }
         public string Password { get; }
         public float CanStopSpeed { get { return Stats.Speed * 1.1f; } }
         public Vector2 TargetPos { get; set; }
