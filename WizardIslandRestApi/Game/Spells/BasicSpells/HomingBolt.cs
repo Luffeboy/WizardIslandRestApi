@@ -35,8 +35,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                         Damage = StandardStats.Damage,
                         Knockback = StandardStats.Knockback,
                     });
-
-                    GetCurrentGame().Entities.Add(new ShadowEntity() { Pos = startPos + dirs[i] * distance, Size = 1 });
                 }
             });
             GoOnCooldown();

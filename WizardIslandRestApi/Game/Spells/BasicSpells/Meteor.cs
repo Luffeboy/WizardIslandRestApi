@@ -33,7 +33,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             {
                 GetCurrentGame().Entities.Add(new MeteorEntity(MyPlayer, mousePos, GetCurrentGame())
                 {
-                    Color = "50, 50, 50",
                     Size = StandardStats.Size,
                     FallTime = fallTime,
                     Damage = StandardStats.Damage,
@@ -56,6 +55,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
         private Game _game;
         public MeteorEntity(Player owner, Vector2 pos, Game game) : base(owner)
         {
+            Color = "50, 50, 50";
             _player = owner;
             MyCollider = null;
             Pos = pos;

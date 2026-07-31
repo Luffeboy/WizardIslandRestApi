@@ -171,6 +171,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Klepto(player),
             (player) => new Ignis(player),
             (player) => new ReloadSpells(player),
+            (player) => new MeteorStorm(player),
         };
 
         public static Spell GetSpell(Player player, int index)

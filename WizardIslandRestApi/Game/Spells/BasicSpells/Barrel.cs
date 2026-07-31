@@ -97,7 +97,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             // create explosion
             _game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos, _game)
             {
-                Color = "50, 50, 50",
                 Size = Size * 3,
                 FallTime = 3,
                 Damage = Damage,
