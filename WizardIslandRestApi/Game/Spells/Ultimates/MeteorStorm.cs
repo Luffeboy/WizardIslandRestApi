@@ -8,7 +8,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         Meteor _meteorSpell;
         public override string Name => "Meteor storm";
 
-        public override int CooldownMax { get; protected set; } = (int)(50.0f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(40.0f * Game._updatesPerSecond);
 
         public MeteorStorm(Player player) : base(player)
         {
@@ -59,6 +59,8 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                     _meteorSpell.CastSpell(stormCenter, meteorPos);
                 });
             }
+
+            GoOnCooldown();
         }
 
         private void CopyStatsToMeteorSpell()
@@ -66,7 +68,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             _meteorSpell.StandardStats.Damage = StandardStats.Damage;
             _meteorSpell.StandardStats.Knockback = StandardStats.Knockback;
             _meteorSpell.StandardStats.Size = StandardStats.Size / 4;
-            _meteorSpell.StandardStats.Range = StandardStats.Range;
+            _meteorSpell.StandardStats.Range = StandardStats.Size * 2;
             _meteorSpell.StandardStats.OtherStatsInt[SpellSpecificStats.ActivationDelay] = StandardStats.OtherStatsInt[SpellSpecificStats.ActivationDelay];
             _meteorSpell.StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity] = StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity];
         }

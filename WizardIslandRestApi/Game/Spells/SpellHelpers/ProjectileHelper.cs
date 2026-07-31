@@ -28,7 +28,26 @@
             int projectileQuantity = spell.StandardStats.OtherStatsInt[SpellSpecificStats.ProjectileQuantity];
             Vector2[] dirs = new Vector2[projectileQuantity];
             float projectileAngle = spell.StandardStats.OtherStatsFloat[SpellSpecificStats.ProjectileAngle];
-            var angle = MathF.Atan2(startDir.y, startDir.x) - (projectileQuantity - 1) / 2 * projectileAngle;
+            var angle = MathF.Atan2(startDir.y, startDir.x) - (float)(projectileQuantity - 1) / 2 * projectileAngle;
+            for (int i = 0; i < projectileQuantity; i++)
+            {
+                dirs[i] = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+                angle += projectileAngle;
+            }
+            return dirs;
+        }
+
+        /// <summary>
+        /// Calculates the direction of a projectile based on the position of the player and the mouse position.
+        /// </summary>
+        /// <param name="spell">must have and "SpellSpecificStats.ProjectileAngle"</param>
+        /// <param name="startDir">Doesn't need to be normalized</param>
+        /// <returns></returns>
+        public static Vector2[] GetProjectileDirections(Spell spell, Vector2 startDir, int projectileQuantity)
+        {
+            Vector2[] dirs = new Vector2[projectileQuantity];
+            float projectileAngle = spell.StandardStats.OtherStatsFloat[SpellSpecificStats.ProjectileAngle];
+            var angle = MathF.Atan2(startDir.y, startDir.x) - (float)(projectileQuantity - 1) / 2 * projectileAngle;
             for (int i = 0; i < projectileQuantity; i++)
             {
                 dirs[i] = new Vector2(MathF.Cos(angle), MathF.Sin(angle));

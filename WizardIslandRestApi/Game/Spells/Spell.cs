@@ -75,6 +75,8 @@ namespace WizardIslandRestApi.Game.Spells
         public const string BasicSpellsToCopy = "BasicSpellsToCopy";
         public const string ActivationDelay = "ActivationDelay";
         public const string TargetHitCount = "TargetHitCount";
+        public const string RotationSpeed = "RotationSpeed";
+        public const string EntityHealth = "EntityHealth";
 
         public const string SpellUsesMax = "SpellUsesMax";
         public const string BricksToApplyOnRespawn = "BricksToApplyOnRespawn";
@@ -149,6 +151,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new BloodSaws(player),
             (player) => new SmallExplosion(player),
             (player) => new DeckOfCards(player),
+            (player) => new SpiralBeam(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
