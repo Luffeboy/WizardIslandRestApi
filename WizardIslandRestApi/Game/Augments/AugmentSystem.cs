@@ -27,7 +27,9 @@ namespace WizardIslandRestApi.Game.Augments
             foreach (var player in _game.Players.Values)
                 AllPlayerAugmentData.Add(player, new PlayerAugmentData(player));
             _ticksBetweenAugments = Game._gameDuration / (MaxAugmentsPerPlayer + 1);
+#if !NO_AUGMENTS
             ScheduleAugmentPhase();
+#endif
         }
 
         private void ScheduleAugmentPhase()

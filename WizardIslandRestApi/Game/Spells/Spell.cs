@@ -152,6 +152,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new SmallExplosion(player),
             (player) => new DeckOfCards(player),
             (player) => new SpiralBeam(player),
+            (player) => new BrickGolem(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),

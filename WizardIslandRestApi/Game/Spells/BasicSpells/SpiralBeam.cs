@@ -5,7 +5,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 {
     public class SpiralBeam : Spell
     {
-        public override string Name => "Spiral Beam";
+        public override string Name => "Spiral beam";
 
         public override int CooldownMax { get; protected set; } = (int)(20 * Game._updatesPerSecond);
         
@@ -25,6 +25,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
         protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
+            Random r = new();
             var dirs = ProjectileHelper.GetProjectileDirections(this, mousePos - startPos, StandardStats.OtherStatsInt[SpellSpecificStats.SummonQuantity]);
             for (int i = 0; i < dirs.Length; i++)
                 GetCurrentGame().Entities.Add(new SpiralBeamEntity(MyPlayer, StandardStats.SummonLifetime, startPos, StandardStats.Range, StandardStats.Size)
@@ -35,6 +36,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                     Knockback = StandardStats.Knockback,
                     RotationSpeed = StandardStats.OtherStatsFloat[SpellSpecificStats.RotationSpeed],
                     Health = StandardStats.OtherStatsInt[SpellSpecificStats.EntityHealth],
+                    CurrentAngle = (float)(r.NextDouble() * Math.PI * 2),
                 });
 
             GoOnCooldown();
@@ -82,7 +84,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
                     TicksUntilDeletion = 99999,
                 });
             }
-            CurrentAngle = (float)(new Random().NextDouble() * Math.PI * 2);
         }
 
         public override void ReTarget(Vector2 pos)

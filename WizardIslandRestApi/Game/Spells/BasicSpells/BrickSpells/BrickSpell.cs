@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using WizardIslandRestApi.Game.Spells.Debuffs;
+﻿using WizardIslandRestApi.Game.Spells.Debuffs;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
