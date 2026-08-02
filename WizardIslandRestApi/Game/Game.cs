@@ -113,6 +113,7 @@ namespace WizardIslandRestApi.Game
             {
                 if (!Players[ids[i]].IsConnected)
                 {
+                    Players[ids[i]].Die();
                     Players.Remove(ids[i]);
                     if (Players.Count == 0)
                         CurrentState = GameState.Ended;

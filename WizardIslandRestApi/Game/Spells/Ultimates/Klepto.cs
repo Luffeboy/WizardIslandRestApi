@@ -60,15 +60,17 @@
                 foreach (var spell in spells)
                 {
                     if (nonSealableSpells.Contains(spell.GetType()))
-                    {
-                        normalsToSteal++; // since you can't steal their ult, you get an extra normal spell. (this is asuming they are following the rules, and only using 1 ult :) )
                         continue;
-                    }
+                    
                     if (spellsByType.ContainsKey(spell.Type))
                         spellsByType[spell.Type].Add(spell.SpellIndex);
                     else
                         spellsByType.Add(spell.Type, new() { spell.SpellIndex });
                 }
+
+                // if you can't steal their ult, you get an extra normal spell.
+                if (spellsByType[SpellType.Ultimate].Count == 0)
+                    normalsToSteal++; 
 
                 // Steal one ultimate and one normal spells
                 for (int i = 0; i < ultsToSteal; i++)

@@ -6,6 +6,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
     public class BrickGolem : BrickSpell
     {
         public override string Name => "Brick golem";
+
         public override int CooldownMax { get; protected set; } = 60 * Game._updatesPerSecond;
 
         public BrickGolem(Player player) : base(player, 5)
@@ -50,6 +51,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
             GoOnCooldownBrick(MinBricksToCast);
         }
     }
+
     public class BrickGolemEntity : Entity
     {
         private int _ticksUntilDeletion;
@@ -61,11 +63,17 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
         private Vector2 _handTargetPos;
         private List<Entity> _hitEntities = [];
         private List<ShadowEntity> _hands = [];
+
         public float Speed { get; set; } = 0.3f;
+
         public float Damage { get; set; } = 1;
+
         public float Knockback { get; set; } = 1;
+
         public int Health { get; set; } = 10;
+
         public int AttackActivationTimeTicks { get; set; } = 1;
+
         public int BricksToReturnOnDeath { get; set; } = 1;
 
         public BrickGolemEntity(Player owner, int ticksUntilDeletion, Vector2 startPos, float size) : base(owner, startPos)
@@ -85,6 +93,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
                     Size = Size / 2,
                     Pos = Pos,
                     TicksUntilDeletion = 99999,
+                    EntityId = "BrickGolemHand",
                 });
                 _ownerPlayer._game.Entities.Add(_hands[i]);
             }
@@ -159,6 +168,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
                 _hands[0].Pos = Pos + handForward + handSideDir * distanceToSide;
                 _hands[1].Pos = Pos + handForward - handSideDir * distanceToSide;
                 ForwardAngle = MathF.Atan2(handForward.y, handForward.x);
+                _hands[0].ForwardAngle = ForwardAngle;
+                _hands[1].ForwardAngle = ForwardAngle;
             }
 
             return --_ticksUntilDeletion < 0;

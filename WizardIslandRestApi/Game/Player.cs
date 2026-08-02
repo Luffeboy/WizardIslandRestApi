@@ -302,7 +302,7 @@ namespace WizardIslandRestApi.Game
                 scaledAmount = 0;
             Stats.Health += scaledAmount;
         }
-        private void Die()
+        public void Die()
         {
             ScoreStats.Deaths++;
             if (LastHitByPlayer != null)
@@ -438,7 +438,7 @@ namespace WizardIslandRestApi.Game
             {
                 GameTick = _game.GameTick,
                 Players = PlayerMinimum.Copy(_game.Players.Values),
-                Entities = _game.Entities.Where(e => e.VisableTo == -1 || e.VisableTo == Id).Select(e => new { e.Pos, e.Size, e.Color, e.EntityId, angle = e.ForwardAngle }).ToArray(),
+                Entities = _game.Entities.Where(e => e.VisableTo == -1 || e.VisableTo == Id).Select(e => new { e.Pos, e.Size, e.Color, e.Transparancy, e.EntityId, angle = e.ForwardAngle }).ToArray(),
                 YourSpells = GetSpellCooldowns(),
                 Map = _game.GameMap,
                 Event = _game.CurrentEvent,

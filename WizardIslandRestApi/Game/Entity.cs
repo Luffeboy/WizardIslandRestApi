@@ -22,6 +22,7 @@ namespace WizardIslandRestApi.Game
         public EntityHeight Height {  get; protected set; } = EntityHeight.Normal;
         public Vector2 Pos { get { return _pos; } set { _pos = value; if (MyCollider != null) MyCollider.Pos = value; } }
         public string Color { get; set; } = "0, 0, 0";
+        public string Transparancy = ".8";
         public float Size { get { return _size; } set { _size = value; if (MyCollider != null) MyCollider.Size = _size; } }
         public Collider MyCollider { get; protected set; } // may be null :)
         public bool CantHitSameTypeOfEntityFromSamePlayer { get; set; } = true;
