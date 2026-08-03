@@ -56,6 +56,24 @@
             return dirs;
         }
 
+        /// <summary>
+        /// Calculates the direction of a projectile based on the position of the player and the mouse position.
+        /// </summary>
+        /// <param name="spell">must have and "SpellSpecificStats.ProjectileAngle"</param>
+        /// <param name="startDir">Doesn't need to be normalized</param>
+        /// <returns></returns>
+        public static Vector2[] GetProjectileDirections(Vector2 startDir, int projectileQuantity, float projectileAngle)
+        {
+            Vector2[] dirs = new Vector2[projectileQuantity];
+            var angle = MathF.Atan2(startDir.y, startDir.x) - (float)(projectileQuantity - 1) / 2 * projectileAngle;
+            for (int i = 0; i < projectileQuantity; i++)
+            {
+                dirs[i] = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+                angle += projectileAngle;
+            }
+            return dirs;
+        }
+
         public static void CastSpellWithBurst(Spell spell, Vector2 startPos, Action<Vector2> actionWithUpdatedStartPosAndIteration)
         {
             CastSpellWithBurst(spell, startPos, (pos, iteration) => { actionWithUpdatedStartPosAndIteration(pos); });

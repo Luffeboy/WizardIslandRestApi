@@ -76,6 +76,7 @@ namespace WizardIslandRestApi.Game.Augments
                 AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.ProjectileEmitterCount, 1, "Fire away... more", "emitters"));
                 AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.SummonQuantity, 1, "More Summons", "all summons"));
                 AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.SpellUsesMax, 1, "More max uses", "spells that have more uses"));
+                AllAugments.Add(new GenericSpecificSpellStatIncreaseAugment(SpellSpecificStats.Luck, 1, "Lucky augment", "luck"));
                 
             }
 #if DEBUG && SHOW_AUGMENTS

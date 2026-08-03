@@ -1,5 +1,4 @@
-﻿using Microsoft.OpenApi.Extensions;
-using WizardIslandRestApi.Game.Spells.BasicSpells;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
@@ -80,6 +79,7 @@ namespace WizardIslandRestApi.Game.Spells
 
         public const string SpellUsesMax = "SpellUsesMax";
         public const string BricksToApplyOnRespawn = "BricksToApplyOnRespawn";
+        public const string Luck = "Luck";
     }
 
     /// <summary>
@@ -153,6 +153,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new DeckOfCards(player),
             (player) => new SpiralBeam(player),
             (player) => new BrickGolem(player),
+            (player) => new ChaosDice(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
