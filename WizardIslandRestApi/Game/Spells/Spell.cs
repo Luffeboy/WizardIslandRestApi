@@ -154,6 +154,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new SpiralBeam(player),
             (player) => new BrickGolem(player),
             (player) => new ChaosDice(player),
+            (player) => new FlipACoint(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
