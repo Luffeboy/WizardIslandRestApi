@@ -38,6 +38,7 @@
         private Player _player;
         private Random _random = new Random();
         private int _explotionCount = 0;
+        private int _beginnerLuck = 5;
 
         public float Damage { get; set; }
 
@@ -61,6 +62,7 @@
         {
             _player = owner;
             MyCollider = null;
+            Color = "212,175,55";
         }
 
         public override bool Update()
@@ -68,7 +70,6 @@
             float t = (DistanceSinceLastExplotion / DistanceBetweenExplotions) * 2;
             if (t > 1)
                 t = 2 - t;
-            Console.WriteLine(t);
             if (t < 0)
                 return Explode();
 
@@ -84,7 +85,8 @@
         /// <returns></returns>
         private bool Explode()
         {
-            float explodeThreshold = 1f / (1 + Luck);
+            float explodeThreshold = 1f / (1 + Luck + _beginnerLuck);
+            _beginnerLuck = 0;
             float randomValue = _random.NextSingle();
 
             if (randomValue < explodeThreshold || ++_explotionCount > MaxExplosions)
