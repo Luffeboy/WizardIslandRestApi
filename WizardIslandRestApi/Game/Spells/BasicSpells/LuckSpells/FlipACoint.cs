@@ -1,4 +1,6 @@
-﻿namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
+﻿using WizardIslandRestApi.Game.Spells.SpellHelpers;
+
+namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 {
     public class FlipACoint : Spell
     {
@@ -13,21 +15,32 @@
             StandardStats.Size = .75f;
             StandardStats.Speed = 3f;
             StandardStats.OtherStatsInt.Add(SpellSpecificStats.Luck, 1);
+
+            ProjectileHelper.SetProjectileStats(this, quantity: 1, angle: MathF.PI / 8, burstCount: 1, burstDelay: Game._updatesPerSecond / 4);
+            Tags.Add(SpellTags.Luck);
+            Tags.Add(SpellTags.Projectile);
         }
 
 
         protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            GetCurrentGame().Entities.Add(new CoinEntity(MyPlayer, startPos)
+            var dirs = ProjectileHelper.GetProjectileDirections(this, mousePos - startPos);
+            ProjectileHelper.CastSpellWithBurst(this, startPos, (spawnPos, iteration) =>
             {
-                Damage = StandardStats.Damage,
-                Knockback = StandardStats.Knockback,
-                Size = StandardStats.Size,
-                SpeedMax = StandardStats.Speed,
-                Luck = StandardStats.OtherStatsInt[SpellSpecificStats.Luck],
-                Dir = (mousePos - startPos).Normalized(),
-                DistanceBetweenExplotions = 10,
-                OnExplodeMultiplier = 1.2f,
+                for (int i = 0; i < dirs.Length; i++)
+                {
+                    GetCurrentGame().Entities.Add(new CoinEntity(MyPlayer, spawnPos)
+                    {
+                        Damage = StandardStats.Damage,
+                        Knockback = StandardStats.Knockback,
+                        Size = StandardStats.Size,
+                        SpeedMax = StandardStats.Speed,
+                        Luck = StandardStats.OtherStatsInt[SpellSpecificStats.Luck],
+                        Dir = dirs[i],
+                        DistanceBetweenExplotions = 10,
+                        OnExplodeMultiplier = 1.2f,
+                    });
+                }
             });
             GoOnCooldown();
         }
@@ -73,7 +86,7 @@
             if (t < 0)
                 return Explode();
 
-            float currentSpeed = MathF.Max(SpeedMax * t, .01f);
+            float currentSpeed = MathF.Max(SpeedMax * t, .05f);
             Pos += Dir * currentSpeed;
             DistanceSinceLastExplotion += currentSpeed;
             return false;
