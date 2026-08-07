@@ -1,4 +1,6 @@
-﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+﻿using Swashbuckle.AspNetCore.SwaggerGen;
+using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
+using WizardIslandRestApi.Game.Spells.Debuffs;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates
@@ -11,7 +13,10 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override int CooldownMax { get; protected set; } = 10 * Game._updatesPerSecond;
 
-        public override string Name => (!_isPlaying ? "Blackjack" : (_currentGame == null ? $"release ({_accumulatedWins})" : "Stand / Hit"));
+        public override string Name => (!_isPlaying ? "Blackjack" : 
+            (_currentGame == null ? $"release ({_accumulatedWins})" : 
+            (_currentGame.IsPlayerTurn ? "Stand / Hit" :
+            "Wait for dealer")));
 
         public int MaxAllowedWins 
         { 
@@ -21,8 +26,12 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         public Blackjack(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
+            StandardStats.Damage = 3;
+            StandardStats.Knockback = 1.1f;
 
             StandardStats.OtherStatsInt.Add(SpellSpecificStats.Luck, 1);
+
+            Tags.Add(SpellTags.Luck);
         }
 
         protected override void OnCast(Vector2 startPos, Vector2 mousePos)
@@ -55,11 +64,81 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         private void CreateWinEffect(Vector2 startPos, Vector2 mousePos)
         {
-            Console.WriteLine("Wins: " + _accumulatedWins);
+            int iterations = _accumulatedWins; // number of projectiles to create
 
             _isPlaying = false;
             _accumulatedWins = 0;
             GoOnCooldown();
+
+            if (iterations <= 0)
+                return;
+            
+            Dictionary<DeckOfCards, Vector2> deckAndStartPositions = [];
+            List<DeckOfCards> decks = new List<DeckOfCards>();
+            for (int i = 0; i < iterations; i++)
+            {
+                var newDeck = new DeckOfCards(MyPlayer);
+                deckAndStartPositions.Add(newDeck, startPos);
+                decks.Add(newDeck);
+                newDeck.StandardStats.Damage = StandardStats.Damage;
+                newDeck.StandardStats.Knockback = StandardStats.Knockback;
+                newDeck.StandardStats.Speed *= 1.5f;
+                newDeck.StandardStats.Range /= 2f;
+                newDeck.StandardStats.OtherStatsInt[SpellSpecificStats.Luck] = StandardStats.OtherStatsInt[SpellSpecificStats.Luck];
+                newDeck.Observers.WentOnCooldown += (a, b) =>
+                {
+                    decks.Remove(newDeck);
+                };
+            }
+
+            int spellToCastNow = -1;
+            int castDelay = Math.Max(Game._updatesPerSecond / (iterations), 10);
+            var game = GetCurrentGame();
+
+            void CastCards(DeckOfCards deck)
+            {
+                // is just going to loop forever, if only the player who cast the spell is in the game.
+                if (game.Players.Count == 1)
+                    return;
+
+                Vector2 castPos = deckAndStartPositions[deck];
+                Player? closestPlayer = null;
+                float closestDistSqr = 9999999f;
+                foreach (var player in game.Players.Values)
+                    if (player != MyPlayer && !player.IsDead)
+                    {
+                        float distSqr = (player.Pos - mousePos).LengthSqr();
+                        if (distSqr < closestDistSqr)
+                        {
+                            closestPlayer = player;
+                            closestDistSqr = distSqr;
+                        }
+                    }
+                // no player found
+                if (closestPlayer == null)
+                {
+                    game.ScheduleAction(castDelay, () => CastCards(deck));
+                    return;
+                }
+                
+                deck.CastSpell(castPos, closestPlayer.Pos);
+                Entity newestEntity = game.Entities.Last();
+                if (newestEntity != null)
+                    newestEntity.Observers.Expired += (a, b) =>
+                    {
+                        if (!decks.Contains(deck))
+                            return;
+                        deckAndStartPositions[deck] = (a as Entity).Pos;
+                        mousePos = deckAndStartPositions[deck]; // set target position to the spawn point so it chooses the closest enemy
+                        // wait half a second if it hit a player, else just cast it again immediately
+                        game.ScheduleAction(b == EntityExpiredReason.CollisionWithPlayer ? Game._updatesPerSecond / 2 : 1, () => CastCards(deck));
+                    };
+            }
+            for (int i = 0; i < iterations; i++)
+            {
+                var deck = decks[i];
+                GetCurrentGame().ScheduleAction(castDelay * (1+i), () => CastCards(deck));
+            }
         }
 
         private void Stand()
@@ -67,7 +146,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             _currentGame.PlayerStand();
             // when standing, go the "dealer" draws cards until they reach 17 or higher, then compare hands
             var game = GetCurrentGame();
-            int ticksBetweenDealerActions = Game._updatesPerSecond / 3;
+            int ticksBetweenDealerActions = Game._updatesPerSecond / (2 + StandardStats.OtherStatsInt[SpellSpecificStats.Luck]);
             void DealerAction()
             {
                 if (_currentGame.DealerShouldDraw())
@@ -113,6 +192,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             {
                 game.Entities.Add(new FollowPlayerEntity(MyPlayer, new Vector2(), Game._updatesPerSecond / 3) { Size = 2, Color = "255,0,0" });
                 _currentGame = null;
+                // since the player has 0 wins, we just reset everything
+                if (_accumulatedWins <= 0)
+                    CreateWinEffect(new Vector2(), new Vector2());
             }
         }
 

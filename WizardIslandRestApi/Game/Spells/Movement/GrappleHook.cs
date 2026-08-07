@@ -131,6 +131,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             if (_spell.CanCast)
                 _spell.ForceGoOnCooldown(HasHit ? 1.0f : .5f);
         }

@@ -118,6 +118,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             var pos = Pos;
             var dir = (IceTarget - Pos).Normalized();
             var distBetweenIce = .75f;

@@ -20,6 +20,8 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             StandardStats.Range = 2f * StandardStats.Speed;
             StandardStats.Size = .25f;
 
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.Luck, 1);
+
             Tags.Add(SpellTags.Luck);
             Tags.Add(SpellTags.Projectile);
 
@@ -224,6 +226,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             _goOnCooldown?.Invoke();
             if (reason != EntityExpiredReason.CollisionWithPlayer || _shouldUseOnDestroyWhenHittingPlayer)
                 _onDestroy();

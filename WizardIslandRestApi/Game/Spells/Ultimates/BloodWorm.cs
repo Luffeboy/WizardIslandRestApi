@@ -245,6 +245,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             // give the player the health back
             MyCollider.Owner.Stats.Health += BloodWorm.WormPartCost;
             // set the child as the new head

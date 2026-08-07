@@ -110,6 +110,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             if (ShouldDropBrick)
                 _originalOwner?.ApplyDebuff(new BrickBuff(_originalOwner));
         }

@@ -123,6 +123,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             MyCollider.Owner.Stats.Health += _healthCost;
         }
     }

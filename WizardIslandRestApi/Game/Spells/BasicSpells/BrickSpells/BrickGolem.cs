@@ -220,6 +220,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells
 
         public override void OnExpire(EntityExpiredReason reason)
         {
+            base.OnExpire(reason);
             var game = MyCollider.Owner._game;
             Random r = new();
             for (int i = 0; i < BricksToReturnOnDeath; i++)

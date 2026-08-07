@@ -2,6 +2,21 @@
 using WizardIslandRestApi.Game.Physics;
 namespace WizardIslandRestApi.Game
 {
+    public class EntityObservers
+    {
+        private Entity _entity;
+
+        public event EventHandler<EntityExpiredReason>? Expired;
+
+        public EntityObservers(Entity entity)
+        {
+            _entity = entity;
+        }
+
+        public void InvokeExpired(EntityExpiredReason reason) 
+            => Expired?.Invoke(_entity, reason);
+    }
+
     public enum EntityHeight
     {
         Normal,
@@ -28,6 +43,8 @@ namespace WizardIslandRestApi.Game
         public bool CantHitSameTypeOfEntityFromSamePlayer { get; set; } = true;
         public float Density { get; set; } = 1;
 
+        public EntityObservers Observers { get; protected set; }
+
         /// <summary>
         /// VisableTo -1 is everyone, else it is their id. Any other number makes it invisable to everyone
         /// </summary>
@@ -36,6 +53,7 @@ namespace WizardIslandRestApi.Game
         public float ForwardAngle { get; set; } = 0;
         public Entity(Player owner, Vector2? startPos = null)
         {
+            Observers = new EntityObservers(this);
             if (startPos == null) startPos = new Vector2();
             MyCollider = new Collider(startPos.Value);
             MyCollider.Owner = owner;
@@ -81,6 +99,9 @@ namespace WizardIslandRestApi.Game
         /// <param name="other"></param>
         /// <returns></returns>
         public abstract bool OnCollision(Player other);
-        public virtual void OnExpire(EntityExpiredReason reason) { }
+        public virtual void OnExpire(EntityExpiredReason reason)
+        {
+            Observers.InvokeExpired(reason);
+        }
     }
 }
