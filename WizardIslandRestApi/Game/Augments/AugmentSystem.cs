@@ -34,6 +34,7 @@ namespace WizardIslandRestApi.Game.Augments
 
         private void ScheduleAugmentPhase()
         {
+#if !NO_AUGMENTS
 #if DEBUG
             if (_game.GetCopyOfScheduledActions().Any(actionAndGameTick => actionAndGameTick.MyAction == StartAugmentPhase))
                 return;
@@ -41,6 +42,7 @@ namespace WizardIslandRestApi.Game.Augments
             if (AugmentsGivenSoFar == 0)
                 _game.ScheduleAction(0, StartAugmentPhase);
             else _game.ScheduleAction(_ticksBetweenAugments, StartAugmentPhase);
+#endif
         }
 
         public static void LoadAugments()

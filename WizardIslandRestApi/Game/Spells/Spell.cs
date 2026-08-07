@@ -179,6 +179,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new ReloadSpells(player),
             (player) => new MeteorStorm(player),
             (player) => new MagmaWhale(player),
+            (player) => new Blackjack(player),
         };
 
         public static Spell GetSpell(Player player, int index)
