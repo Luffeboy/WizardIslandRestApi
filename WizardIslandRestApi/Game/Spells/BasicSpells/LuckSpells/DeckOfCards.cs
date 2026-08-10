@@ -1,4 +1,6 @@
-﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
+using WizardIslandRestApi.Game.Spells.Ultimates;
 namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 {
     public class DeckOfCards : Spell
@@ -6,8 +8,10 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         private int _numberOfCards = 10;
         private int _nextCardNumber = 0;
         private CardEntity _nextCard = null;
+        private DebuffBase _cardCountBuff;
+        private int NumberOfCardsMax { get => 7 + StandardStats.OtherStatsInt[SpellSpecificStats.Luck] * 3; }
         public int CooldownBetweenCardsInSameDeck { get; protected set; } = (int)(.5f * Game._updatesPerSecond);
-        public override int CooldownMax { get; protected set; } = (int)(5.0f * Game._updatesPerSecond);
+        public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
         public override string Name => _nextCard == null ? "Deck Of Cards" : $"Card: {_nextCard.Number}";
 
         public DeckOfCards(Player player) : base(player)
@@ -25,7 +29,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             Tags.Add(SpellTags.Luck);
             Tags.Add(SpellTags.Projectile);
 
-            GetNewCard();
+            //GetNewCard();
         }
 
         protected override void OnCast(Vector2 startPos, Vector2 mousePos)
@@ -72,10 +76,12 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
                 }
             _nextCard = new CardEntity(MyPlayer, StandardStats.GetLifetime(), new Vector2(), cardNum, StandardStats.Damage, StandardStats.Knockback, StandardStats.Speed, null,
                 isAce ? () =>
-            {
-                GoOnCooldown();
-                GetNewCard();
-            } : null)
+                {
+                    _nextCardNumber = 0;
+                    FullReset();
+                    GoOnCooldown();
+                }
+            : null)
             {
                 Size = StandardStats.Size,
             };
@@ -85,6 +91,28 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 #if !NO_COOLDOWN
             CurrentCooldown = GetCurrentGameTick() + (int)(CooldownBetweenCardsInSameDeck * GetCurrentGame().GameModifiers.CooldownMultiplier * MyPlayer.Stats.CooldownMultiplier);
 #endif
+        }
+
+        public override void FullReset()
+        {
+            base.FullReset();
+            Random r = new Random();
+            _numberOfCards = 0;
+            for (int i = 0; i < StandardStats.OtherStatsInt[SpellSpecificStats.Luck]; i++)
+                _numberOfCards = Math.Max(_numberOfCards, 1 + r.Next(NumberOfCardsMax - 1));
+            if (_cardCountBuff != null)
+                _cardCountBuff.Stacks = _numberOfCards;
+            GetNewCard();
+        }
+
+        public override void OnPlayerReset()
+        {
+            base.OnPlayerReset();
+            MyPlayer.ApplyDebuff(_cardCountBuff = new NamedBuff(MyPlayer)
+            {
+                MyName = "DeckOfCardsCardCount",
+                Stacks = 1,
+            });
         }
     }
 
