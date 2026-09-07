@@ -1,6 +1,7 @@
 ﻿using System.Net.WebSockets;
 using System.Text.Json;
 using WizardIslandRestApi.Game.Spells;
+using WizardIslandRestApi.Helpers.Debugging;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
 namespace WizardIslandRestApi.Game
@@ -46,15 +47,20 @@ namespace WizardIslandRestApi.Game
 
         public int CreateNewGame()
         {
+            int id = -1;
             lock (_games)
             {
-                int id = _nextGameId++;
+                id = _nextGameId++;
                 var game = new Game(id);
                 _games.Add(id, game);
                 Task task = Task.Run(game.GameLoop);
-                //task.Start();
-                return id;
+                task.ContinueWith(t =>
+                {
+                    if (t.Exception != null)
+                        ErrorLogger.Instance.LogError(t.Exception);
+                });
             }
+            return id;
         }
 
         public void DeleteGame(int gameId)
