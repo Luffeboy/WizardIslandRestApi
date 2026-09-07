@@ -86,7 +86,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
             Height = EntityHeight.Ground;
             Size = 1.0f;
             Luck = luck;
-            VisableTo = owner.Id;
             _highestAllowedValue = highestAllowedValue;
             RollDie();
             Color = "0,0,0";
@@ -267,6 +266,12 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
                 AdditionalDice[i].Activate(endPos);
             
             return ShouldDelete;
+        }
+
+        public override void OnExpire(EntityExpiredReason reason)
+        {
+            base.OnExpire(reason);
+            ShouldDelete = true; // incase the die get deleted by something else.
         }
 
         public List<ChaosDiceEntity> GetAliveAdditionalDice()
