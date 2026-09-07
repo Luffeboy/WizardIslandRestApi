@@ -28,8 +28,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
             Tags.Add(SpellTags.Luck);
             Tags.Add(SpellTags.Projectile);
-
-            //GetNewCard();
         }
 
         protected override void OnCast(Vector2 startPos, Vector2 mousePos)

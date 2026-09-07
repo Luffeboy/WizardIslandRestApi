@@ -79,6 +79,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             {
                 var newDeck = new DeckOfCards(MyPlayer);
                 deckAndStartPositions.Add(newDeck, startPos);
+                newDeck.FullReset();
                 decks.Add(newDeck);
                 newDeck.StandardStats.Damage = StandardStats.Damage;
                 newDeck.StandardStats.Knockback = StandardStats.Knockback;
