@@ -204,6 +204,12 @@ namespace WizardIslandRestApi.Game.Spells
         {
             MyPlayer = player;
             Observers = new SpellObservers(this);
+
+            var spellConfig = MyPlayer?.GetGame().GetSpellConfiguration(GetType()) ?? Game.GetSpellConfigurationDefault(GetType());
+            if (spellConfig != null)
+            {
+                CooldownMax = spellConfig.MaxCooldownTicks();
+            }
         }
 
         public virtual void PostSpellConstructor()

@@ -1,5 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Augments;
 using WizardIslandRestApi.Game.Events;
+using WizardIslandRestApi.Helpers;
 using static WizardIslandRestApi.Controllers.WizardIslandController;
 
 namespace WizardIslandRestApi.Game
@@ -30,10 +31,6 @@ namespace WizardIslandRestApi.Game
         /// </summary>
         public const int _gameDuration = 5 * 60 * _updatesPerSecond;
         //public const int _gameDuration = 1 * 30 * _updatesPerSecond;
-        // unused, maybe...
-        //private DateTime _gameCreated;
-        //private DateTime _gameStarted;
-        //private DateTime _gameWillEnd;
         private long _lastUpdateTick;
 
         public Map GameMap { get; } = new Map();
@@ -42,6 +39,10 @@ namespace WizardIslandRestApi.Game
         public EventBase NextEvent { get; private set; }
         public int TicksTillNextEventMax { get; private set; } = 30 * _updatesPerSecond;
         public int TicksTillNextEvent { get; private set; }
+
+        public static SpellConfiguration SpellConfigDefault { get; private set; } = new SpellConfiguration();
+
+        public SpellConfiguration SpellConfig { get; set; } = SpellConfigDefault;
 
         public int Id { get; private set; } // game id, for the GameManager
         private int _nextPlayerId;
@@ -381,6 +382,27 @@ namespace WizardIslandRestApi.Game
         public List<ActionAndGameTick> GetCopyOfScheduledActions()
         {
             return new List<ActionAndGameTick>(_scheduledActions);
+        }
+
+        public SpellSpecificConfiguration? GetSpellConfiguration(Type type)
+        {
+            if (SpellConfig.Spells.TryGetValue(type.Name, out SpellSpecificConfiguration? configObj))
+                return configObj;
+            return null;
+        }
+
+        public static SpellSpecificConfiguration? GetSpellConfigurationDefault(Type type)
+        {
+            if (SpellConfigDefault.Spells.TryGetValue(type.Name, out SpellSpecificConfiguration? configObj))
+                return configObj;
+            return null;
+        }
+
+        public static void LoadDefaultConfiguration()
+        {
+            SpellConfiguration? spellConfig = SpellConfiguration.LoadDefaultSpellConfiguration();
+            if (spellConfig != null)
+                SpellConfigDefault = spellConfig;
         }
     }
 

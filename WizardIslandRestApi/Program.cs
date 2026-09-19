@@ -1,6 +1,13 @@
 using WizardIslandRestApi.Game;
 using WizardIslandRestApi.Game.Augments;
 
+//{
+//    WizardIslandRestApi.Helpers.SpellConfiguration.ExportDefaultSpellConfiguration();
+//    return;
+//}
+
+Game.LoadDefaultConfiguration();
+
 AugmentSystem.LoadAugments();
 
 var builder = WebApplication.CreateBuilder(args);
