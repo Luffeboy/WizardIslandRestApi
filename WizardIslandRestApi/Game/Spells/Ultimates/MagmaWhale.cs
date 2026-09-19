@@ -155,11 +155,18 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             if (paht == null)
                 _hitPlayers.Add(paht = new PlayerAndHitTime() { HitPlayer = other, HitTick = -1 });
 
-            if (paht.HitTick + _hitCooldown > MyCollider.Owner._game.GameTick)
+            int currentTick = MyCollider.Owner._game.GameTick;
+            if (paht.HitTick + _hitCooldown > currentTick)
                 return false;
 
+            paht.HitTick = currentTick;
             other.TakeDamage(Damage, MyCollider.Owner);
             other.ApplyKnockback(_dir, Knockback);
+            return false;
+        }
+
+        public override bool OnCollision(Entity other)
+        {
             return false;
         }
 
