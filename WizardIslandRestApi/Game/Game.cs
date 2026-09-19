@@ -291,6 +291,53 @@ namespace WizardIslandRestApi.Game
             GameManager.Instance.DeleteGame(Id);
         }
 
+        /// <summary>
+        /// Returns the nearest alive player to the given position, or null if there are no alive players.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public Player? GetNearestPlayer(Vector2 pos)
+        {
+            Player? nearestPlayer = null;
+            float nearestDistance = float.MaxValue;
+            foreach (Player player in Players.Values)
+            {
+                if (player.IsDead)
+                    continue;
+                float distance = (player.Pos - pos).LengthSqr();
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestPlayer = player;
+                }
+            }
+            return nearestPlayer;
+        }
+
+        /// <summary>
+        /// Returns the nearest alive player to the given position, or null if there are no alive players.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="except">Excempt from the search</param>
+        /// <returns></returns>
+        public Player? GetNearestPlayer(Vector2 pos, Player except)
+        {
+            Player? nearestPlayer = null;
+            float nearestDistance = float.MaxValue;
+            foreach (Player player in Players.Values)
+            {
+                if (player.IsDead || player == except)
+                    continue;
+                float distance = (player.Pos - pos).LengthSqr();
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestPlayer = player;
+                }
+            }
+            return nearestPlayer;
+        }
+
         public Player? GetPlayer(int id, string password)
         {
             if (id < 0 || id >= Players.Count || Players[id].Password != password)

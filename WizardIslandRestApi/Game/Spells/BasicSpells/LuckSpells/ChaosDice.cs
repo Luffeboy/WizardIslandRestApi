@@ -5,11 +5,10 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 {
     public class ChaosDice : Spell
     {
-        private List<ChaosDiceEntity> _activeDice = [];
 
         public override int CooldownMax { get ; protected set; } = 20 * Game._updatesPerSecond;
 
-        public override string Name => _activeDice.Count == 0 ? "Chaos dice" : "Activate dice";
+        public override string Name => "Chaos dice";
 
         public ChaosDice(Player player) : base(player)
         {
@@ -23,36 +22,18 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
         protected override void OnCast(Vector2 startPos, Vector2 mousePos)
         {
-            if (_activeDice.Count == 0)
+            // spawn a new die
+            var die = new ChaosDiceEntity(MyPlayer, StandardStats.OtherStatsInt[SpellSpecificStats.Luck], startPos)
             {
-                // spawn a new die
-                var die = new ChaosDiceEntity(MyPlayer, StandardStats.OtherStatsInt[SpellSpecificStats.Luck], startPos)
-                {
-                    Dir = (mousePos - startPos).Normalized(),
-                    Damage = StandardStats.Damage,
-                    Knockback = StandardStats.Knockback,
-                    Size = StandardStats.Size,
-                    FlyTime = (int)(1.5f * Game._updatesPerSecond),
-                    Speed = StandardStats.Speed,
-                };
-                _activeDice.Add(die);
-                GetCurrentGame().Entities.Add(die);
-            }
-            else
-            {
-                // activate all dice
-                List<ChaosDiceEntity> remainingDice = [];
-                foreach (var die in _activeDice)
-                {
-                    die.Activate(mousePos);
-                    remainingDice.AddRange(die.GetAliveAdditionalDice());
-                }
-                _activeDice.Clear();
-                _activeDice.AddRange(remainingDice);
-
-                if (_activeDice.Count == 0)
-                    GoOnCooldown();
-            }
+                Dir = (mousePos - startPos).Normalized(),
+                Damage = StandardStats.Damage,
+                Knockback = StandardStats.Knockback,
+                Size = StandardStats.Size,
+                FlyTime = (int)(1.5f * Game._updatesPerSecond),
+                Speed = StandardStats.Speed,
+            };
+            GetCurrentGame().Entities.Add(die);
+            GoOnCooldown();
         }
     }
 
@@ -62,6 +43,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
         private int _aliveTime = 0;
         private int _ticksBetweenRolls = (int)(0.5f * Game._updatesPerSecond);
         private int _highestAllowedValue;
+        private int _ticksBetweenFlyAndActivate = (int)(0.25f * Game._updatesPerSecond);
 
         public List<ChaosDiceEntity> AdditionalDice { get; } = [];
 
@@ -93,7 +75,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
         public override bool OnCollision(Player other)
         {
-            return other != MyCollider.Owner;
+            return false;
         }
         public override bool OnCollision(Entity other)
         {
@@ -122,6 +104,12 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
                 if (_aliveTime % _ticksBetweenRolls == 0)
                     RollDie();
             }
+            if (CanActivate())
+            {
+                var nearestEnemy = MyCollider.Owner.GetGame().GetNearestPlayer(Pos, MyCollider.Owner);
+                var targetPos = nearestEnemy != null ? nearestEnemy.Pos : Pos + Dir * 10;
+                Activate(targetPos);
+            }
             return ShouldDelete;
         }
 
@@ -143,13 +131,13 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
 
         public void ForceReady()
         {
-            _aliveTime = FlyTime + 1;
+            _aliveTime = FlyTime + _ticksBetweenFlyAndActivate + 1;
             AdditionalDice.ForEach(d => d.ForceReady());
         }
 
         public bool CanActivate()
         {
-            return _aliveTime > FlyTime;
+            return _aliveTime > FlyTime + _ticksBetweenFlyAndActivate;
         }
 
         public bool Activate(Vector2 endPos)
@@ -248,7 +236,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells
                             AdditionalDice.Add(jackpotDie);
                             game.Entities.Add(jackpotDie);
                             jackpotDie.ForceReady();
-                            jackpotDie.Activate(endPos + dirs[i]);
                         }
                         // also explode this die
                         game.Entities.Add(new MeteorEntity(MyCollider.Owner, Pos, game)
