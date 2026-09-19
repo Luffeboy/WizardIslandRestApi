@@ -27,7 +27,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         {
             Type = SpellType.Ultimate;
             StandardStats.Damage = 3;
-            StandardStats.Knockback = 1.1f;
+            StandardStats.Knockback = 1.25f;
 
             StandardStats.OtherStatsInt.Add(SpellSpecificStats.Luck, 1);
 
@@ -85,14 +85,13 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 newDeck.StandardStats.Knockback = StandardStats.Knockback;
                 newDeck.StandardStats.Speed *= 1.5f;
                 newDeck.StandardStats.Range /= 2f;
-                newDeck.StandardStats.OtherStatsInt[SpellSpecificStats.Luck] = StandardStats.OtherStatsInt[SpellSpecificStats.Luck];
+                newDeck.StandardStats.OtherStatsInt[SpellSpecificStats.Luck] = 3 + i * 2 + StandardStats.OtherStatsInt[SpellSpecificStats.Luck];
                 newDeck.Observers.WentOnCooldown += (a, b) =>
                 {
                     decks.Remove(newDeck);
                 };
             }
 
-            int spellToCastNow = -1;
             int castDelay = Math.Max(Game._updatesPerSecond / (iterations), 10);
             var game = GetCurrentGame();
 
@@ -125,20 +124,20 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 deck.CastSpell(castPos, closestPlayer.Pos);
                 Entity newestEntity = game.Entities.Last();
                 if (newestEntity != null)
-                    newestEntity.Observers.Expired += (a, b) =>
+                    newestEntity.Observers.Expired += (entity, expirationReason) =>
                     {
                         if (!decks.Contains(deck))
                             return;
-                        deckAndStartPositions[deck] = (a as Entity).Pos;
+                        deckAndStartPositions[deck] = (entity as Entity)!.Pos;
                         mousePos = deckAndStartPositions[deck]; // set target position to the spawn point so it chooses the closest enemy
-                        // wait half a second if it hit a player, else just cast it again immediately
-                        game.ScheduleAction(b == EntityExpiredReason.CollisionWithPlayer ? Game._updatesPerSecond / 2 : 1, () => CastCards(deck));
+                        // wait a little if it hit a player, else just cast it again immediately
+                        game.ScheduleAction(expirationReason == EntityExpiredReason.CollisionWithPlayer ? Game._updatesPerSecond * 2 / 5 : 1, () => CastCards(deck));
                     };
             }
             for (int i = 0; i < iterations; i++)
             {
                 var deck = decks[i];
-                GetCurrentGame().ScheduleAction(castDelay * (1+i), () => CastCards(deck));
+                GetCurrentGame().ScheduleAction((int)(castDelay * (.25f + i)), () => CastCards(deck));
             }
         }
 
