@@ -55,17 +55,16 @@
                 int normalsToSteal = StandardStats.OtherStatsInt[SpellSpecificStats.BasicSpellsToCopy];
                 var spells = targetPlayer.GetOriginalSpells();
                 Dictionary<SpellType, List<int>> spellsByType = new();
+                foreach (var spellType in Enum.GetValues<SpellType>())
+                    spellsByType.Add(spellType, []);
+
                 // spells that connot be stolen
                 List<System.Type> nonSealableSpells = [typeof(CopySpell), typeof(Klepto)]; // I don't think I can get these two to work properly
                 foreach (var spell in spells)
                 {
                     if (nonSealableSpells.Contains(spell.GetType()))
                         continue;
-                    
-                    if (spellsByType.ContainsKey(spell.Type))
-                        spellsByType[spell.Type].Add(spell.SpellIndex);
-                    else
-                        spellsByType.Add(spell.Type, new() { spell.SpellIndex });
+                    spellsByType[spell.Type].Add(spell.SpellIndex);
                 }
 
                 // if you can't steal their ult, you get an extra normal spell.
@@ -75,7 +74,7 @@
                 // Steal one ultimate and one normal spells
                 for (int i = 0; i < ultsToSteal; i++)
                 {
-                    if (spellsByType.ContainsKey(SpellType.Ultimate) && spellsByType[SpellType.Ultimate].Any())
+                    if (spellsByType[SpellType.Ultimate].Any())
                     {
                         var ultsList = spellsByType[SpellType.Ultimate];
                         var ultsListIndex = new Random().Next(ultsList.Count);
@@ -89,7 +88,7 @@
                 }
                 for (int i = 0; i < normalsToSteal; i++)
                 {
-                    if (spellsByType.ContainsKey(SpellType.Attack) && spellsByType[SpellType.Attack].Any())
+                    if (spellsByType[SpellType.Attack].Any())
                     {
                         var normalsList = spellsByType[SpellType.Attack];
                         var ultsListIndex = new Random().Next(normalsList.Count);
