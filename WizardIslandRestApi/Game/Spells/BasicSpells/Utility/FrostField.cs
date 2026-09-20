@@ -1,6 +1,6 @@
 ﻿using WizardIslandRestApi.Game.Spells.Debuffs;
 
-namespace WizardIslandRestApi.Game.Spells.BasicSpells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells.Utility
 {
     public class FrostField : Spell
     {

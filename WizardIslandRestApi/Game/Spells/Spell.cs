@@ -3,6 +3,7 @@ using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.Utility;
 using WizardIslandRestApi.Game.Spells.Movement;
 using WizardIslandRestApi.Game.Spells.Ultimates;
 
