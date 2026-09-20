@@ -41,7 +41,8 @@ namespace WizardIslandRestApi.Game
     }
     public class PlayerOverrideAndObservers
     {
-        public Action<int> OnSpellCast;
+        public Action<int> OnSpellCastObserver;
+        public Action<Spell, Vector2, Vector2>? OnSpellCastOverride = null;
         public Action OnRespawnPreReset;
         public Action OnRespawnPostReset;
         public Action OnHealthChanged;
@@ -103,13 +104,21 @@ namespace WizardIslandRestApi.Game
                 Password += random.Next(10);
             Reset();
         }
+
         public void CastSpell(int spellIndex, Vector2 mousePos)
         {
             if (IsDead || spellIndex < 0 || spellIndex >= MySpells.Length || !MySpells[spellIndex].CanCast)
                 return;
-            OverridesAndObservers.OnSpellCast?.Invoke(spellIndex);
-            lock(MySpells[spellIndex])
-                MySpells[spellIndex].CastSpell(Pos, mousePos);
+            OverridesAndObservers.OnSpellCastObserver?.Invoke(spellIndex);
+            var spell = MySpells[spellIndex];
+            if (OverridesAndObservers.OnSpellCastOverride != null)
+            {
+                var spellOverride = OverridesAndObservers.OnSpellCastOverride;
+                OverridesAndObservers.OnSpellCastOverride = null;
+                spellOverride(spell, Pos, mousePos);
+            }
+            else 
+                spell.CastSpell(Pos, mousePos);
         }
 
         public void Reset()
