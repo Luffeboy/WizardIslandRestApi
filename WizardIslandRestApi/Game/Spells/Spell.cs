@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;

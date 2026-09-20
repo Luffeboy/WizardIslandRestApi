@@ -1,4 +1,5 @@
 ﻿using WizardIslandRestApi.Game.Interfaces;
+using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
 
 namespace WizardIslandRestApi.Game.Spells.Ultimates
 {
@@ -14,9 +15,9 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
             _fireSpells = new Spell[GetCurrentGame().AllowedSpellCount];
             if (_fireSpells.Length == 0) // should not happen
                 return;
-            _fireSpells[0] = new BasicSpells.FireBurst(player);
+            _fireSpells[0] = new FireBurst(player);
             for (int i = 1; i < _fireSpells.Length - 1; i++)
-                _fireSpells[i] = new BasicSpells.FireBall(player);
+                _fireSpells[i] = new FireBall(player);
             _fireSpells[_fireSpells.Length - 1] = this;
             for (int i = 1; i < _fireSpells.Length - 1; i++)
                 (_fireSpells[i] as ISetCooldownMax)?.SetCooldownMax((int)(2.5f * _fireSpells[i].CooldownMax));

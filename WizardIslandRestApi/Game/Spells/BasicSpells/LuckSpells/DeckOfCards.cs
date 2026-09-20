@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells.Debuffs;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
+using WizardIslandRestApi.Game.Spells.Debuffs;
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 using WizardIslandRestApi.Game.Spells.Ultimates;
 namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells

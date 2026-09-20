@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using WizardIslandRestApi.Game.Spells.BasicSpells;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
 
 namespace WizardIslandRestApi.Game.Spells.ExtraEntities
 {

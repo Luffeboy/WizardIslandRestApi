@@ -1,4 +1,5 @@
-﻿using WizardIslandRestApi.Game.Spells.ExtraEntities;
+﻿using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
+using WizardIslandRestApi.Game.Spells.ExtraEntities;
 using WizardIslandRestApi.Game.Spells.SpellHelpers;
 
 namespace WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells

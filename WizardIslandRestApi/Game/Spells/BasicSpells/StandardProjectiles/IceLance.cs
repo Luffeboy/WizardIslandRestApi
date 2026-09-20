@@ -2,7 +2,7 @@
 using WizardIslandRestApi.Game.Spells.ExtraEntities;
 using WizardIslandRestApi.Game.Spells.SpellHelpers;
 
-namespace WizardIslandRestApi.Game.Spells.BasicSpells
+namespace WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles
 {
     public class IceLance : Spell
     {

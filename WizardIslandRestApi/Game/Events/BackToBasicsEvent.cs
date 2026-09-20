@@ -1,6 +1,7 @@
 ﻿using WizardIslandRestApi.Game.Augments;
 using WizardIslandRestApi.Game.Spells;
 using WizardIslandRestApi.Game.Spells.BasicSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
 namespace WizardIslandRestApi.Game.Events
 {
     public class BackToBasicsEvent : EventBase
