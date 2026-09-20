@@ -5,6 +5,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.Utility
     public class AnchorCast : Spell
     {
         public override int CooldownMax { get; protected set; } = (int)(10.0f * Game._updatesPerSecond);
+
         public override string Name => "Anchor cast";
 
         public AnchorCast(Player player) : base(player)

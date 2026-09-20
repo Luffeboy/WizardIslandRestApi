@@ -68,6 +68,6 @@ namespace WizardIslandRestApi.Game.Augments
         }
 
         public virtual void AugmentSpell(Spell spell) { }
-        public virtual void AugmentPlayer(Player player, int spellsThatWereCouldBeAugmented) { }
+        public virtual void AugmentPlayer(Player player, int amountOfSpellsThatWereAugmented) { }
     }
 }

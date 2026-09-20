@@ -26,7 +26,7 @@
                 return;
             }
 
-            var spells = MyPlayer.GetSpells();
+            var spells = MyPlayer.GetOriginalSpells();
             if (_lastUsedSpellIndex < 0 || _lastUsedSpellIndex >= spells.Length || spells[_lastUsedSpellIndex] is CopySpell)
                 return;
 
@@ -40,6 +40,11 @@
 
         private void Observe(int spellIndex)
         {
+            var currentSpells = MyPlayer.GetSpells();
+            var originalSpells = MyPlayer.GetOriginalSpells();
+            if (spellIndex < 0 || spellIndex > currentSpells.Length || spellIndex > originalSpells.Length ||
+                currentSpells[spellIndex] != originalSpells[spellIndex])
+                return;
             _lastUsedSpellIndex = _justUsedSpellIndex;
             _justUsedSpellIndex = spellIndex;
         }
@@ -48,7 +53,7 @@
         {
             if (_spell != null)
                 return "Copy of " + _spell.ToString();
-                var spells = MyPlayer.GetSpells();
+            var spells = MyPlayer.GetOriginalSpells();
             if (_justUsedSpellIndex < 0 || _justUsedSpellIndex >= spells.Length || spells[_justUsedSpellIndex] is CopySpell)
                 return "Copy...";
             return "copy: " + spells[_justUsedSpellIndex].ToString();

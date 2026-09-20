@@ -16,7 +16,7 @@ namespace WizardIslandRestApi.Game.Augments.SpellSpecific
             CanBeStacked = false;
         }
 
-        public override void AugmentPlayer(Player player, int spellsThatWereCouldBeAugmented)
+        public override void AugmentPlayer(Player player, int amountOfSpellsThatWereAugmented)
         {
             var game = player.GetGame();
             if (game != null)
