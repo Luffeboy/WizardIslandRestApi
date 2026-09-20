@@ -13,7 +13,7 @@
         {
             Type = SpellType.Ultimate;
             if (player != null)
-                player.OverridesAndObservers.OnSpellCast += Observe;
+                player.OverridesAndObservers.OnSpellCastObserver += Observe;
             Tags.Add(SpellTags.UseOtherSpell);
         }
 
