@@ -1,8 +1,9 @@
 ﻿using WizardIslandRestApi.Game.Spells.BasicSpells;
-using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
 using WizardIslandRestApi.Game.Spells.BasicSpells.BrickSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.LuckSpells;
 using WizardIslandRestApi.Game.Spells.BasicSpells.SelfDamageSpells;
+using WizardIslandRestApi.Game.Spells.BasicSpells.StandardProjectiles;
+using WizardIslandRestApi.Game.Spells.BasicSpells.TrapSeplls;
 using WizardIslandRestApi.Game.Spells.BasicSpells.Utility;
 using WizardIslandRestApi.Game.Spells.Movement;
 using WizardIslandRestApi.Game.Spells.Ultimates;
@@ -158,6 +159,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new ChaosDice(player),
             (player) => new FlipACoint(player),
             (player) => new AnchorCast(player),
+            (player) => new ExplosionMine(player),
 
             (player) => new Blink(player),
             (player) => new BullCharge(player),
@@ -227,7 +229,13 @@ namespace WizardIslandRestApi.Game.Spells
         }
 
         public Game GetCurrentGame() { return MyPlayer.GetGame(); }
+
         protected int GetCurrentGameTick() { return GetCurrentGame().GameTick; }
+
+        public void AddEntityToGame(Entity entity)
+        {
+            MyPlayer.GetGame().Entities.Add(entity);
+        }
         public void CastSpell(Vector2 startPos, Vector2 mousePos)
         {
             Observers.InvokeWasCast();
