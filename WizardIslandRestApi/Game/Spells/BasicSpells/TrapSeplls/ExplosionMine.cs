@@ -42,23 +42,29 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.TrapSeplls
 
     public class MineEntity : CantHitOwnerAtStartSpellEntity
     {
-        private Action<MineEntity> _onTrigger;
-
         private int _ticksAlive = 0;
 
         public float TicksUntilInvisable { get; set; } = 2.5f * Game._updatesPerSecond;
 
         public float TimeUntilInvisableSeconds { set => TicksUntilInvisable = (int)(value * Game._updatesPerSecond); }
 
-        public MineEntity(Player owner, Vector2 startPos, Action<MineEntity> onTrigger) : base(owner, 9999999, startPos)
+        public bool CanBeTriggeredByOwner { get; set; } = true;
+
+        public MineEntity(Player owner, Vector2 startPos, Action<MineEntity>? onTrigger = null) : base(owner, 9999999, startPos)
         {
             EntityId = "Mine";
-            _onTrigger = onTrigger;
+            if (onTrigger != null)
+                Observers.Expired += (a,b) => onTrigger.Invoke(this);
         }
 
         protected override bool HitPlayer(Player other)
         {
-            return true;
+            return other != MyCollider.Owner || CanBeTriggeredByOwner;
+        }
+
+        public override bool OnCollision(Entity other)
+        {
+            return Height != EntityHeight.Ground && other.Height != EntityHeight.Ground;
         }
 
         public override void ReTarget(Vector2 pos)
@@ -79,12 +85,6 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells.TrapSeplls
             }
 
             return base.Update();
-        }
-
-        public override void OnExpire(EntityExpiredReason reason)
-        {
-            base.OnExpire(reason);
-            _onTrigger.Invoke(this);
         }
     }
 }

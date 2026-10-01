@@ -34,7 +34,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             if (_rewindData == null)
                 return;
             _rewindData.RewindEntityPosition.TicksUntilDeletion = -1;
-            _rewindData.RewindEntityTimer.SetRemainingTicks(-1);
+            _rewindData.RewindEntityTimer.DestroyEntity();
             _rewindData = null;
         }
 
@@ -64,8 +64,8 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             {
                 DeleteRewindData();
             };
-            GetCurrentGame().Entities.Add(_rewindData.RewindEntityPosition);
-            GetCurrentGame().Entities.Add(_rewindData.RewindEntityTimer);
+            AddEntityToGame(_rewindData.RewindEntityPosition);
+            AddEntityToGame(_rewindData.RewindEntityTimer);
         }
 
         private void DoRewind()
@@ -102,6 +102,11 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             Size = 0.01f;
             _maxSize = maxSize;
             SetRemainingTicks(ticksDuration);
+        }
+
+        public void DestroyEntity()
+        {
+            _ticksRemaining = -1;
         }
 
         public void SetRemainingTicks(int ticks)

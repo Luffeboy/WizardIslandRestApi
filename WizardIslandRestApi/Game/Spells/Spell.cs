@@ -170,6 +170,7 @@ namespace WizardIslandRestApi.Game.Spells
             (player) => new Phoenix(player),
             (player) => new BrickBridge(player),
             (player) => new Rewind(player),
+            (player) => new TeleportTrap(player),
 
             (player) => new Luna(player),
             (player) => new Stella(player),

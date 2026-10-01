@@ -66,6 +66,16 @@ namespace WizardIslandRestApi.Game
             Pos = pos; // also set the previous pos
         }
 
+        /// <summary>
+        /// Sets the height of this entity.
+        /// Note should only be called if you "own" this entity
+        /// </summary>
+        /// <param name="height"></param>
+        public void SetHeight(EntityHeight height)
+        {
+            Height = height;
+        }
+
         public abstract void ReTarget(Vector2 pos);
 
         /// <summary>

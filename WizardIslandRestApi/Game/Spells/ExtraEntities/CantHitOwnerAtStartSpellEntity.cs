@@ -35,5 +35,10 @@
             return --_ticksUntilDeletion <= 0;
         }
         protected abstract bool HitPlayer(Player other);
+
+        public void ForceExpire()
+        {
+            _ticksUntilDeletion = -1;
+        }
     }
 }
