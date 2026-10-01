@@ -5,14 +5,18 @@ namespace WizardIslandRestApi.Game.Spells.Movement
     public class Rewind : Spell
     {
         public override SpellType Type { get; set; } = SpellType.Movement;
+
         public override int CooldownMax { get; protected set; } = (int)(15 * Game._updatesPerSecond);
+
         public override string Name => _rewindData == null ? "Rewind" : "Rewind (activate)";
+
         private RewindData? _rewindData = null;
 
         public Rewind(Player player) : base(player)
         {
-            StandardStats.SummonLifetime = (int)(3.5f * Game._updatesPerSecond);
+            StandardStats.SummonLifetime = (int)(7.5f * Game._updatesPerSecond);
         }
+
         protected override void OnCast(Vector2 pos, Vector2 mousePos)
         {
             if (_rewindData == null)
@@ -82,6 +86,7 @@ namespace WizardIslandRestApi.Game.Spells.Movement
             public int Health { get; set; }
         }
     }
+
     public class TimerEntity : Entity
     {
         private float _maxSize;
@@ -125,5 +130,4 @@ namespace WizardIslandRestApi.Game.Spells.Movement
         {
         }
     }
-
 }
