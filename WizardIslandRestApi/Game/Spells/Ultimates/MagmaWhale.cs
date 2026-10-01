@@ -13,7 +13,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
         public MagmaWhale(Player player) : base(player)
         {
             Type = SpellType.Ultimate;
-            StandardStats.Speed = 1.5f;
+            StandardStats.Speed = 2.5f;
             StandardStats.Size = 10.0f;
             StandardStats.Damage = 10.0f;
             StandardStats.Knockback = 4.0f;
@@ -93,7 +93,7 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
                 Knockback = _spell.StandardStats.Knockback,
                 MaxSpeed = _spell.StandardStats.Speed,
                 Size = Size,
-                SecondsToReachMaxSpeed = 3.0f,
+                SecondsToReachMaxSpeed = 2.5f,
             });
         }
 
@@ -151,17 +151,26 @@ namespace WizardIslandRestApi.Game.Spells.Ultimates
 
         public override bool OnCollision(Player other)
         {
-            PlayerAndHitTime paht = _hitPlayers.FirstOrDefault(p => p.HitPlayer == other);
+            PlayerAndHitTime? paht = _hitPlayers.FirstOrDefault(p => p.HitPlayer == other);
             if (paht == null)
                 _hitPlayers.Add(paht = new PlayerAndHitTime() { HitPlayer = other, HitTick = -1 });
 
-            int currentTick = MyCollider.Owner._game.GameTick;
+            int currentTick = MyCollider.Owner!._game.GameTick;
             if (paht.HitTick + _hitCooldown > currentTick)
                 return false;
 
             paht.HitTick = currentTick;
             other.TakeDamage(Damage, MyCollider.Owner);
-            other.ApplyKnockback(_dir, Knockback);
+            // if other is the owner, move to side, with a bit less knockback, instead of the direction the whale is going.
+            if (other == MyCollider.Owner)
+            {
+                var dirNormal = _dir.Normal();
+                if (dirNormal.Dot(other.Pos - Pos) < 0)
+                    dirNormal = dirNormal * -1;
+                other.ApplyKnockback(dirNormal, Knockback / 2);
+            }
+            else
+                other.ApplyKnockback(_dir, Knockback);
             return false;
         }
 

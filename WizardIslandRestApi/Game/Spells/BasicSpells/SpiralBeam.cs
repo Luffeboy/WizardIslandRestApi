@@ -18,7 +18,7 @@ namespace WizardIslandRestApi.Game.Spells.BasicSpells
             StandardStats.Range = 10;
             StandardStats.Size = .5f;
             StandardStats.OtherStatsInt.Add(SpellSpecificStats.SummonQuantity, 1);
-            StandardStats.OtherStatsInt.Add(SpellSpecificStats.EntityHealth, 3);
+            StandardStats.OtherStatsInt.Add(SpellSpecificStats.EntityHealth, 25);
             StandardStats.OtherStatsFloat.Add(SpellSpecificStats.RotationSpeed, .1f);
             StandardStats.OtherStatsFloat.Add(SpellSpecificStats.ProjectileAngle, MathF.PI / 8);
         }
